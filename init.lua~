@@ -2,7 +2,7 @@ potions = {}
 
 
 
-function potions.register_potion(iname, desc, color, exptime, action, expaction)
+function potions.register_potion(iname, color, exptime, action, expaction)
 	iname = string.gsub(iname, "[-%[%]()1023456789 ]", "")
 	minetest.register_craftitem("potions:"..iname, {
 		description = iname.." Potion",
@@ -28,23 +28,4 @@ function potions.register_potion(iname, desc, color, exptime, action, expaction)
 	})
 end
 
-minetest.register_craft({
-	output = 'potions:cauldron',
-	recipe = {
-		{'', '', ''},
-		{'default:steel_ingot', 'default:mese_crystal', 'default:steel_ingot'},
-		{'default:mese_crystal', 'default:steel_ingot', 'default:mese_crystal'},
-	}
-})
 
-
-potions.register_potion("Anti Gravity", "Anti Gravity", "purple", 5,
-function(itemstack, user, pointed_thing) 
-	user:set_physics_override(3, 1.5, 0.5)
-	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Anti Gravity for 60 seconds!")
-end,
-
-function(itemstack, user, pointed_thing)
-	user:set_physics_override(1,1,1)
-	minetest.chat_send_player(user:get_player_name(), "Anti Gravity has worn off.")
-end)

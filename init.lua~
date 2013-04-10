@@ -4,7 +4,7 @@ potions = {}
 
 function potions.register_potion(iname, color, exptime, action, expaction)
 	iname = string.gsub(iname, "[-%[%]()1023456789 ]", "")
-	minetest.register_craftitem("potions:"..iname, {
+	minetest.register_craftitem(minetest.get_current_modname():"..iname:lower(), {
 		description = iname.." Potion",
 		inventory_image = "potions_bottle.png^potions_"..color..".png",
 

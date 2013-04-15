@@ -13,15 +13,24 @@ function potions.register_potion(iname, color, exptime, action, expaction)
   			 minetest.after(exptime, expaction, itemstack, user, pointed_thing)
 			itemstack:take_item()
 			--Particle Code
-			local vel = {x=math.random(-1, 1), y= 2, z=math.random(-1, 1)}
-			local acc = {x=0, y=0.2, z=0}
-			minetest.add_particlespawner(20, 0.5,
-   		 user:getpos(), user:getpos(),
-   		 {x=2, y= 2, z=2}, {x=-2, y= 2, z=-2},
-   		 acc, acc,
-   		 50, 100,
+			--Potions Particles
+			minetest.add_particlespawner(30, 0.2,
+   		 pointed_thing.above, pointed_thing.above,
+   		 {x=1, y= 2, z=1}, {x=-1, y= 2, z=-1},
+   		 {x=0.2, y=0.2, z=0.2}, {x=-0.2, y=0.5, z=-0.2},
+   		 5, 10,
    		 1, 3,
   			 false, "potions_particle.png")
+  			 
+  			 --Shatter Particles
+  			 minetest.add_particlespawner(40, 0.1,
+   		 pointed_thing.above, pointed_thing.above,
+   		 {x=2, y=0.2, z=2}, {x=-2, y=0.5, z=-2},
+   		 {x=0, y=-6, z=0}, {x=0, y=-10, z=0},
+   		 0.5, 2,
+   		 0.2, 5,
+  			 true, "potions_shatter.png")
+  			 
 			return itemstack
 			
 		end,

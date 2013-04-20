@@ -1,44 +1,44 @@
 potions.register_potion("Anti Gravity", "purple", 60,
 function(itemstack, user, pointed_thing) 
-	user:set_physics_override(3, 1.5, 0.5)
+	user:set_physics_override(nil, 1.5, 0.5)
 	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Anti Gravity for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
-	user:set_physics_override(1,1,1)
+	user:set_physics_override(nil,1,1)
 	minetest.chat_send_player(user:get_player_name(), "Anti Gravity has worn off.")
 end)
 
 potions.register_potion("Anti Gravity II", "pink", 60,
 function(itemstack, user, pointed_thing) 
-	user:set_physics_override(3, 1, 0.1)
+	user:set_physics_override(3, nil, 0.1)
 	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Anti Gravity II for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
-	user:set_physics_override(1,1,1)
+	user:set_physics_override(1,nil,1)
 	minetest.chat_send_player(user:get_player_name(), "Anti Gravity II has worn off.")
 end)
 
 potions.register_potion("Speed", "lightgrey", 60,
 function(itemstack, user, pointed_thing) 
-	user:set_physics_override(3, 1.1, 1)
+	user:set_physics_override(3, 1, 1)
 	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Speed for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
-	user:set_physics_override(1,1,1)
+	user:set_physics_override(1,nil,nil)
 	minetest.chat_send_player(user:get_player_name(), "Speed has worn off.")
 end)
 
 potions.register_potion("Speed II", "cyan", 60,
 function(itemstack, user, pointed_thing) 
-	user:set_physics_override(5, 1.1, 1)
+	user:set_physics_override(5, 1, 1)
 	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Speed II for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
-	user:set_physics_override(1,1,1)
+	user:set_physics_override(1,nil,nil)
 	minetest.chat_send_player(user:get_player_name(), "Speed II has worn off.")
 end)
 
@@ -55,7 +55,7 @@ end)
 
 potions.register_potion("Confusion", "dull", 60,
 function(itemstack, user, pointed_thing) 
-	user:set_physics_override(-1, 1, 1)
+	user:set_physics_override(-1, nil, nil)
 	minetest.chat_send_player(user:get_player_name(), "You have been cursed with Confusion for 60 seconds!")
 end,
 

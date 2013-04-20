@@ -72,10 +72,19 @@ function potions.register_potion(iname, color, exptime, action, expaction)
 					end
 				end
 				timer(user, iname)]]--
-			
+			local player = user
 			
 			action(itemstack, user, pointed_thing)
   			 minetest.after(exptime, expaction, itemstack, user, pointed_thing)
+  			 minetest.after(exptime, function(user)
+					if user:hud_get(0) and user:hud_get(1) and user:hud_get(2) and user:hud_get(3) then
+						user:hud_remove(0)
+						user:hud_remove(1)
+						user:hud_remove(2)
+						user:hud_remove(3)
+					end
+				end, player)
+				
   			 itemstack:take_item()
 			--Particle Code
 			--Potions Particles

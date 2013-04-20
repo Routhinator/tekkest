@@ -5,14 +5,75 @@ local MOD_NAME = minetest.get_current_modname()
 potions = {}
 
 
-
 function potions.register_potion(iname, color, exptime, action, expaction)
-	iname = string.gsub(iname, "[-%[%]()1023456789 ]", "")
-	minetest.register_craftitem(minetest.get_current_modname()..":"..iname:lower(), {
+	local rname = string.gsub(iname, "[-%[%]()1023456789 ]", "")
+	minetest.register_craftitem(minetest.get_current_modname()..":"..rname:lower(), {
 		description = iname.." Potion",
 		inventory_image = "potions_bottle.png^potions_"..color..".png",
 
 		on_place = function(itemstack, user, pointed_thing)
+			if user:hud_get(0) and user:hud_get(1) and user:hud_get(2) and user:hud_get(3) then
+				user:hud_remove(0)
+				user:hud_remove(1)
+				user:hud_remove(2)
+				user:hud_remove(3)
+			end
+			local cntdown = exptime
+			local length1 = cntdown+iname:len()
+			local potions_hud_1 = user:hud_add( {
+				hud_elem_type = "statbar",
+				position = {x=0.206, y=0.009},
+				name = "Potions HUD BG",
+				scale = {x=1, y=1},
+				number = length1*2+1,
+				text = "potions_hud_bg.png",
+			})
+			local length2 = iname:len()/100
+			local potions_hud_2 = user:hud_add( {
+				hud_elem_type = "statbar",
+				position = {x=0.206+length2, y=0.015},
+				name = "Potions HUD COUNTER",
+				scale = {x=1, y=1},
+				number = cntdown,
+				text = "potions_hud_stat.png",
+			})
+			
+						
+			local potions_hud_3 = user:hud_add( {
+				hud_elem_type = "text",
+				position = {x=0.21, y=0.01},
+				number = 0xFFFFFF,
+				name = "POTIONS HUD TEXT",
+				text = iname..":",
+				scale = {x=100, y=100},
+			})
+			
+			local potions_hud_4 = user:hud_add( {
+				hud_elem_type = "image",
+				position = {x=0.18, y=0.008},
+				name = "POTIONS HUD BOTTLE",
+				text = "potions_bottle.png^potions_"..color..".png",
+				scale = {x=1, y=1},
+			})
+			
+			--[[	local function timer(player, str)
+					if cntdown < 0 then
+						user:hud_remove(0)
+						user:hud_remove(1)
+						user:hud_remove(2)
+						user:hud_remove(3)
+					else
+						cntdown = cntdown-1
+						length1 = cntdown+iname:len()
+						player:hud_change(0, number, length1*2+1)
+						minetest.after(1, function(param)
+							timer(param.player, param.str)
+						end)				
+					end
+				end
+				timer(user, iname)]]--
+			
+			
 			action(itemstack, user, pointed_thing)
   			 minetest.after(exptime, expaction, itemstack, user, pointed_thing)
   			 itemstack:take_item()
@@ -59,6 +120,10 @@ minetest.register_craftitem("potions:glass_bottle", {
    		 0.5, 2,
    		 0.2, 5,
   			 true, "potions_shatter.png")
+		local dir = Vec3(user:get_look_dir()) *20
+				minetest.add_particle(
+				{x=user:getpos().x, y=user:getpos().y+1.5, z=user:getpos().z}, {x=dir.x, y=dir.y, z=dir.z}, {x=0, y=-10, z=0}, 0.2,
+					6, false, "potions_bottle.png")
 			return itemstack
 		end,
 })

@@ -74,3 +74,43 @@ function(itemstack, user, pointed_thing)
 	user:set_physics_override(1,1,1)
 	minetest.chat_send_player(user:get_player_name(), "Unknown powers lost.")
 end)
+
+potions.register_potion("Health I", "red", 1,
+function(itemstack, user, pointed_thing) 
+	user:set_hp(user:get_hp()+6)
+	minetest.chat_send_player(user:get_player_name(), "You have been healed. +6 HP")
+end,
+
+function(itemstack, user, pointed_thing)
+	return true;
+end)
+
+potions.register_potion("Health II", "darkred", 1,
+function(itemstack, user, pointed_thing) 
+	user:set_hp(user:get_hp()+10)
+	minetest.chat_send_player(user:get_player_name(), "You have been healed. +10 HP")
+end,
+
+function(itemstack, user, pointed_thing)
+	return true;
+end)
+
+potions.register_potion("Harming I", "green", 1,
+function(itemstack, user, pointed_thing) 
+	user:set_hp(user:get_hp()-6)
+	minetest.chat_send_player(user:get_player_name(), "You have been harmed. -6 HP")
+end,
+
+function(itemstack, user, pointed_thing)
+	return true;
+end)
+
+potions.register_potion("Harming II", "darkgreen", 1,
+function(itemstack, user, pointed_thing) 
+	user:set_hp(user:get_hp()-10)
+	minetest.chat_send_player(user:get_player_name(), "You have been harmed. -10 HP")
+end,
+
+function(itemstack, user, pointed_thing)
+	return true;
+end)

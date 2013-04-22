@@ -1,84 +1,69 @@
 potions.register_potion("Anti Gravity", "purple", 60,
 function(itemstack, user, pointed_thing) 
 	user:set_physics_override(nil, 1.5, 0.5)
-	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Anti Gravity for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
 	user:set_physics_override(nil,1,1)
-	minetest.chat_send_player(user:get_player_name(), "Anti Gravity has worn off.")
 end)
 
 potions.register_potion("Anti Gravity II", "pink", 60,
 function(itemstack, user, pointed_thing) 
 	user:set_physics_override(3, nil, 0.1)
-	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Anti Gravity II for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
 	user:set_physics_override(1,nil,1)
-	minetest.chat_send_player(user:get_player_name(), "Anti Gravity II has worn off.")
 end)
 
 potions.register_potion("Speed", "lightgrey", 60,
 function(itemstack, user, pointed_thing) 
 	user:set_physics_override(3, 1, 1)
-	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Speed for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
 	user:set_physics_override(1,nil,nil)
-	minetest.chat_send_player(user:get_player_name(), "Speed has worn off.")
 end)
 
 potions.register_potion("Speed II", "cyan", 60,
 function(itemstack, user, pointed_thing) 
 	user:set_physics_override(5, 1, 1)
-	minetest.chat_send_player(user:get_player_name(), "You have been blessed with Speed II for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
 	user:set_physics_override(1,nil,nil)
-	minetest.chat_send_player(user:get_player_name(), "Speed II has worn off.")
 end)
 
 potions.register_potion("Inversion", "dull", 60,
 function(itemstack, user, pointed_thing) 
 	user:set_physics_override(1, -1, -0.2)
-	minetest.chat_send_player(user:get_player_name(), "You have been cursed with Inversion for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
 	user:set_physics_override(1,1,1)
-	minetest.chat_send_player(user:get_player_name(), "Inversion has worn off.")
 end)
 
 potions.register_potion("Confusion", "dull", 60,
 function(itemstack, user, pointed_thing) 
 	user:set_physics_override(-1, nil, nil)
-	minetest.chat_send_player(user:get_player_name(), "You have been cursed with Confusion for 60 seconds!")
 end,
 
 function(itemstack, user, pointed_thing)
 	user:set_physics_override(1,1,1)
-	minetest.chat_send_player(user:get_player_name(), "Confusion has worn off.")
 end)
 
 potions.register_potion("What will this do", "white", 60,
 function(itemstack, user, pointed_thing) 
 	user:set_physics_override(math.random(1, 20), math.random(1, 20), math.random(-4, 2))
-	minetest.chat_send_player(user:get_player_name(), "You have been given unknown powers for good or evil! (60 seconds)")
 end,
 
 function(itemstack, user, pointed_thing)
 	user:set_physics_override(1,1,1)
-	minetest.chat_send_player(user:get_player_name(), "Unknown powers lost.")
 end)
 
 potions.register_potion("Health I", "red", 1,
 function(itemstack, user, pointed_thing) 
 	user:set_hp(user:get_hp()+6)
-	minetest.chat_send_player(user:get_player_name(), "You have been healed. +6 HP")
 end,
 
 function(itemstack, user, pointed_thing)
@@ -88,7 +73,6 @@ end)
 potions.register_potion("Health II", "darkred", 1,
 function(itemstack, user, pointed_thing) 
 	user:set_hp(user:get_hp()+10)
-	minetest.chat_send_player(user:get_player_name(), "You have been healed. +10 HP")
 end,
 
 function(itemstack, user, pointed_thing)
@@ -98,7 +82,6 @@ end)
 potions.register_potion("Harming I", "green", 1,
 function(itemstack, user, pointed_thing) 
 	user:set_hp(user:get_hp()-6)
-	minetest.chat_send_player(user:get_player_name(), "You have been harmed. -6 HP")
 end,
 
 function(itemstack, user, pointed_thing)
@@ -108,7 +91,6 @@ end)
 potions.register_potion("Harming II", "darkgreen", 1,
 function(itemstack, user, pointed_thing) 
 	user:set_hp(user:get_hp()-10)
-	minetest.chat_send_player(user:get_player_name(), "You have been harmed. -10 HP")
 end,
 
 function(itemstack, user, pointed_thing)

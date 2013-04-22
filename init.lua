@@ -12,14 +12,15 @@ function potions.register_potion(iname, color, exptime, action, expaction)
 		inventory_image = "potions_bottle.png^potions_"..color..".png",
 
 		on_place = function(itemstack, user, pointed_thing)
+			local cnt = 0
 			if user:hud_get(0) and user:hud_get(1) and user:hud_get(2) and user:hud_get(3) then
 				user:hud_remove(0)
 				user:hud_remove(1)
 				user:hud_remove(2)
 				user:hud_remove(3)
+				samepotion = false
 			end
-			local cntdown = exptime
-			local length1 = cntdown+iname:len()
+			local length1 = exptime+iname:len()
 			local potions_hud_1 = user:hud_add( {
 				hud_elem_type = "statbar",
 				position = {x=0.206, y=0.009},
@@ -34,7 +35,7 @@ function potions.register_potion(iname, color, exptime, action, expaction)
 				position = {x=0.206+length2, y=0.015},
 				name = "Potions HUD COUNTER",
 				scale = {x=1, y=1},
-				number = cntdown,
+				number = exptime,
 				text = "potions_hud_stat.png",
 			})
 			
@@ -55,25 +56,23 @@ function potions.register_potion(iname, color, exptime, action, expaction)
 				text = "potions_bottle.png^potions_"..color..".png",
 				scale = {x=1, y=1},
 			})
-			
-			--[[	local function timer(player, str)
-					if cntdown < 0 then
+				local player = user
+
+				local function timer(cnt, player)
+					if cnt <= exptime and samepotion == true then
+						player:hud_change(1, number, exptime-cnt)
+						minetest.after(1, timer, cnt+1, player)
+					else
 						user:hud_remove(0)
 						user:hud_remove(1)
 						user:hud_remove(2)
 						user:hud_remove(3)
-					else
-						cntdown = cntdown-1
-						length1 = cntdown+iname:len()
-						player:hud_change(0, number, length1*2+1)
-						minetest.after(1, function(param)
-							timer(param.player, param.str)
-						end)				
+						cnt = 0					
 					end
 				end
-				timer(user, iname)]]--
-			local player = user
-			
+			samepotion = true
+			timer(cnt, player)
+
 			action(itemstack, user, pointed_thing)
   			 minetest.after(exptime, expaction, itemstack, user, pointed_thing)
   			 minetest.after(exptime, function(user)
@@ -82,6 +81,7 @@ function potions.register_potion(iname, color, exptime, action, expaction)
 						user:hud_remove(1)
 						user:hud_remove(2)
 						user:hud_remove(3)
+						cnt = 0
 					end
 				end, player)
 				

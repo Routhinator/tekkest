@@ -15,3 +15,8 @@ minetest.register_craft({
 	recipe = "charcoal:charcoal_lump",
 	burntime = 8,
 })
+minetest.register_craft({
+	type = "shapeless",
+	recipe = {"charcoal:charcoal_lump","default:stick"},
+	output = "default:torch",
+})

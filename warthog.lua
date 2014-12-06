@@ -59,7 +59,7 @@ passive = true,
 	end,
 	
 })
-mobs:register_spawn("mobs:pumba", {"ethereal:mushroom_dirt"}, 20, 8, 9000, 1, 31000)
+mobs:register_spawn("mobs:pumba", {"ethereal:mushroom_dirt", "default:dirt"}, 20, 8, 9000, 1, 31000)
 
 -- Porkchops
 

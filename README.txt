@@ -25,7 +25,7 @@ This mod contains the following additions:
 
 Changelog:
 
-0.6 - Api now supports multi-textured mobs, e.g oerkki, dungeon master, rats and chickens have multiple skins when spawning (sheep fix TODO), also new Honey block
+0.6 - Api now supports multi-textured mobs, e.g oerkki, dungeon master, rats and chickens have random skins when spawning (sheep fix TODO), also new Honey block
 0.5 - Mobs now float in water, die from falling, and some code improvements
 0.4 - Dungeon Masters and Mese Monsters have much better aim due to shoot_offset, also they can both shoot through nodes that aren't walkable (flowers, grass etc) plus new sheep sound :)
 0.3 - Added LOTT's Spider mob, made Cobwebs, added KPavel's Bee with Honey and Beehives (made texture), Warthogs now have sound and can be tamed, taming of shaved sheep or milked cow with 8 wheat so it will not despawn, many bug fixes :)

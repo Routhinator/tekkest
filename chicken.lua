@@ -47,6 +47,9 @@ mobs:register_mob("mobs:chicken", {
 			self.object:remove()
 		end
 	end,
+	sounds = {
+		random = "mobs_chicken",
+	},
 	jump = true,
 	step = 1,
 	blood_texture = "mobs_blood.png",

@@ -49,6 +49,9 @@ mobs:register_mob("mobs:spider", {
 		punch_start = 50,
 		punch_end = 90,
 	},
+	sounds = {
+		random = "mobs_spider",
+	},
 	jump = true,
 	sounds = {},
 	step = 1,

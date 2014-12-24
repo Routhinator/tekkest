@@ -53,6 +53,9 @@ mobs:register_mob("mobs:lava_flan", {
 		punch_start = 20,
 		punch_end = 28,
 	},
+	sounds = {
+		random = "mobs_lavaflan",
+	},
 	jump = true,
 	step = 0.5,
 	blood_texture = "fire_basic_flame.png",

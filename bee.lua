@@ -34,7 +34,9 @@ mobs:register_mob("mobs:bee", {
 		walk_start = 35,
 		walk_end = 65,
 	},
-	
+	sounds = {
+		random = "mobs_bee",
+	},
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
 			clicker:get_inventory():add_item("main", "mobs:bee")

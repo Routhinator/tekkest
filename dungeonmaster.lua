@@ -61,6 +61,9 @@ mobs:register_mob("mobs:dungeon_master", {
 		speed_normal = 15,
 		speed_run = 15,
 	},
+	sounds = {
+		random = "mobs_dungeonmaster",
+	},
 	jump = true,
 	step = 0.5,
 	shoot_offset = 0,

@@ -25,6 +25,9 @@ mobs:register_mob("mobs:rat", {
 jump = true,
 step = 1,
 passive = true,
+	sounds = {
+		random = "mobs_rat",
+	},
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then

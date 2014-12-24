@@ -61,6 +61,9 @@ mobs:register_mob("mobs:mese_monster", {
 		punch_start = 15, -- 40
 		punch_end = 38, -- 63
 	},
+	sounds = {
+		random = "mobs_mesemonster",
+	},
 	jump = true,
 	step = 0.5,
 	shoot_offset = 2,

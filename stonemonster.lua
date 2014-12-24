@@ -52,6 +52,9 @@ mobs:register_mob("mobs:stone_monster", {
 		punch_start = 40,
 		punch_end = 63,
 	},
+	sounds = {
+		random = "mobs_stonemonster",
+	},
 	jump = true,
 	step = 0.5,
 	blood_texture = "mobs_blood.png",

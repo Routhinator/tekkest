@@ -43,6 +43,9 @@ mobs:register_mob("mobs:dirt_monster", {
 		punch_start = 40,
 		punch_end = 63,
 	},
+	sounds = {
+		random = "mobs_dirtmonster",
+	},
 	jump = true,
 	step = 0.5,
 	blood_texture = "default_dirt.png",

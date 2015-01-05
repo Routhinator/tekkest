@@ -1,6 +1,9 @@
 -= MOBS-MOD for MINETEST =-
 by PilzAdam, KrupnovPavel, Zeg9 and TenPlus1
 
+
+https://forum.minetest.net/viewtopic.php?f=9&t=9917
+
 This mod contains the following additions:
 
 - Giant Spiders (found in desert caves, drop string when killed)

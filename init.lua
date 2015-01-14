@@ -1,7 +1,7 @@
 
---= Ambience lite by TenPlus1 (11 Sep 2014)
+--= Ambience lite by TenPlus1 (14th Jan 2015)
 
-local max_frequency_all = 1000 -- larger number means less frequent sounds (100-2000)
+local max_frequency_all = 1000 -- larger number means more frequent sounds (100-2000)
 local SOUNDVOLUME = 1
 local volume = 0.3
 local ambiences
@@ -54,6 +54,11 @@ local desert = {
 local flowing_water = {
 	handler = {},			frequency = 1000,
 	{name="waterfall",		length=6}
+}
+
+local underwater = {
+	handler = {},			frequency = 1000,
+	{name="scuba",			length=8}
 }
 
 local splash = {
@@ -110,9 +115,17 @@ local get_ambience = function(player)
 
 	local pos = player:getpos()
 
-	pos.y = pos.y + 0.2
+	pos.y = pos.y + 1.4 -- head level
 
-	if minetest.get_node(pos).name == "default:water_source" then
+	if minetest.get_node(pos).name == "default:water_source"
+	or minetest.get_node(pos).name == "default:water_flowing" then
+		return {underwater=underwater}
+	end
+
+	pos.y = pos.y - 1.2 -- feet level
+
+	if minetest.get_node(pos).name == "default:water_source"
+	or minetest.get_node(pos).name == "default:water_flowing" then
 		return {splash=splash}
 	end
 
@@ -134,7 +147,7 @@ local get_ambience = function(player)
 		return {desert=desert}
 	end
 	
-	if player:getpos().y < 5 then
+	if player:getpos().y < -10 then
 		return {cave=cave}
 	end
 	
@@ -245,6 +258,17 @@ local stop_sound = function(still_playing, player)
 	
 	if not still_playing.splash then
 		local list = splash
+		if list.handler[player_name] then
+			if list.on_stop then
+				minetest.sound_play(list.on_stop, {to_player=player:get_player_name(),gain=SOUNDVOLUME})
+			end
+			minetest.sound_stop(list.handler[player_name])
+			list.handler[player_name] = nil
+		end
+	end
+
+	if not still_playing.underwater then
+		local list = underwater
 		if list.handler[player_name] then
 			if list.on_stop then
 				minetest.sound_play(list.on_stop, {to_player=player:get_player_name(),gain=SOUNDVOLUME})

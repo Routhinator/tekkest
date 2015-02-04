@@ -1,11 +1,12 @@
 
---= Ambience lite by TenPlus1 (14th Jan 2015)
+--= Ambience lite by TenPlus1 (4th Feb 2015)
 
 local max_frequency_all = 1000 -- larger number means more frequent sounds (100-2000)
 local SOUNDVOLUME = 1
 local volume = 0.3
 local ambiences
 local played_on_start = false
+local tempy = 0
 
 -- sound sets
 local night = {
@@ -71,79 +72,79 @@ local lava = {
 	{name="lava",			length=7}
 }
 
+local smallfire = {
+	handler = {},			frequency = 1000,
+	{name="fire_small",		length=6}
+}
+
+local largefire = {
+	handler = {},			frequency = 1000,
+	{name="fire_large",		length=8}
+}
+
 -- find how many nodes in range
 local nodes_in_range = function(pos, search_distance, node_name)
-	nodes = minetest.env:find_nodes_in_area({x=pos.x-search_distance,y=pos.y-search_distance, z=pos.z-search_distance},
-											{x=pos.x+search_distance,y=pos.y+search_distance, z=pos.z+search_distance},
-											node_name)
+	local nodes = minetest.env:find_nodes_in_area({x=pos.x-search_distance,y=pos.y-search_distance, z=pos.z-search_distance},
+		{x=pos.x+search_distance,y=pos.y+search_distance, z=pos.z+search_distance}, node_name)
 	return #nodes
-end
-
-local nodes_in_coords = function(minp, maxp, node_name)
-	nodes = minetest.env:find_nodes_in_area(minp, maxp, node_name)
-	return #nodes
-end
-
--- find at least (threshold) nodes in area
-local atleast_nodes_in_grid = function(pos, distance, height, node, threshold)
-
-	nodes = minetest.env:find_nodes_in_area({x=pos.x-distance,y=height, z=pos.z+20},
-											{x=pos.x+distance,y=height, z=pos.z+20}, node)
-	totalnodes = #nodes
-	if totalnodes >= threshold then return true end
-
-	nodes = minetest.env:find_nodes_in_area({x=pos.x-distance,y=height, z=pos.z-20},
-											{x=pos.x+distance,y=height, z=pos.z-20}, node)
-	totalnodes = totalnodes + #nodes
-	if totalnodes >= threshold then return true end
-
-	nodes = minetest.env:find_nodes_in_area({x=pos.x+20,y=height, z=pos.z+distance},
-											{x=pos.x+20,y=height, z=pos.z-distance}, node)	
-	totalnodes = totalnodes + #nodes
-	if totalnodes >= threshold then return true end
-
-	nodes = minetest.env:find_nodes_in_area({x=pos.x-20,y=height, z=pos.z-distance},
-											{x=pos.x-20,y=height, z=pos.z+distance}, node)	
-	totalnodes = totalnodes + #nodes
-	if totalnodes >= threshold then return true end
-
-	return false
 end
 
 -- check where player is and which sounds are played
 local get_ambience = function(player)
 
+	-- where am I?
 	local pos = player:getpos()
 
-	pos.y = pos.y + 1.4 -- head level
+	-- what is around me?
+	pos.y = pos.y - 0.1 -- standing on
+	local nod_stand = minetest.get_node(pos).name
 
-	if minetest.get_node(pos).name == "default:water_source"
-	or minetest.get_node(pos).name == "default:water_flowing" then
+	pos.y = pos.y + 1.5 -- head level
+	local nod_head = minetest.get_node(pos).name
+	
+	pos.y = pos.y - 1.2 -- feet level
+	local nod_feet = minetest.get_node(pos).name
+	
+	pos.y = pos.y - 0.2 -- reset pos
+
+	--= START Ambiance
+
+	if nod_head == "default:water_source"
+	or nod_head == "default:water_flowing" then
 		return {underwater=underwater}
 	end
 
-	pos.y = pos.y - 1.2 -- feet level
-
-	if minetest.get_node(pos).name == "default:water_source"
-	or minetest.get_node(pos).name == "default:water_flowing" then
+	if nod_feet == "default:water_source"
+	or nod_feet == "default:water_flowing" then
 		return {splash=splash}
 	end
 
-	pos.y=pos.y - 0.2
+	if minetest.get_modpath("fire") then
+	if fire.mod == "redo" then
 
-	if nodes_in_range(pos, 7, {"default:lava_flowing", "default:lava_source"}) > 5 then
+		tempy = nodes_in_range(pos, 6, {"fire:basic_flame", "bakedclay:safe_fire"})
+		if tempy > 8 then
+			return {largefire=largefire}
+		elseif tempy > 0 then
+			return {smallfire=smallfire}
+		end
+
+	end
+	end
+
+	if nodes_in_range(pos, 5, {"default:lava_flowing", "default:lava_source"}) > 5 then
 		return {lava=lava}		
 	end
 	
-	if nodes_in_range(pos, 6, "default:water_flowing") > 45 then
+	if nodes_in_range(pos, 5, "default:water_flowing") > 45 then
 		return {flowing_water=flowing_water}
 	end
 	
-	if pos.y < 7 and pos.y > 0 and atleast_nodes_in_grid(pos, 60, 1, "default:water_source", 51 ) then
+	if pos.y < 7 and pos.y > 0 and nodes_in_range(pos, 20, {"default:water_source"}) > 100 then
 		return {beach=beach}
 	end
 	
-	if nodes_in_range(pos, 6, {"default:desert_sand", "default:desert_stone", "default:sandstone"}) > 250 then
+	if nodes_in_range(pos, 5, {"default:desert_sand", "default:desert_stone", "default:sandstone"}) > 250 then
 		return {desert=desert}
 	end
 	
@@ -156,6 +157,8 @@ local get_ambience = function(player)
 	else
 		return {night=night}
 	end
+
+	-- END Ambiance
 end
 
 -- play sound, set handler then delete handler when sound finished
@@ -288,6 +291,29 @@ local stop_sound = function(still_playing, player)
 			list.handler[player_name] = nil
 		end
 	end	
+	
+	if not still_playing.smallfire then
+		local list = smallfire
+		if list.handler[player_name] then
+			if list.on_stop then
+				minetest.sound_play(list.on_stop, {to_player=player:get_player_name(),gain=SOUNDVOLUME})
+			end
+			minetest.sound_stop(list.handler[player_name])
+			list.handler[player_name] = nil
+		end
+	end	
+	
+	if not still_playing.largefire then
+		local list = largefire
+		if list.handler[player_name] then
+			if list.on_stop then
+				minetest.sound_play(list.on_stop, {to_player=player:get_player_name(),gain=SOUNDVOLUME})
+			end
+			minetest.sound_stop(list.handler[player_name])
+			list.handler[player_name] = nil
+		end
+	end	
+
 
 end
 
@@ -295,10 +321,13 @@ end
 local timer = 0
 minetest.register_globalstep(function(dtime)
 	timer = timer + dtime
-	if timer < 2 then return end
+	
+	-- every 1 second
+	if timer < 1 then return end
 	timer = 0
-
+	
 	for _,player in ipairs(minetest.get_connected_players()) do
+
 		ambiences = get_ambience(player)
 		stop_sound(ambiences, player)
 
@@ -313,6 +342,7 @@ minetest.register_globalstep(function(dtime)
 				play_sound(player, ambience, math.random(1, #ambience))
 			end
 		end
+		
 	end
 end)
 

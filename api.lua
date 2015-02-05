@@ -801,26 +801,27 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 			end
 
 			pos.y = pos.y+1
-			if not minetest.get_node_light(pos) then
-				return
-			end
-			if minetest.get_node_light(pos) > max_light then
-				return
-			end
-			if minetest.get_node_light(pos) < min_light then
-				return
-			end
-			if pos.y > max_height then
+
+			if not minetest.get_node_light(pos)
+			or minetest.get_node_light(pos) > max_light
+			or minetest.get_node_light(pos) < min_light
+			or pos.y > max_height then
 				return
 			end
 
-			if not minetest.registered_nodes[minetest.get_node(pos).name] then return end
-			if minetest.registered_nodes[minetest.get_node(pos).name].walkable then return end
+			if not minetest.registered_nodes[minetest.get_node(pos).name]
+			or minetest.registered_nodes[minetest.get_node(pos).name].walkable then
+				return
+			end
 
 			pos.y = pos.y+1
 
-			if not minetest.registered_nodes[minetest.get_node(pos).name] then return end
-			if minetest.registered_nodes[minetest.get_node(pos).name].walkable then return end
+			if not minetest.registered_nodes[minetest.get_node(pos).name]
+			or minetest.registered_nodes[minetest.get_node(pos).name].walkable then
+				return
+			end
+
+			pos.y = pos.y-1
 
 			if min_dist == nil then
 				min_dist = {x=-1,z=-1}
@@ -841,6 +842,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 			if minetest.setting_getbool("display_mob_spawn") then
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 			end
+
 			local mob = minetest.add_entity(pos, name)
 
 			-- setup the hp, armor, drops, etc... for this specific mob

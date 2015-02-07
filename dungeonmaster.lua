@@ -109,3 +109,16 @@ mobs:register_arrow("mobs:fireball", {
 		end
 	end
 })
+
+-- Spawn Egg
+minetest.register_craftitem("mobs:dungeon_master", {
+	description = "Dungeon Master Egg",
+	inventory_image = "fire_basic_flame.png^mobs_chicken_egg.png",
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
+			minetest.env:add_entity(pointed_thing.above, "mobs:dungeon_master")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})

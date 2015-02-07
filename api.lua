@@ -45,7 +45,7 @@ function mobs:register_mob(name, def)
 		recovery_time = def.recovery_time or 0.5,
 		knock_back = def.knock_back or 3,
 		blood_offset = def.blood_offset or 0,
-		blood_amount = def.blood_amount or 5, -- 15
+		blood_amount = def.blood_amount or 5,
 		blood_texture = def.blood_texture or "mobs_blood.png",
 		rewards = def.rewards or nil,
 		animaltype = def.animaltype,
@@ -590,7 +590,7 @@ local yaw = 0
 					local obj = minetest.add_entity(p, self.arrow)
 					local amount = (vec.x^2+vec.y^2+vec.z^2)^0.5
 					local v = obj:get_luaentity().velocity
-					vec.y = vec.y + self.shoot_offset -- was +1, this way shoot aim is accurate
+					vec.y = vec.y + self.shoot_offset -- this makes shoot aim accurate
 					vec.x = vec.x*v/amount
 					vec.y = vec.y*v/amount
 					vec.z = vec.z*v/amount
@@ -602,10 +602,7 @@ local yaw = 0
 		on_activate = function(self, staticdata, dtime_s)
 			-- reset HP
 			local pos = self.object:getpos()
-			local distance_rating = ( ( get_distance({x=0,y=0,z=0},pos) ) / 20000 )	
-			local newHP = self.hp_min + math.floor( self.hp_max * distance_rating )
-			self.object:set_hp( newHP )
-
+			self.object:set_hp( math.random(self.hp_min, self.hp_max) )
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
 			self.state = "stand"
@@ -667,50 +664,7 @@ local yaw = 0
 --							object = self.object,
 --						})
 --					end
---					if minetest.get_modpath("skills") and minetest.get_modpath("experience") then
---						-- DROP experience
---						local distance_rating = ( ( get_distance({x=0,y=0,z=0},pos) ) / ( skills.get_player_level(hitter:get_player_name()).level * 1000 ) )
---						local emax = math.floor( self.exp_min + ( distance_rating * self.exp_max ) )
---						local expGained = math.random(self.exp_min, emax)
---						skills.add_exp(hitter:get_player_name(),expGained)
---						local expStack = experience.exp_to_items(expGained)
---						for _,stack in ipairs(expStack) do
---							default.drop_item(pos,stack)
---						end
---					end
 
---					-- see if there are any NPCs to shower you with rewards
---					if self.type ~= "npc" then
---						local inradius = minetest.get_objects_inside_radius(hitter:getpos(),10)
---						for _, oir in pairs(inradius) do
---							local obj = oir:get_luaentity()
---							if obj then	
---								if obj.type == "npc" and obj.rewards ~= nil then
---									local yaw = nil
---									local lp = hitter:getpos()
---									local s = obj.object:getpos()
---									local vec = {x=lp.x-s.x, y=1, z=lp.z-s.z}
---									yaw = math.atan(vec.z/vec.x)+math.pi/2
---									if self.drawtype == "side" then
---										yaw = yaw+(math.pi/2)
---									end
---									if lp.x > s.x then
---										yaw = yaw+math.pi
---									end
---									obj.object:setyaw(yaw)
---									local x = math.sin(yaw) * -2
---									local z = math.cos(yaw) * 2
---									acc = {x=x, y=-5, z=z}
---									for _, r in pairs(obj.rewards) do
---										if math.random(0,100) < r.chance then
---											default.drop_item(obj.object:getpos(),r.item, vec, acc)
---										end
---									end
---								end
---							end
---						end
---					end
-					
 				end
 			end
 
@@ -780,7 +734,7 @@ local yaw = 0
 end
 
 mobs.spawning_mobs = {}
-function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height, min_dist, max_dist, spawn_func)
+function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
 	mobs.spawning_mobs[name] = true	
 	minetest.register_abm({
 		nodenames = nodes,
@@ -795,8 +749,8 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 				return
 			end
 
-			-- Check if protected area using bogus name so mobs will not spawn
-			if mobs.protected == 1 and minetest.is_protected(pos, "-") then
+			-- Check if protected area mobs will not spawn
+			if mobs.protected == 1 and minetest.is_protected(pos, "") then
 				return
 			end
 
@@ -809,35 +763,13 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 				return
 			end
 
-			if not minetest.registered_nodes[minetest.get_node(pos).name]
-			or minetest.registered_nodes[minetest.get_node(pos).name].walkable then
-				return
-			end
+			if minetest.registered_nodes[minetest.get_node(pos).name].walkable then return end
 
 			pos.y = pos.y+1
 
-			if not minetest.registered_nodes[minetest.get_node(pos).name]
-			or minetest.registered_nodes[minetest.get_node(pos).name].walkable then
-				return
-			end
+			if minetest.registered_nodes[minetest.get_node(pos).name].walkable then return end
 
 			pos.y = pos.y-1
-
-			if min_dist == nil then
-				min_dist = {x=-1,z=-1}
-			end
-			if max_dist == nil then
-				max_dist = {x=33000,z=33000}
-			end
-	
-			if math.abs(pos.x) < min_dist.x or math.abs(pos.z) < min_dist.z
-			or math.abs(pos.x) > max_dist.x or math.abs(pos.z) > max_dist.z then
-				return
-			end
-		
-			if spawn_func and not spawn_func(pos, node) then
-				return
-			end
 
 			if minetest.setting_getbool("display_mob_spawn") then
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
@@ -845,12 +777,10 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 
 			local mob = minetest.add_entity(pos, name)
 
-			-- setup the hp, armor, drops, etc... for this specific mob
-			local distance_rating = ( ( get_distance({x=0,y=0,z=0},pos) ) / 15000 )	
+			-- set mob hp
 			if mob then
 				mob = mob:get_luaentity()
-				local newHP = mob.hp_min + math.floor( mob.hp_max * distance_rating )
-				mob.object:set_hp( newHP )
+				mob.object:set_hp( math.random(mob.hp_min, mob.hp_max) )
 			end
 		end
 	})
@@ -869,14 +799,13 @@ function mobs:register_arrow(name, def)
 
 		on_step = function(self, dtime)
 			local pos = self.object:getpos()
-			--if minetest.get_node(self.object:getpos()).name ~= "air" then
 			local node = minetest.get_node(self.object:getpos()).name
 			if minetest.registered_nodes[node].walkable then
 				self.hit_node(self, pos, node)
 				self.object:remove()
 				return
 			end
-			-- pos.y = pos.y-1.0
+
 			for _,player in pairs(minetest.get_objects_inside_radius(pos, 1)) do
 				if player:is_player() then
 					self.hit_player(self, player)
@@ -886,14 +815,6 @@ function mobs:register_arrow(name, def)
 			end
 		end
 	})
-end
-
-function get_distance(pos1,pos2)
-	if ( pos1 ~= nil and pos2 ~= nil ) then
-		return math.abs(math.floor(math.sqrt( (pos1.x - pos2.x)^2 + (pos1.z - pos2.z)^2 )))
-	else
-		return 0
-	end
 end
 
 function process_weapon(player, time_from_last_punch, tool_capabilities)
@@ -915,4 +836,3 @@ local weapon = player:get_wielded_item()
 --		})
 --	end	
 end
-

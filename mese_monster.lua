@@ -92,3 +92,16 @@ mobs:register_arrow("mobs:mese_arrow", {
 	hit_node = function(self, pos, node)
 	end
 })
+
+-- Spawn Egg
+minetest.register_craftitem("mobs:mese_monster", {
+	description = "Mese Monster Egg",
+	inventory_image = "default_mese_block.png^mobs_chicken_egg.png",
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
+			minetest.env:add_entity(pointed_thing.above, "mobs:mese_monster")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})

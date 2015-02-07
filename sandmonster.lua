@@ -52,3 +52,16 @@ mobs:register_mob("mobs:sand_monster", {
 	blood_texture = "mobs_blood.png",
 })
 mobs:register_spawn("mobs:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 1, 31000)
+
+-- Spawn Egg
+minetest.register_craftitem("mobs:sand_monster", {
+	description = "Sand Monster Egg",
+	inventory_image = "default_desert_sand.png^mobs_chicken_egg.png",
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
+			minetest.env:add_entity(pointed_thing.above, "mobs:sand_monster")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})

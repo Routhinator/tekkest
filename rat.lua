@@ -38,14 +38,13 @@ passive = true,
 })
 mobs:register_spawn("mobs:rat", {"default:stone"}, 20, -1, 7000, 1, 31000)
 
--- Can Right-click Rat to Pick Up
+-- Spawn Egg
 
 minetest.register_craftitem("mobs:rat", {
 	description = "Rat",
 	inventory_image = "mobs_rat_inventory.png",
-	
 	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above then
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
 			minetest.env:add_entity(pointed_thing.above, "mobs:rat")
 			itemstack:take_item()
 		end

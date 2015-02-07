@@ -75,3 +75,16 @@ mobs:register_mob("mobs:sheep", {
 	end,
 })
 mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass", "ethereal:green_dirt_top"}, 20, 8, 9000, 1, 31000)
+
+-- Spawn Egg
+minetest.register_craftitem("mobs:sheep", {
+	description = "Sheep Spawn Egg",
+	inventory_image = "wool_white.png^mobs_chicken_egg.png",
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
+			minetest.env:add_entity(pointed_thing.above, "mobs:sheep")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})

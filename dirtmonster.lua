@@ -51,3 +51,16 @@ mobs:register_mob("mobs:dirt_monster", {
 	blood_texture = "default_dirt.png",
 })
 mobs:register_spawn("mobs:dirt_monster", {"default:dirt_with_grass", "ethereal:gray_dirt_top"}, 3, -1, 7000, 1, 31000)
+
+-- Spawn Egg
+minetest.register_craftitem("mobs:dirt_monster", {
+	description = "Dirt Monster Egg",
+	inventory_image = "default_dirt.png^mobs_chicken_egg.png",
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
+			minetest.env:add_entity(pointed_thing.above, "mobs:dirt_monster")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})

@@ -49,12 +49,13 @@ passive = true,
 })
 mobs:register_spawn("mobs:bee", {"group:flower"}, 20, 4, 5000, 1, 31000)
 
+-- Spawn Egg
+
 minetest.register_craftitem("mobs:bee", {
 	description = "bee",
 	inventory_image = "mobs_bee_inv.png",
-	
 	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above then
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
 			minetest.env:add_entity(pointed_thing.above, "mobs:bee")
 			itemstack:take_item()
 		end

@@ -58,14 +58,13 @@ mobs:register_mob("mobs:chicken", {
 
 mobs:register_spawn("mobs:chicken", {"default:dirt_with_grass", "ethereal:bamboo_dirt"}, 20, 8, 9000, 1, 31000)
 
--- Chicken (right-click chicken to place in inventory)
+-- Chicken (right-click to place chicken)
 
 minetest.register_craftitem("mobs:chicken", {
 	description = "Chicken",
 	inventory_image = "mobs_chicken_inv.png",
-	
 	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above then
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
 			minetest.env:add_entity(pointed_thing.above, "mobs:chicken")
 			itemstack:take_item()
 		end

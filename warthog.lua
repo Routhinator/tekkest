@@ -81,3 +81,16 @@ minetest.register_craft({
 	recipe = "mobs:pork_raw",
 	cooktime = 5,
 })
+
+-- Spawn Egg
+minetest.register_craftitem("mobs:warthog", {
+	description = "Warthog Egg",
+	inventory_image = "wool_pink.png^mobs_chicken_egg.png",
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
+			minetest.env:add_entity(pointed_thing.above, "mobs:pumba")
+			itemstack:take_item()
+		end
+		return itemstack
+	end,
+})

@@ -1,6 +1,16 @@
 mobs = {}
+
+-- Set global for other mod checks (e.g. Better HUD uses this)
 mobs.mod = "redo"
-mobs.protected = 0 -- Set to 1 if you do not wish mobs to spawn in protected areas (default: 0)
+
+-- Do mobs spawn in protected areas (0=no, 1=yes)
+mobs.protected = 0
+
+-- Initial check to see if damage is enabled
+local damage_enabled = minetest.setting_getbool("enable_damage")
+
+-- Check to see if in peaceful mode
+local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
 
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
@@ -175,7 +185,7 @@ function mobs:register_mob(name, def)
 		
 		on_step = function(self, dtime)
 local yaw = 0			
-			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
+			if self.type == "monster" and peaceful_only then
 				self.object:remove()
 			end
 			
@@ -312,7 +322,7 @@ local yaw = 0
 			end
 			
 			-- FIND SOMEONE TO ATTACK
-			if ( self.type == "monster" or self.type == "barbarian" ) and minetest.setting_getbool("enable_damage") and self.state ~= "attack" then
+			if ( self.type == "monster" or self.type == "barbarian" ) and damage_enabled and self.state ~= "attack" then
 				local s = self.object:getpos()
 				local inradius = minetest.get_objects_inside_radius(s,self.view_range)
 				local player = nil
@@ -608,7 +618,7 @@ local yaw = 0
 			self.state = "stand"
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
-			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
+			if self.type == "monster" and peaceful_only then
 				self.object:remove()
 			end
 			if self.type ~= "npc" then
@@ -629,6 +639,10 @@ local yaw = 0
 			if self.lifetimer <= 0 and not self.tamed and self.type ~= "npc" then
 				self.object:remove()
 			end
+
+			-- Internal check to see if player damage is still enabled
+			damage_enabled = minetest.setting_getbool("enable_damage")
+
 		end,
 
 		get_staticdata = function(self)

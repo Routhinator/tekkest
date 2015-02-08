@@ -39,7 +39,6 @@ passive = true,
 mobs:register_spawn("mobs:rat", {"default:stone"}, 20, -1, 7000, 1, 31000)
 
 -- Spawn Egg
-
 minetest.register_craftitem("mobs:rat", {
 	description = "Rat",
 	inventory_image = "mobs_rat_inventory.png",

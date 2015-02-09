@@ -139,7 +139,7 @@ minetest.register_craftitem("mobs:cow", {
 	description = "Cow Spawn Egg",
 	inventory_image = "default_grass.png^mobs_chicken_egg.png",
 	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, "") then
+		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
 			minetest.env:add_entity(pointed_thing.above, "mobs:cow")
 			itemstack:take_item()
 		end

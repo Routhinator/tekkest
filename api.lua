@@ -669,7 +669,11 @@ local yaw = 0
 --							default.drop_item(pos,d)
 							local pos2 = pos
 							pos2.y = pos2.y + 0.5 -- drop items half block higher
-							minetest.add_item(pos2,d)
+							--minetest.add_item(pos2,d)
+local obj = minetest.add_item(pos2, d)
+if obj then
+	obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
+end
 						end
 					end
 					

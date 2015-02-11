@@ -52,7 +52,7 @@ mobs:register_mob("mobs:oerkki", {
 	step = 0.5,
 	blood_texture = "mobs_blood.png",
 })
-mobs:register_spawn("mobs:oerkki", {"default:stone"}, 2, -1, 7000, 1, -10)
+mobs:register_spawn("mobs:oerkki", {"default:stone"}, 5, -1, 7000, 1, -10)
 
 -- Spawn Egg
 minetest.register_craftitem("mobs:oerkki", {

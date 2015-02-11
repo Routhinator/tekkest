@@ -61,7 +61,7 @@ mobs:register_mob("mobs:tree_monster", {
 	jump = true,
 	blood_texture = "default_wood.png",
 })
-mobs:register_spawn("mobs:tree_monster", {"default:leaves", "default:jungleleaves"}, 3, -1, 7000, 1, 31000)
+mobs:register_spawn("mobs:tree_monster", {"default:leaves", "default:jungleleaves"}, 5, -1, 7000, 1, 31000)
 
 -- Ethereal sapling compatibility
 

@@ -69,7 +69,7 @@ mobs:register_mob("mobs:dungeon_master", {
 	shoot_offset = 0,
 	blood_texture = "mobs_blood.png",
 })
-mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -70)
+mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 5, -1, 7000, 1, -70)
 
 -- Fireball (weapon)
 

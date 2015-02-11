@@ -59,7 +59,7 @@ mobs:register_mob("mobs:stone_monster", {
 	step = 0.5,
 	blood_texture = "mobs_blood.png",
 })
-mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 3, -1, 7000, 1, 0)
+mobs:register_spawn("mobs:stone_monster", {"default:stone"}, 5, -1, 7000, 1, 0)
 
 -- Spawn Egg
 minetest.register_craftitem("mobs:stone_monster", {

@@ -97,7 +97,9 @@ mobs:register_arrow("mobs:fireball", {
 				for dz=-1,1 do
 					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
 					local n = minetest.env:get_node(p).name
-					if n ~= "default:obsidian" and n ~= "default:obsidianbrick" then	
+					if n ~= "default:obsidian"
+					and n ~= "default:obsidianbrick"
+					and not n:find("protector:") then	
 					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
 						minetest.env:set_node(p, {name="fire:basic_flame"})
 					else

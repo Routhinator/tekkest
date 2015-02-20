@@ -55,8 +55,10 @@ mobs:register_mob("mobs:spider", {
 	jump = true,
 	sounds = {},
 	step = 1,
+	floats = 0,
 })
 mobs:register_spawn("mobs:spider", {"default:desert_stone", "ethereal:crystal_topped_dirt"}, 5, -1, 7000, 1, 71)
+mobs:register_egg("mobs:spider", "Spider", "mobs_cobweb.png", 1)
 
 -- Ethereal crystal spike compatibility
 
@@ -89,21 +91,8 @@ minetest.register_node("mobs:cobweb", {
 minetest.register_craft({
 	output = "mobs:cobweb",
 	recipe = {
-		{"farming:string", "farming:string", "farming:string"},
-		{"farming:string", "farming:string", "farming:string"},
-		{"farming:string", "farming:string", "farming:string"},
+		{"farming:string", "", "farming:string"},
+		{"", "farming:string", ""},
+		{"farming:string", "", "farming:string"},
 	}
-})
-
--- Spawn Egg
-minetest.register_craftitem("mobs:spider", {
-	description = "Spider Egg",
-	inventory_image = "mobs_cobweb.png^mobs_chicken_egg.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:spider")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
 })

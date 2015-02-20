@@ -70,6 +70,7 @@ mobs:register_mob("mobs:mese_monster", {
 	blood_texture = "default_mese_crystal_fragment.png",
 })
 mobs:register_spawn("mobs:mese_monster", {"default:stone"}, 5, -1, 5000, 1, -20)
+mobs:register_egg("mobs:mese_monster", "Mese Monster", "default_mese_block.png", 1)
 
 -- Mese Monster Crystal Shards (weapon)
 
@@ -91,17 +92,4 @@ mobs:register_arrow("mobs:mese_arrow", {
 	
 	hit_node = function(self, pos, node)
 	end
-})
-
--- Spawn Egg
-minetest.register_craftitem("mobs:mese_monster", {
-	description = "Mese Monster Egg",
-	inventory_image = "default_mese_block.png^mobs_chicken_egg.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:mese_monster")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
 })

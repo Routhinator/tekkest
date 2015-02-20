@@ -62,6 +62,7 @@ mobs:register_mob("mobs:tree_monster", {
 	blood_texture = "default_wood.png",
 })
 mobs:register_spawn("mobs:tree_monster", {"default:leaves", "default:jungleleaves"}, 5, -1, 7000, 1, 31000)
+mobs:register_egg("mobs:tree_monster", "Tree Monster", "default_tree_top.png", 1)
 
 -- Ethereal sapling compatibility
 
@@ -69,16 +70,3 @@ if not minetest.get_modpath("ethereal") then
 	minetest.register_alias("ethereal:tree_sapling", "default:sapling")
 	minetest.register_alias("ethereal:jungle_tree_sapling", "default:junglesapling")
 end
-
--- Spawn Egg
-minetest.register_craftitem("mobs:tree_monster", {
-	description = "Tree Monster Egg",
-	inventory_image = "default_tree_top.png^mobs_chicken_egg.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:tree_monster")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
-})

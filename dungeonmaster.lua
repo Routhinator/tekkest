@@ -70,6 +70,7 @@ mobs:register_mob("mobs:dungeon_master", {
 	blood_texture = "mobs_blood.png",
 })
 mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 5, -1, 7000, 1, -70)
+mobs:register_egg("mobs:dungeon_master", "Dungeon Master", "fire_basic_flame.png", 1)
 
 -- Fireball (weapon)
 
@@ -110,17 +111,4 @@ mobs:register_arrow("mobs:fireball", {
 			end
 		end
 	end
-})
-
--- Spawn Egg
-minetest.register_craftitem("mobs:dungeon_master", {
-	description = "Dungeon Master Egg",
-	inventory_image = "fire_basic_flame.png^mobs_chicken_egg.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:dungeon_master")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
 })

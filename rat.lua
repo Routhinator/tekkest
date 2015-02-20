@@ -37,19 +37,7 @@ passive = true,
 	end,
 })
 mobs:register_spawn("mobs:rat", {"default:stone"}, 20, -1, 7000, 1, 31000)
-
--- Spawn Egg
-minetest.register_craftitem("mobs:rat", {
-	description = "Rat",
-	inventory_image = "mobs_rat_inventory.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:rat")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
-})
+mobs:register_egg("mobs:rat", "Rat", "mobs_rat_inventory.png", 0)
 	
 -- Cooked Rat, yummy!
 

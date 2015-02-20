@@ -82,6 +82,7 @@ mobs:register_mob("mobs:cow", {
 	passive = true,
 })
 mobs:register_spawn("mobs:cow", {"default:dirt_with_grass", "ethereal:green_dirt_top", "ethereal:prairie_dirt"}, 20, 0, 11000, 1, 31000)
+mobs:register_egg("mobs:cow", "Cow", "default_grass.png", 1)
 
 -- Bucket of Milk
 
@@ -132,17 +133,4 @@ minetest.register_craft({
 	recipe = {
 		{'mobs:cheeseblock'},
 	}
-})
-
--- Spawn Egg
-minetest.register_craftitem("mobs:cow", {
-	description = "Cow Spawn Egg",
-	inventory_image = "default_grass.png^mobs_chicken_egg.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:cow")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
 })

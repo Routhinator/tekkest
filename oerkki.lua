@@ -53,16 +53,4 @@ mobs:register_mob("mobs:oerkki", {
 	blood_texture = "mobs_blood.png",
 })
 mobs:register_spawn("mobs:oerkki", {"default:stone"}, 5, -1, 7000, 1, -10)
-
--- Spawn Egg
-minetest.register_craftitem("mobs:oerkki", {
-	description = "Oerkki Egg",
-	inventory_image = "default_obsidian.png^mobs_chicken_egg.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:oerkki")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
-})
+mobs:register_egg("mobs:oerkki", "Oerkki", "default_obsidian.png", 1)

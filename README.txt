@@ -28,6 +28,7 @@ This mod contains the following additions:
 
 Changelog:
 
+1.0 - more work on Api so that certain mobs can float in water while some sink like a brick :)
 0.9 - Spawn eggs added for all mobs (admin only, cannot be placed in protected areas)...  Api tweaked
 0.8 - Added sounds to monster mobs (thanks Cyberpangolin for the sfx) and also chicken sound
 0.7 - mobs.protected switch added to api.lua, when set to 1 mobs no longer spawn in protected areas, also bug fixes

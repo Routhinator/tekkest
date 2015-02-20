@@ -60,6 +60,7 @@ passive = true,
 	
 })
 mobs:register_spawn("mobs:pumba", {"ethereal:mushroom_dirt", "default:dirt"}, 20, 8, 9000, 1, 31000)
+mobs:register_egg("mobs:pumba", "Warthog", "wool_pink.png", 1)
 
 -- Porkchops
 
@@ -80,17 +81,4 @@ minetest.register_craft({
 	output = "mobs:pork_cooked",
 	recipe = "mobs:pork_raw",
 	cooktime = 5,
-})
-
--- Spawn Egg
-minetest.register_craftitem("mobs:warthog", {
-	description = "Warthog Egg",
-	inventory_image = "wool_pink.png^mobs_chicken_egg.png",
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above and not minetest.is_protected(pointed_thing.above, placer:get_player_name()) then
-			minetest.env:add_entity(pointed_thing.above, "mobs:pumba")
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
 })

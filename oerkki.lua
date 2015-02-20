@@ -31,7 +31,7 @@ mobs:register_mob("mobs:oerkki", {
 	light_resistant = true,
 	water_damage = 1,
 	lava_damage = 1,
-	light_damage = 0,
+	light_damage = 1,
 	attack_type = "dogfight",
 	animation = {
 		stand_start = 0,

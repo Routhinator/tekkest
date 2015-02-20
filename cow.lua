@@ -37,27 +37,23 @@ mobs:register_mob("mobs:cow", {
 	on_rightclick = function(self, clicker)
 		local tool = clicker:get_wielded_item()
 		if tool:get_name() == "bucket:bucket_empty" then
-			if self.milked then
-				do return end
-			end
+			if self.gotten then return end
 			clicker:get_inventory():remove_item("main", "bucket:bucket_empty")
 			clicker:get_inventory():add_item("main", "mobs:bucket_milk")
-			self.milked = true
+			self.gotten = true -- milked
 		end
 		
-		if tool:get_name() == "farming:wheat" then
-			if self.milked then
-				if not minetest.setting_getbool("creative_mode") then
-					tool:take_item(1)
-					clicker:set_wielded_item(tool)
-				end
-				self.food = (self.food or 0) + 1
-				if self.food >= 8 then
-					self.food = 0
-					self.milked = false
-					self.tamed = true
-					minetest.sound_play("mobs_cow", {object = self.object,gain = 1.0,max_hear_distance = 32,loop = false,})
-				end
+		if tool:get_name() == "farming:wheat" and self.gotten then
+			if not minetest.setting_getbool("creative_mode") then
+				tool:take_item(1)
+				clicker:set_wielded_item(tool)
+			end
+			self.food = (self.food or 0) + 1
+			if self.food >= 8 then
+				self.food = 0
+				self.gotten = false -- ready to be milked again
+				self.tamed = true
+				minetest.sound_play("mobs_cow", {object = self.object,gain = 1.0,max_hear_distance = 32,loop = false,})
 			end
 			return tool
 		end
@@ -65,17 +61,13 @@ mobs:register_mob("mobs:cow", {
 	end,
 
 	animation = {
-		speed_normal = 15,
-		speed_run = 15,
-		stand_start = 0,
-		stand_end = 30,
-		walk_start = 35,
-		walk_end = 65,
-		run_start = 105,
-		run_end = 135,
-		punch_start = 70,
-		punch_end = 100,
+		speed_normal = 15,		speed_run = 15,
+		stand_start = 0,		stand_end = 30,
+		walk_start = 35,		walk_end = 65,
+		run_start = 105,		run_end = 135,
+		punch_start = 70,		punch_end = 100,
 	},
+
 	jump = true,
 	step = 1,
 	blood_texture = "mobs_blood.png",

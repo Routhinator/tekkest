@@ -75,11 +75,9 @@ function mobs:register_mob(name, def)
 
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
---				if self.sounds.war_cry then
---					if math.random(0,100) < 90 then
+--					if math.random(0,100) < 90  and self.sounds.war_cry then
 --						minetest.sound_play(self.sounds.war_cry,{ object = self.object })
 --					end
---				end
 				self.state = "attack"
 				self.attack.player = player
 				self.attack.dist = dist
@@ -262,26 +260,22 @@ function mobs:register_mob(name, def)
 				and lit > 4
 				and tod > 0.2 and tod < 0.8 then
 					self.object:set_hp(self.object:get_hp()-self.light_damage) ; --print ("light damage")
-					if self.object:get_hp() < 1 then
-						self.object:remove()
-					end
 				end
 
 				if self.water_damage and self.water_damage ~= 0
 				and minetest.get_item_group(n.name, "water") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.water_damage) ; --print ("water damage")
-					if self.object:get_hp() < 1 then
-						self.object:remove()
-					end
 				end
 				
 				if self.lava_damage and self.lava_damage ~= 0
 				and minetest.get_item_group(n.name, "lava") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.lava_damage) ; --print ("lava damage")
-					if self.object:get_hp() < 1 then
-						self.object:remove()
-					end
 				end
+
+				if self.object:get_hp() < 1 then
+					self.object:remove()
+				end
+
 			end
 			
 			self.env_damage_timer = self.env_damage_timer + dtime
@@ -437,6 +431,7 @@ function mobs:register_mob(name, def)
 					end
 					self.object:setyaw(yaw)
 				end
+
 				self.set_velocity(self, 0)
 				self.set_animation(self, "stand")
 
@@ -594,8 +589,8 @@ function mobs:register_mob(name, def)
 		end,
 
 		on_activate = function(self, staticdata, dtime_s)
-			-- reset HP
 			local pos = self.object:getpos()
+			-- reset HP
 			self.object:set_hp( math.random(self.hp_min, self.hp_max) )
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
@@ -610,15 +605,17 @@ function mobs:register_mob(name, def)
 			end
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
-				if tmp and tmp.lifetimer then
-					self.lifetimer = tmp.lifetimer - dtime_s
+				if tmp then
+					if tmp.lifetimer then
+						self.lifetimer = tmp.lifetimer - dtime_s
+					end
+					if tmp.tamed then
+						self.tamed = tmp.tamed
+					end
+					if tmp.gotten then -- using this variable for obtaining something from mob (milk/wool)
+						self.gotten = tmp.gotten
+					end
 				end
-				if tmp and tmp.tamed then
-					self.tamed = tmp.tamed
-				end
-				--[[if tmp and tmp.textures then
-					self.object:set_properties(tmp.textures)
-				end]]
 			end
 			if self.lifetimer <= 0 and not self.tamed and self.type ~= "npc" then
 				self.object:remove()
@@ -633,7 +630,7 @@ function mobs:register_mob(name, def)
 			local tmp = {
 				lifetimer = self.lifetimer,
 				tamed = self.tamed,
-				--textures = { textures = self.textures },
+				gotten = self.gotten,
 				textures = def.available_textures["texture_"..math.random(1,def.available_textures["total"])],
 			}
 			self.object:set_properties(tmp)
@@ -661,9 +658,7 @@ function mobs:register_mob(name, def)
 					end
 					
 --					if self.sounds.death ~= nil then
---						minetest.sound_play(self.sounds.death,{
---							object = self.object,
---						})
+--						minetest.sound_play(self.sounds.death,{object = self.object,})
 --					end
 
 				end
@@ -829,14 +824,10 @@ local weapon = player:get_wielded_item()
 	
 --	if weapon:get_definition().sounds ~= nil then
 --		local s = math.random(0,#weapon:get_definition().sounds)
---		minetest.sound_play(weapon:get_definition().sounds[s], {
---			object=player,
---		})
+--		minetest.sound_play(weapon:get_definition().sounds[s], {object=player,})
 --	else
---		minetest.sound_play("default_sword_wood", {
---			object = player,
---		})
---	end	
+--		minetest.sound_play("default_sword_wood", {object = player,})
+--	end
 end
 
 -- Spawn Egg

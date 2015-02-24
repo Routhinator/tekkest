@@ -1,5 +1,5 @@
 
---= Ambience lite by TenPlus1 (16th Feb 2015)
+--= Ambience lite by TenPlus1 (24th Feb 2015)
 
 local max_frequency_all = 1000 -- larger number means more frequent sounds (100-2000)
 local SOUNDVOLUME = 1
@@ -108,12 +108,7 @@ local get_ambience = function(player)
 		return {splash=splash}
 	end
 
-	-- this may seem messy but is faster than checking each area separately for specific nodes
-	local num_fire = 0
-	local num_lava = 0
-	local num_water_source = 0
-	local num_water_flowing = 0
-	local num_desert = 0
+	local num_fire, num_lava, num_water_source, num_water_flowing, num_desert = 0,0,0,0,0
 
 	-- get block of nodes we need to check
 	local tempy = minetest.find_nodes_in_area(	{x=pos.x-6,y=pos.y-3, z=pos.z-6},
@@ -129,10 +124,9 @@ local get_ambience = function(player)
 		if node == "default:water_flowing" then num_water_flowing = num_water_flowing + 1 end
 		if node == "default:water_source" then num_water_source = num_water_source + 1 end
 		if node == "default:desert_sand" or node == "default:desert_stone" then num_desert = num_desert + 1 end
+		-- break check if total reached for specific sound (stops lag in desert areas)
+		if num_fire > 8 or num_lava > 5 or num_water_flowing > 45 or num_water_source > 100 or num_desert > 150 then break end
 	end
-	-- END messy
-
---print ("fire:"..num_fire.." , lava:"..num_lava.." , watflow:"..num_water_flowing.." , watsrc:"..num_water_source.." , desert:"..num_desert)
 
 	-- is fire redo mod active?
 	if fire.mod and fire.mod == "redo" then
@@ -155,7 +149,7 @@ local get_ambience = function(player)
 		return {beach=beach}
 	end
 
-	if num_desert > 150 then -- was 250
+	if num_desert > 150 then
 		return {desert=desert}
 	end
 
@@ -244,7 +238,8 @@ minetest.register_globalstep(function(dtime)
 	for _,player in ipairs(minetest.get_connected_players()) do
 --local t1 = os.clock()
 		ambiences = get_ambience(player)
---print ("[TEST] "..math.ceil((os.clock() - t1) * 1000).." ms")
+--print ("[AMBIENCE] "..math.ceil((os.clock() - t1) * 1000).." ms")
+
 		still_playing(ambiences, player)
 
 		for _,ambience in pairs(ambiences) do

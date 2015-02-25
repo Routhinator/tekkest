@@ -665,29 +665,26 @@ function mobs:register_mob(name, def)
 			end
 
 			--blood_particles
---[[
 			if self.blood_amount > 0 and pos then
 				local p = pos
 				p.y = p.y + self.blood_offset
-
-				minetest.add_particlespawner(
-					5, --blood_amount, --amount
-					0.25, --time
-					{x=p.x-0.2, y=p.y-0.2, z=p.z-0.2}, --minpos
-					{x=p.x+0.2, y=p.y+0.2, z=p.z+0.2}, --maxpos
-					{x=0, y=-2, z=0}, --minvel
-					{x=2, y=2, z=2}, --maxvel
-					{x=-4,y=-4,z=-4}, --minacc
-					{x=4,y=-4,z=4}, --maxacc
-					0.1, --minexptime
-					1, --maxexptime
-					0.5, --minsize
-					1, --maxsize
-					false, --collisiondetection
-					self.blood_texture --texture
-				)
+				minetest.add_particlespawner({
+					amount = self.blood_amount,
+					time = 0.25,
+					minpos = {x=pos.x-0.2, y=pos.y-0.2, z=pos.z-0.2},
+					maxpos = {x=pos.x+0.2, y=pos.y+0.2, z=pos.z+0.2},
+					minvel = {x=-0, y=-2, z=-0},
+					maxvel = {x=2,  y=2,  z=2},
+					minacc = {x=-4, y=-4, z=-4},
+					maxacc = {x=4, y=4, z=4},
+					minexptime = 0.1,
+					maxexptime = 1,
+					minsize = 0.5,
+					maxsize = 1,
+					texture = self.blood_texture,
+				})
 			end
-]]--
+
 			-- knock back effect, adapted from blockmen's pyramids mod
 			-- https://github.com/BlockMen/pyramids
 			local kb = self.knock_back

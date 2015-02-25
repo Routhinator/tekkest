@@ -125,7 +125,7 @@ local get_ambience = function(player)
 		if node == "default:water_source" then num_water_source = num_water_source + 1 end
 		if node == "default:desert_sand" or node == "default:desert_stone" then num_desert = num_desert + 1 end
 		-- break check if total reached for specific sound (stops lag in desert areas)
-		if num_fire > 8 or num_lava > 5 or num_water_flowing > 45 or num_water_source > 100 or num_desert > 150 then break end
+		if num_fire > 0 or num_lava > 5 or num_water_flowing > 45 or num_water_source > 100 or num_desert > 150 then break end
 	end
 
 	-- is fire redo mod active?

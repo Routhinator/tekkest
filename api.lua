@@ -741,7 +741,8 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 			end
 
-			-- spawn mob
+			-- spawn mob half block higher
+			pos.y = pos.y + 0.5
 			local mob = minetest.add_entity(pos, name)
 
 			-- set mob health (randomly between min and max)

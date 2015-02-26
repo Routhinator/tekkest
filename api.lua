@@ -41,7 +41,7 @@ function mobs:register_mob(name, def)
 		attack_type = def.attack_type,
 		arrow = def.arrow,
 		shoot_interval = def.shoot_interval,
-		sounds = def.sounds,
+		sounds = def.sounds or {},
 		animation = def.animation,
 		follow = def.follow,
 		jump = def.jump or true,

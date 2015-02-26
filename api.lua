@@ -757,14 +757,12 @@ end
 function check_for_death(self)
 	if self.object:get_hp() < 1 then
 		local pos = self.object:getpos()
+		pos.y = pos.y + 0.5 -- drop items half a block higher
 		self.object:remove()
 		for _,drop in ipairs(self.drops) do
 			if math.random(1, drop.chance) == 1 then
 				local d = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
-				local pos2 = pos
-				pos2.y = pos2.y + 0.5 -- drop items half block higher
-
-				local obj = minetest.add_item(pos2, d)
+				local obj = minetest.add_item(pos, d)
 				if obj then
 					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
 				end

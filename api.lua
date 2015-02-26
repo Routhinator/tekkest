@@ -1,9 +1,10 @@
+ -- Mobs Api (26th Feb 2015)
 mobs = {}
 
 -- Set global for other mod checks (e.g. Better HUD uses this)
 mobs.mod = "redo"
 
--- Do mobs spawn in protected areas (0=no, 1=yes)
+-- Do mobs spawn in protected areas (0=yes, 1=no)
 mobs.protected = 0
 
 -- Initial check to see if damage is enabled
@@ -49,15 +50,13 @@ function mobs:register_mob(name, def)
 		walk_chance = def.walk_chance or 50,
 		attacks_monsters = def.attacks_monsters or false,
 		group_attack = def.group_attack or false,
-		step = def.step or 0,
-		fov = def.fov or 120,
+		--fov = def.fov or 120,
 		passive = def.passive or false,
 		recovery_time = def.recovery_time or 0.5,
 		knock_back = def.knock_back or 3,
 		blood_offset = def.blood_offset or 0,
 		blood_amount = def.blood_amount or 5,
 		blood_texture = def.blood_texture or "mobs_blood.png",
-		rewards = def.rewards or nil,
 		shoot_offset = def.shoot_offset or 0,
 		floats = def.floats or 1, -- floats in water by default
 		
@@ -75,9 +74,9 @@ function mobs:register_mob(name, def)
 
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
---					if math.random(0,100) < 90  and self.sounds.war_cry then
---						minetest.sound_play(self.sounds.war_cry,{ object = self.object })
---					end
+					if math.random(0,100) < 90  and self.sounds.war_cry then
+						minetest.sound_play(self.sounds.war_cry,{ object = self.object })
+					end
 				self.state = "attack"
 				self.attack.player = player
 				self.attack.dist = dist
@@ -218,9 +217,7 @@ function mobs:register_mob(name, def)
 					if d > 5 then
 						local damage = d-5
 						self.object:set_hp(self.object:get_hp()-damage)
-						if self.object:get_hp() == 0 then
-							self.object:remove()
-						end
+						check_for_death(self)
 					end
 					self.old_y = self.object:getpos().y
 				end
@@ -272,10 +269,7 @@ function mobs:register_mob(name, def)
 					self.object:set_hp(self.object:get_hp()-self.lava_damage) ; --print ("lava damage")
 				end
 
-				if self.object:get_hp() < 1 then
-					self.object:remove()
-				end
-
+				check_for_death(self)
 			end
 			
 			self.env_damage_timer = self.env_damage_timer + dtime
@@ -640,29 +634,8 @@ function mobs:register_mob(name, def)
 		on_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 			process_weapon(hitter,tflp,tool_capabilities)
-
 			local pos = self.object:getpos()
-			if self.object:get_hp() < 1 then
-				if hitter and hitter:is_player() then -- and hitter:get_inventory() then
-					for _,drop in ipairs(self.drops) do
-						if math.random(1, drop.chance) == 1 then
-							local d = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
-							local pos2 = pos
-							pos2.y = pos2.y + 0.5 -- drop items half block higher
-
-							local obj = minetest.add_item(pos2, d)
-							if obj then
-								obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
-							end
-						end
-					end
-					
---					if self.sounds.death ~= nil then
---						minetest.sound_play(self.sounds.death,{object = self.object,})
---					end
-
-				end
-			end
+			check_for_death(self)
 
 			--blood_particles
 			if self.blood_amount > 0 and pos then
@@ -780,6 +753,31 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 	})
 end
 
+-- on mob death drop items
+function check_for_death(self)
+	if self.object:get_hp() < 1 then
+		local pos = self.object:getpos()
+		self.object:remove()
+		for _,drop in ipairs(self.drops) do
+			if math.random(1, drop.chance) == 1 then
+				local d = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
+				local pos2 = pos
+				pos2.y = pos2.y + 0.5 -- drop items half block higher
+
+				local obj = minetest.add_item(pos2, d)
+				if obj then
+					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
+				end
+			end
+		end
+					
+		if self.sounds.death ~= nil then
+			minetest.sound_play(self.sounds.death,{object = self.object,})
+		end
+
+	end
+end
+		
 function mobs:register_arrow(name, def)
 	minetest.register_entity(name, {
 		physical = false,

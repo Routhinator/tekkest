@@ -704,8 +704,8 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 	minetest.register_abm({
 		nodenames = nodes,
 		neighbors = {"air"},
-		interval = 5, --30,
-		chance = 1, --chance,
+		interval = 30,
+		chance = chance,
 		action = function(pos, node, _, active_object_count_wider)
 
 			-- do not spawn if too many in one active area

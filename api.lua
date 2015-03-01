@@ -1,4 +1,4 @@
- -- Mobs Api (26th Feb 2015)
+ -- Mobs Api (1st March 2015)
 mobs = {}
 
 -- Set global for other mod checks (e.g. Better HUD uses this)
@@ -227,7 +227,7 @@ function mobs:register_mob(name, def)
 			-- pause is only set after a monster is hit
 			if self.pause_timer > 0 then
 				self.pause_timer = self.pause_timer - dtime
-				if self.pause_timer <= 0 then
+				if self.pause_timer < 1 then
 					self.pause_timer = 0
 				end
 				return
@@ -584,8 +584,7 @@ function mobs:register_mob(name, def)
 
 		on_activate = function(self, staticdata, dtime_s)
 			local pos = self.object:getpos()
-			-- reset HP
-			self.object:set_hp( math.random(self.hp_min, self.hp_max) )
+			self.object:set_hp( math.random(self.hp_min, self.hp_max) ) -- reset HP
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
 			self.state = "stand"
@@ -644,8 +643,8 @@ function mobs:register_mob(name, def)
 				minetest.add_particlespawner({
 					amount = self.blood_amount,
 					time = 0.25,
-					minpos = {x=pos.x-0.2, y=pos.y-0.2, z=pos.z-0.2},
-					maxpos = {x=pos.x+0.2, y=pos.y+0.2, z=pos.z+0.2},
+					minpos = {x=p.x-0.2, y=p.y-0.2, z=p.z-0.2},
+					maxpos = {x=p.x+0.2, y=p.y+0.2, z=p.z+0.2},
 					minvel = {x=-0, y=-2, z=-0},
 					maxvel = {x=2,  y=2,  z=2},
 					minacc = {x=-4, y=-4, z=-4},
@@ -705,13 +704,14 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 	minetest.register_abm({
 		nodenames = nodes,
 		neighbors = {"air"},
-		interval = 30,
-		chance = chance,
+		interval = 5, --30,
+		chance = 1, --chance,
 		action = function(pos, node, _, active_object_count_wider)
 
 			-- do not spawn if too many in one active area
 			if active_object_count_wider > active_object_count
-			or not mobs.spawning_mobs[name] then
+			or not mobs.spawning_mobs[name] 
+			or not pos then
 				return
 			end
 
@@ -732,17 +732,18 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 			end
 
 			-- are we spawning inside a node?
-			if minetest.registered_nodes[minetest.get_node(pos).name].walkable then return end
+			local nod = minetest.get_node_or_nil(pos)
+			if not nod or minetest.registered_nodes[nod.name].walkable == true then return end
 			pos.y = pos.y + 1
-			if minetest.registered_nodes[minetest.get_node(pos).name].walkable then return end
-			pos.y = pos.y - 1
+			nod = minetest.get_node_or_nil(pos)
+			if not nod or minetest.registered_nodes[nod.name].walkable == true then return end
 
 			if minetest.setting_getbool("display_mob_spawn") then
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 			end
 
 			-- spawn mob half block higher
-			pos.y = pos.y + 0.5
+			pos.y = pos.y - 0.5
 			local mob = minetest.add_entity(pos, name)
 
 			-- set mob health (randomly between min and max)

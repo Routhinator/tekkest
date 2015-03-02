@@ -1,11 +1,12 @@
 
---= Ambience lite by TenPlus1 (24th Feb 2015)
+--= Ambience lite by TenPlus1 (2nd March 2015)
 
 local max_frequency_all = 1000 -- larger number means more frequent sounds (100-2000)
 local SOUNDVOLUME = 1
 local volume = 0.3
 local ambiences
 local played_on_start = false
+local tempy = {}
 
 -- sound sets
 local night = {
@@ -111,10 +112,10 @@ local get_ambience = function(player)
 	local num_fire, num_lava, num_water_source, num_water_flowing, num_desert = 0,0,0,0,0
 
 	-- get block of nodes we need to check
-	local tempy = minetest.find_nodes_in_area(	{x=pos.x-6,y=pos.y-3, z=pos.z-6},
-												{x=pos.x+6,y=pos.y+3, z=pos.z+6},
-		{"fire:basic_flame", "bakedclay:safe_fire", "default:lava_flowing", "default:lava_source",
-		"default:water_flowing", "default:water_source", "default:desert_sand", "default:desert_stone"})
+	tempy = minetest.find_nodes_in_area({x=pos.x-6,y=pos.y-2, z=pos.z-6},
+										{x=pos.x+6,y=pos.y+2, z=pos.z+6},
+										{"fire:basic_flame", "bakedclay:safe_fire", "default:lava_flowing", "default:lava_source",
+										"default:water_flowing", "default:water_source", "default:desert_sand", "default:desert_stone",})
 
 	-- count separate instances in block
 	for _, npos in ipairs(tempy) do
@@ -124,9 +125,7 @@ local get_ambience = function(player)
 		if node == "default:water_flowing" then num_water_flowing = num_water_flowing + 1 end
 		if node == "default:water_source" then num_water_source = num_water_source + 1 end
 		if node == "default:desert_sand" or node == "default:desert_stone" then num_desert = num_desert + 1 end
-		-- break check if total reached for specific sound (stops lag in desert areas)
-		if (fire.mod and fire.mod == "redo" and num_fire > 0) or num_lava > 5 or num_water_flowing > 45 or num_water_source > 100 or num_desert > 150 then break end
-	end
+	end ; --print (num_fire, num_lava, num_water_flowing, num_water_source, num_desert)
 
 	-- is fire redo mod active?
 	if fire.mod and fire.mod == "redo" then
@@ -141,7 +140,7 @@ local get_ambience = function(player)
 		return {lava=lava}		
 	end
 
-	if num_water_flowing > 45 then
+	if num_water_flowing > 30 then
 		return {flowing_water=flowing_water}
 	end
 

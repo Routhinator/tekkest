@@ -733,10 +733,12 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 
 			-- are we spawning inside a node?
 			local nod = minetest.get_node_or_nil(pos)
-			if not nod or minetest.registered_nodes[nod.name].walkable == true then return end
+			if not nod then return end
+			if minetest.registered_nodes[nod.name].walkable == true then return end
 			pos.y = pos.y + 1
 			nod = minetest.get_node_or_nil(pos)
-			if not nod or minetest.registered_nodes[nod.name].walkable == true then return end
+			if not nod then return end
+			if minetest.registered_nodes[nod.name].walkable == true then return end
 
 			if minetest.setting_getbool("display_mob_spawn") then
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
@@ -838,7 +840,7 @@ minetest.register_craftitem(mob, {
 		local pos = pointed_thing.above
 		if pointed_thing.above and not minetest.is_protected(pos, placer:get_player_name()) then
 			pos.y = pos.y + 0.5
-			minetest.env:add_entity(pos, mob)
+			minetest.add_entity(pos, mob)
 			itemstack:take_item()
 		end
 		return itemstack

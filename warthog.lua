@@ -14,6 +14,9 @@ mobs:register_mob("mobs:pumba", {
 	mesh = "mobs_pumba.x",
 	makes_footstep_sound = true,
 	walk_velocity = 2,
+	run_velocity = 3,
+	damage = 1,
+	attack_type = "dogfight",
 	armor = 200,
 	drops = {
 		{name = "mobs:pork_raw",
@@ -34,12 +37,13 @@ mobs:register_mob("mobs:pumba", {
 		stand_end = 55,
 		walk_start = 70,
 		walk_end = 100,
+		punch_start = 70,
+		punch_end = 100,
 	},
 	follow = "farming:wheat",
 	view_range = 5,
 jump = true,
 step = 1,
-passive = true,
 
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()

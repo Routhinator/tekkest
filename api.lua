@@ -675,9 +675,9 @@ function mobs:register_mob(name, def)
 
 			self.object:setvelocity({x=dir.x*kb,y=ykb,z=dir.z*kb})
 			self.pause_timer = r
---[[
+
 			-- attack puncher and call other mobs for help
-			if self.passive == false then
+			if self.passive == false and not self.tamed then
 				if self.state ~= "attack" then
 					self.do_attack(self,hitter,1)
 				end
@@ -692,7 +692,7 @@ function mobs:register_mob(name, def)
 					end
 				end
 			end
-]]--
+
 		end,
 		
 	})
@@ -733,12 +733,10 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 
 			-- are we spawning inside a node?
 			local nod = minetest.get_node_or_nil(pos)
-			if not nod then return end
-			if minetest.registered_nodes[nod.name].walkable == true then return end
+			if not nod or minetest.registered_nodes[nod.name].walkable == true then return end
 			pos.y = pos.y + 1
 			nod = minetest.get_node_or_nil(pos)
-			if not nod then return end
-			if minetest.registered_nodes[nod.name].walkable == true then return end
+			if not nod or minetest.registered_nodes[nod.name].walkable == true then return end
 
 			if minetest.setting_getbool("display_mob_spawn") then
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))

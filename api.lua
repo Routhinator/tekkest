@@ -610,6 +610,7 @@ function mobs:register_mob(name, def)
 					end
 				end
 			end
+
 			if self.lifetimer <= 0 and not self.tamed and self.type ~= "npc" then
 				self.object:remove()
 			end
@@ -620,11 +621,21 @@ function mobs:register_mob(name, def)
 		end,
 
 		get_staticdata = function(self)
+			-- set mob texture and model
+			local textures = def.available_textures["texture_"..math.random(1,def.available_textures["total"])]
+			local mesh = self.mesh
+			-- if object is a sheared sheep then set texture and model
+			if self.name == "mobs:sheep" and self.gotten == true then
+				textures = {"mobs_sheep_shaved.png"}
+				mesh = "mobs_sheep_shaved.x"
+			end
+
 			local tmp = {
 				lifetimer = self.lifetimer,
 				tamed = self.tamed,
 				gotten = self.gotten,
-				textures = def.available_textures["texture_"..math.random(1,def.available_textures["total"])],
+				mesh = mesh,
+				textures = textures,
 			}
 			self.object:set_properties(tmp)
 			return minetest.serialize(tmp)

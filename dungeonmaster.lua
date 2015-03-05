@@ -1,14 +1,23 @@
 
--- Dungeon Master (This one spits out fireballs at you)
+-- Dungeon Master by PilzAdam
 
 mobs:register_mob("mobs:dungeon_master", {
+	-- animal, monster, npc, barbarian
 	type = "monster",
-	hp_min = 12,
-	hp_max = 35,
+	-- aggressive, shoots fireballs at player
+	passive = false,
+	damage = 4,
+	attack_type = "shoot",
+	shoot_interval = 2.5,
+	arrow = "mobs:fireball",
+	shoot_offset = 0,
+	-- health & armor
+	hp_min = 12, hp_max = 35, armor = 60,
+	-- textures and model
 	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
 	visual = "mesh",
 	mesh = "mobs_dungeon_master.x",
-	--textures = {"mobs_dungeon_master.png"},
+	drawtype = "front",
 	available_textures = {
 		total = 3,
 		texture_1 = {"mobs_dungeon_master.png"},
@@ -16,64 +25,46 @@ mobs:register_mob("mobs:dungeon_master", {
 		texture_3 = {"mobs_dungeon_master3.png"},
 	},
 	visual_size = {x=8, y=8},
+	blood_texture = "mobs_blood.png",
+	-- sounds
 	makes_footstep_sound = true,
-	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
-	damage = 4,
-	drops = {
-		{name = "default:mese_crystal_fragment",
-		chance = 1,
-		min = 1,
-		max = 3,},
-		{name = "default:diamond",
-		chance = 4,
-		min = 1,
-		max = 1,},
-		{name = "default:mese_crystal",
-		chance = 2,
-		min = 1,
-		max = 2,},
-		{name = "default:diamond_block",
-		chance = 30,
-		min = 1,
-		max = 1,},
-	},
-	armor = 60,
-	drawtype = "front",
-	water_damage = 1,
-	lava_damage = 1,
-	light_damage = 0,
-	on_rightclick = nil,
-	attack_type = "shoot",
-	arrow = "mobs:fireball",
-	shoot_interval = 2.5,
-	sounds = {
-		attack = "mobs_fireball",
-	},
-	animation = {
-		stand_start = 0,
-		stand_end = 19,
-		walk_start = 20,
-		walk_end = 35,
-		punch_start = 36,
-		punch_end = 48,
-		speed_normal = 15,
-		speed_run = 15,
-	},
 	sounds = {
 		random = "mobs_dungeonmaster",
 	},
+	-- speed and jump
+	walk_velocity = 1,
+	run_velocity = 3,
 	jump = true,
-	step = 0.5,
-	shoot_offset = 0,
-	blood_texture = "mobs_blood.png",
+	view_range = 15,
+	-- drops mese or diamond when dead
+	drops = {
+		{name = "default:mese_crystal_fragment",
+		chance = 1, min = 1, max = 3,},
+		{name = "default:diamond",
+		chance = 4, min = 1, max = 1,},
+		{name = "default:mese_crystal",
+		chance = 2, min = 1, max = 2,},
+		{name = "default:diamond_block",
+		chance = 30, min = 1, max = 1,},
+	},
+	-- damaged by
+	water_damage = 1,
+	lava_damage = 1,
+	light_damage = 0,
+	-- model animation
+	animation = {
+		stand_start = 0,		stand_end = 19,
+		walk_start = 20,		walk_end = 35,
+		punch_start = 36,		punch_end = 48,
+		speed_normal = 15,		speed_run = 15,
+	},
 })
-mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 5, -1, 7000, 1, -70)
+-- spawn on stone between 0 and 5 light, 1 in 7000 chance, 1 dungeon master in area starting at -70 and below
+mobs:register_spawn("mobs:dungeon_master", {"default:stone"}, 5, 0, 7000, 1, -70)
+-- register spawn egg
 mobs:register_egg("mobs:dungeon_master", "Dungeon Master", "fire_basic_flame.png", 1)
 
--- Fireball (weapon)
-
+-- Fireball (dungeon masters weapon)
 mobs:register_arrow("mobs:fireball", {
 	visual = "sprite",
 	visual_size = {x=1, y=1},
@@ -87,12 +78,11 @@ mobs:register_arrow("mobs:fireball", {
 		player:punch(self.object, 1.0,  {
 			full_punch_interval=1.0,
 			damage_groups = {fleshy=8},
-		}, 0) -- {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z})
+		}, 0)
 	end,
 
-	-- node hit, bursts into flame (cannot blast through obsidian)
+	-- node hit, bursts into flame (cannot blast through obsidian or protection redo mod items)
 	hit_node = function(self, pos, node)
-
 		for dx=-1,1 do
 			for dy=-1,1 do
 				for dz=-1,1 do

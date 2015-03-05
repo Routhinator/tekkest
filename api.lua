@@ -1,4 +1,4 @@
- -- Mobs Api (1st March 2015)
+ -- Mobs Api (5th March 2015)
 mobs = {}
 
 -- Set global for other mod checks (e.g. Better HUD uses this)
@@ -45,8 +45,6 @@ function mobs:register_mob(name, def)
 		animation = def.animation,
 		follow = def.follow,
 		jump = def.jump or true,
-		exp_min = def.exp_min or 0,
-		exp_max = def.exp_max or 0,
 		walk_chance = def.walk_chance or 50,
 		attacks_monsters = def.attacks_monsters or false,
 		group_attack = def.group_attack or false,

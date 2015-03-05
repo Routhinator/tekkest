@@ -1,47 +1,50 @@
 
--- Sheep
+-- Sheep by PilzAdam
 
 mobs:register_mob("mobs:sheep", {
+	-- animal, monster, npc, barbarian
 	type = "animal",
-	hp_min = 8,
-	hp_max = 10,
+	-- not aggressive
+	passive = true,
+	-- health & armor
+	hp_min = 8, hp_max = 10, armor = 200,
+	-- textures and model
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
-	--textures = {"mobs_sheep.png"},
+	visual = "mesh",
+	mesh = "mobs_sheep.x",
+	drawtype = "front",
 	available_textures = {
 		total = 1,
 		texture_1 = {"mobs_sheep.png"},
 	},
-	visual = "mesh",
-	mesh = "mobs_sheep.x",
+	blood_texture = "mobs_blood.png",
+	-- sounds
 	makes_footstep_sound = true,
-	walk_velocity = 1,
-	armor = 200,
-	drops = {
-		{name = "mobs:meat_raw",
-		chance = 1,
-		min = 2,
-		max = 3,},
-	},
-	drawtype = "front",
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 0,
 	sounds = {
 		random = "mobs_sheep",
 	},
-	animation = {
-		speed_normal = 15,
-		stand_start = 0,
-		stand_end = 80,
-		walk_start = 81,
-		walk_end = 100,
-	},
+	-- speed and jump
+	walk_velocity = 1,
 	jump = true,
-	step = 1,
-	blood_texture = "mobs_blood.png",
-	passive = true,
+	-- drops raw meat when dead
+	drops = {
+		{name = "mobs:meat_raw",
+		chance = 1, min = 2, max = 3,},
+	},
+	-- damaged by
+	water_damage = 1,
+	lava_damage = 5,
+	light_damage = 0,
+	-- model animation
+	animation = {
+		speed_normal = 15,		speed_run = 15,
+		stand_start = 0,		stand_end = 80,
+		walk_start = 81,		walk_end = 100,
+	},
+	-- follows wheat
 	follow = "farming:wheat",
 	view_range = 5,
+	-- right click sheep to shear sheep and get wood, feed 8 wheat for wool to grow back
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
 		if item:get_name() == "farming:wheat" then
@@ -75,5 +78,7 @@ mobs:register_mob("mobs:sheep", {
 		end
 	end,
 })
+-- spawn on default;green grass between 8 and 20 light, 1 in 9000 chance, 1 sheep in area up to 31000 in height
 mobs:register_spawn("mobs:sheep", {"default:dirt_with_grass", "ethereal:green_dirt_top"}, 20, 8, 9000, 1, 31000)
+-- register spawn egg
 mobs:register_egg("mobs:sheep", "Sheep", "wool_white.png", 1)

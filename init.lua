@@ -1,5 +1,5 @@
 
---= Ambience lite by TenPlus1 (2nd March 2015)
+--= Ambience lite by TenPlus1 (6th March 2015)
 
 local max_frequency_all = 1000 -- larger number means more frequent sounds (100-2000)
 local SOUNDVOLUME = 1
@@ -10,21 +10,19 @@ local tempy = {}
 
 -- sound sets
 local night = {
-	handler = {},		frequency = 20,
+	handler = {},		frequency = 40,
 	{name="hornedowl",	length=2},
 	{name="wolves",		length=4},
 	{name="cricket",	length=6},
 	{name="deer",		length=7},
 	{name="frog",		length=1},
-	{name="raccoon",	length=1}
 }
 
 local day = {
-	handler = {},			frequency = 80,
+	handler = {},			frequency = 40,
 	{name="cardinal",		length=3},
-	{name="craw",			length=3},
 	{name="bluejay",		length=6},
-	{name="canadianloon1",	length=10},
+	{name="craw",			length=3},
 	{name="canadianloon2",	length=14},
 	{name="robin",			length=4},
 	{name="bird1",			length=11},
@@ -33,14 +31,20 @@ local day = {
 	{name="peacock",		length=2}
 }
 
+local high_up = {
+	handler = {},			frequency = 40,
+	{name="craw",			length=3},
+	{name="wind",			length=9.5},
+}
+
 local cave = {
-	handler = {},			frequency = 80,
+	handler = {},			frequency = 60,
 	{name="drippingwater1",	length=1.5},
 	{name="drippingwater2",	length=1.5}
 }
 
 local beach = {
-	handler = {},			frequency = 20,
+	handler = {},			frequency = 40,
 	{name="seagull",		length=4.5},
 	{name="beach",			length=13},
 	{name="gull",			length=1}
@@ -151,8 +155,12 @@ local get_ambience = function(player)
 	if num_desert > 150 then
 		return {desert=desert}
 	end
+	
+	if pos.y > 60 then
+		return {high_up=high_up}
+	end
 
-	if player:getpos().y < -10 then
+	if pos.y < -10 then
 		return {cave=cave}
 	end
 
@@ -210,8 +218,8 @@ end
 
 -- check sounds that are not in still_playing
 local still_playing = function(still_playing, player)
-
 	if not still_playing.cave then				stop_sound(cave, player) end
+	if not still_playing.high_up then			stop_sound(high_up, player) end
 	if not still_playing.beach then				stop_sound(beach, player) end
 	if not still_playing.desert then			stop_sound(desert, player) end
 	if not still_playing.night then				stop_sound(night, player) end
@@ -222,7 +230,6 @@ local still_playing = function(still_playing, player)
 	if not still_playing.lava then				stop_sound(lava, player) end	
 	if not still_playing.smallfire then			stop_sound(smallfire, player) end	
 	if not still_playing.largefire then			stop_sound(largefire, player) end
-
 end
 
 -- player routine
@@ -242,7 +249,6 @@ minetest.register_globalstep(function(dtime)
 		still_playing(ambiences, player)
 
 		for _,ambience in pairs(ambiences) do
-
 			if math.random(1, 1000) <= ambience.frequency then			
 				if ambience.on_start and played_on_start == false then
 					played_on_start = true
@@ -252,7 +258,6 @@ minetest.register_globalstep(function(dtime)
 				play_sound(player, ambience, math.random(1, #ambience))
 			end
 		end
-
 	end
 end)
 

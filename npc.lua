@@ -6,7 +6,7 @@ mobs:register_mob("mobs:npc", {
 	type = "npc",
 	-- aggressive, deals 1 damage to player/mob when hit
 	passive = false,
-	damage = 1,
+	damage = 2,
 	attack_type = "dogfight",
 	attacks_monsters = true,
 	-- health & armor
@@ -34,6 +34,8 @@ mobs:register_mob("mobs:npc", {
 		chance = 1, min = 1, max = 3},
 		{name = "default:apple",
 		chance = 2, min = 1, max = 2},
+		{name = "default:axe_stone",
+		chance = 3, min = 1, max = 1},
 	},
 	-- damaged by
 	water_damage = 1,

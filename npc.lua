@@ -1,6 +1,8 @@
 
 -- Npc by TenPlus1
 
+mobs.npc_drops = { "default:pick_steel", "mobs:meat", "default:sword_steel", "default:shovel_steel", "farming:bread", "bucket:bucket_water" }
+
 mobs:register_mob("mobs:npc", {
 	-- animal, monster, npc
 	type = "npc",
@@ -63,6 +65,7 @@ mobs:register_mob("mobs:npc", {
 				clicker:set_wielded_item(item)
 			end
 			self.object:set_hp(hp+4)
+		-- right clicking with gold lump drops random item from mobs.npc_drops
 		elseif item:get_name() == "default:gold_lump" then
 			if not minetest.setting_getbool("creative_mode") then
 				item:take_item()
@@ -70,7 +73,7 @@ mobs:register_mob("mobs:npc", {
 			end
 			local pos = self.object:getpos()
 			pos.y = pos.y + 0.5
-			minetest.add_item(pos, {name = "default:pick_steel"})
+			minetest.add_item(pos, {name = mobs.npc_drops[math.random(1,#mobs.npc_drops)]})
 		end
 	end,
 })

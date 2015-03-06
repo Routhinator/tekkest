@@ -24,6 +24,7 @@ mobs:register_mob("mobs:spider", {
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_spider",
+		attack = "mobs_spider",
 	},
 	-- speed and jump, sinks in water
 	walk_velocity = 1,

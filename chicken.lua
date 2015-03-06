@@ -52,6 +52,7 @@ mobs:register_mob("mobs:chicken", {
 	follow = "farming:wheat", view_range = 5,
 	-- right click to pick up chicken
 	on_rightclick = function(self, clicker)
+		local item = clicker:get_wielded_item()
 		if clicker:is_player() and clicker:get_inventory() then
 			clicker:get_inventory():add_item("main", "mobs:chicken")
 			self.object:remove()

@@ -1,4 +1,4 @@
- -- Mobs Api (5th March 2015)
+ -- Mobs Api (6th March 2015)
 mobs = {}
 
 -- Set global for other mod checks (e.g. Better HUD uses this)
@@ -17,7 +17,7 @@ function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
 		name = name,
 		hp_min = def.hp_min or 5,
-		hp_max = def.hp_max,
+		hp_max = def.hp_max or 10,
 		physical = true,
 		collisionbox = def.collisionbox,
 		visual = def.visual,
@@ -279,7 +279,7 @@ function mobs:register_mob(name, def)
 			end
 			
 			-- FIND SOMEONE TO ATTACK
-			if ( self.type == "monster" or self.type == "barbarian" ) and damage_enabled and self.state ~= "attack" then
+			if self.type == "monster" and damage_enabled and self.state ~= "attack" then
 
 				local s = self.object:getpos()
 				local inradius = minetest.get_objects_inside_radius(s,self.view_range)
@@ -317,22 +317,20 @@ function mobs:register_mob(name, def)
 			end
 			
 			-- NPC FIND A MONSTER TO ATTACK
---			if self.type == "npc" and self.attacks_monsters and self.state ~= "attack" then
---				local s = self.object:getpos()
---				local inradius = minetest.get_objects_inside_radius(s,self.view_range)
---				for _, oir in pairs(inradius) do
---					local obj = oir:get_luaentity()
---					if obj then
---						if obj.type == "monster" or obj.type == "barbarian" then
---							-- attack monster
---							local p = obj.object:getpos()
---							local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
---							self.do_attack(self,obj.object,dist)
---							break
---						end
---					end
---				end
---			end
+			if self.type == "npc" and self.attacks_monsters and self.state ~= "attack" then
+				local s = self.object:getpos()
+				local inradius = minetest.get_objects_inside_radius(s,self.view_range)
+				for _, oir in pairs(inradius) do
+					local obj = oir:get_luaentity()
+					if obj and obj.type == "monster" then
+						-- attack monster
+						local p = obj.object:getpos()
+						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						self.do_attack(self,obj.object,dist)
+						break
+					end
+				end
+			end
 
 			if self.follow ~= "" and not self.following then
 				for _,player in pairs(minetest.get_connected_players()) do

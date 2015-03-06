@@ -29,6 +29,9 @@ dofile(minetest.get_modpath("mobs").."/mese_monster.lua")
 
 dofile(minetest.get_modpath("mobs").."/spider.lua")
 
+-- NPC
+dofile(minetest.get_modpath("mobs").."/npc.lua")
+
 -- Meat & Cooked Meat
 
 minetest.register_craftitem("mobs:meat_raw", {

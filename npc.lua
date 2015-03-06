@@ -2,9 +2,9 @@
 -- Npc by TenPlus1
 
 mobs:register_mob("mobs:npc", {
-	-- animal, monster, npc, barbarian
+	-- animal, monster, npc
 	type = "npc",
-	-- aggressive, deals 1 damage to player/mob when hit
+	-- aggressive, deals 2 damage to player/monster when hit
 	passive = false,
 	damage = 2,
 	attack_type = "dogfight",
@@ -38,7 +38,7 @@ mobs:register_mob("mobs:npc", {
 		chance = 3, min = 1, max = 1},
 	},
 	-- damaged by
-	water_damage = 1,
+	water_damage = 0,
 	lava_damage = 2,
 	light_damage = 0,
 	-- follow diamond
@@ -55,14 +55,22 @@ mobs:register_mob("mobs:npc", {
 	-- right clicking with cooked meat will give npc more health
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
-		if item:get_name() == "mobs:meat" then
+		if item:get_name() == "mobs:meat" or item:get_name() == "farming:bread" then
+			local hp = self.object:get_hp()
+			if hp + 4 > self.hp_max then return end
 			if not minetest.setting_getbool("creative_mode") then
 				item:take_item()
 				clicker:set_wielded_item(item)
 			end
-			local hp = self.object:get_hp() + 4
-			if hp > self.hp_max then hp = self.hp_max end
-			self.object:set_hp(hp)
+			self.object:set_hp(hp+4)
+		elseif item:get_name() == "default:gold_lump" then
+			if not minetest.setting_getbool("creative_mode") then
+				item:take_item()
+				clicker:set_wielded_item(item)
+			end
+			local pos = self.object:getpos()
+			pos.y = pos.y + 0.5
+			minetest.add_item(pos, {name = "default:pick_steel"})
 		end
 	end,
 })

@@ -4,10 +4,10 @@
 mobs:register_mob("mobs:cow", {
 	-- animal, monster, npc, barbarian
 	type = "animal",
-	-- aggressive, does 5 damage to player when threatened
+	-- aggressive, does 4 damage to player when threatened
 	passive = false,
 	attack_type = "dogfight",
-	damage = 5,
+	damage = 4,
 	-- health & armor
 	hp_min = 5, hp_max = 20, armor = 200,
 	-- textures and model

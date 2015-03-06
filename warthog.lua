@@ -23,14 +23,15 @@ mobs:register_mob("mobs:pumba", {
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_pig",
+		attack = "mobs_pig_angry",
 	},
 	-- speed and jump
 	walk_velocity = 2,
 	run_velocity = 3,
 	jump = true,
 	-- follows wheat
-	follow = "farming:wheat",
-	view_range = 5,
+	follow = "default:apple",
+	view_range = 10,
 	-- drops raw pork when dead
 	drops = {
 		{name = "mobs:pork_raw",
@@ -50,7 +51,7 @@ mobs:register_mob("mobs:pumba", {
 	-- can be tamed by feeding 8 wheat (will not attack when tamed)
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
-		if item:get_name() == "farming:wheat" then
+		if item:get_name() == "default:apple" then
 			if not minetest.setting_getbool("creative_mode") then
 				item:take_item()
 				clicker:set_wielded_item(item)

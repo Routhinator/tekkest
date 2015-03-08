@@ -40,6 +40,7 @@ mobs:register_mob("mobs:chicken", {
 	water_damage = 1,
 	lava_damage = 5,
 	light_damage = 0,
+	fall_damage = 0,
 	-- model animation
 	animation = {
 		speed_normal = 15,

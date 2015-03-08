@@ -34,7 +34,7 @@ mobs:register_mob("mobs:mese_monster", {
 	walk_velocity = 0.5,
 	run_velocity = 2,
 	jump = true,
-	fall_damage = false,
+	fall_damage = 0,
 	-- drops mese when dead
 	drops = {
 		{name = "default:mese_crystal",

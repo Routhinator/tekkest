@@ -32,7 +32,7 @@ function mobs:register_mob(name, def)
 		light_damage = def.light_damage,
 		water_damage = def.water_damage,
 		lava_damage = def.lava_damage,
-		fall_damage = def.fall_damage or true,
+		fall_damage = def.fall_damage or 1,
 		drops = def.drops,
 		armor = def.armor,
 		drawtype = def.drawtype,
@@ -207,18 +207,14 @@ function mobs:register_mob(name, def)
 			end
 
 			-- fall damage
-			if self.fall_damage and self.object:getvelocity().y == 0 then
-				if not self.old_y then
-					self.old_y = self.object:getpos().y
-				else
-					local d = self.old_y - self.object:getpos().y
-					if d > 5 then
-						local damage = d-5
-						self.object:set_hp(self.object:get_hp()-damage)
-						check_for_death(self)
-					end
-					self.old_y = self.object:getpos().y
+			if self.fall_damage == 1 and self.object:getvelocity().y == 0 then
+				local d = self.old_y - self.object:getpos().y
+				if d > 5 then
+					local damage = math.floor(d - 5)
+					self.object:set_hp(self.object:get_hp()-damage)
+					check_for_death(self)
 				end
+				self.old_y = self.object:getpos().y
 			end
 			
 			-- if pause state then this is where the loop ends
@@ -584,7 +580,7 @@ function mobs:register_mob(name, def)
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
 			self.state = "stand"
-			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
+			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0}) ; self.old_y = self.object:getpos().y
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
 			if self.type == "monster" and peaceful_only then
 				self.object:remove()
@@ -764,24 +760,21 @@ end
 
 -- on mob death drop items
 function check_for_death(self)
-	if self.object:get_hp() < 1 then
-		local pos = self.object:getpos()
-		pos.y = pos.y + 0.5 -- drop items half a block higher
-		self.object:remove()
-		for _,drop in ipairs(self.drops) do
-			if math.random(1, drop.chance) == 1 then
-				local d = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
-				local obj = minetest.add_item(pos, d)
-				if obj then
-					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
-				end
+	if self.object:get_hp() > 0 then return end
+	local pos = self.object:getpos()
+	pos.y = pos.y + 0.5 -- drop items half a block higher
+	self.object:remove()
+	for _,drop in ipairs(self.drops) do
+		if math.random(1, drop.chance) == 1 then
+			local d = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
+			local obj = minetest.add_item(pos, d)
+			if obj then
+				obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
 			end
 		end
-					
-		if self.sounds.death ~= nil then
-			minetest.sound_play(self.sounds.death,{object = self.object,})
-		end
-
+	end
+	if self.sounds.death ~= nil then
+		minetest.sound_play(self.sounds.death,{object = self.object,})
 	end
 end
 		

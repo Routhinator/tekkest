@@ -24,7 +24,7 @@ mobs:register_mob("mobs:bee", {
 	},	
 	-- speed and jump
 	walk_velocity = 1,
-	jump = true,
+	jump = false, -- true,
 	-- drops honey when killed
 	drops = {
 		{name = "mobs:honey",
@@ -35,6 +35,7 @@ mobs:register_mob("mobs:bee", {
 	lava_damage = 1,
 	light_damage = 0,
 	fall_damage = 0,
+	fall_speed = -3,
 	-- model animation
 	animation = {
 		speed_normal = 15,

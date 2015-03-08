@@ -44,7 +44,7 @@ mobs:register_mob("mobs:tree_monster", {
 	water_damage = 1,
 	lava_damage = 5,
 	light_damage = 2,
-	fall_damage = false,
+	fall_damage = 0,
 	-- model animation
 	animation = {
 		speed_normal = 15,		speed_run = 15,

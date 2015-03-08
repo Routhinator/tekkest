@@ -1,4 +1,4 @@
- -- Mobs Api (6th March 2015)
+ -- Mobs Api (8th March 2015)
 mobs = {}
 
 -- Set global for other mod checks (e.g. Better HUD uses this)
@@ -23,7 +23,6 @@ function mobs:register_mob(name, def)
 		visual = def.visual,
 		visual_size = def.visual_size,
 		mesh = def.mesh,
-		--textures = def.textures,
 		makes_footstep_sound = def.makes_footstep_sound,
 		view_range = def.view_range,
 		walk_velocity = def.walk_velocity,
@@ -188,7 +187,7 @@ function mobs:register_mob(name, def)
 
 			-- drop egg
 			if name == "mobs:chicken" then
-				if math.random(1, 3000) <= 1
+				if math.random(1, 3000) == 1
 				and minetest.get_node(self.object:getpos()).name == "air"
 				and self.state == "stand" then
 					minetest.set_node(self.object:getpos(), {name="mobs:egg"})
@@ -200,7 +199,7 @@ function mobs:register_mob(name, def)
 				if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
 					self.object:setacceleration({x = 0, y = 1.5, z = 0})
 				else
-					self.object:setacceleration({x = 0, y = -10, z = 0}) -- 14.5
+					self.object:setacceleration({x = 0, y = -10, z = 0})
 				end
 			else
 				self.object:setacceleration({x=0, y=-10, z=0})
@@ -250,17 +249,17 @@ function mobs:register_mob(name, def)
 				and pos.y > 0
 				and lit > 4
 				and tod > 0.2 and tod < 0.8 then
-					self.object:set_hp(self.object:get_hp()-self.light_damage) ; --print ("light damage")
+					self.object:set_hp(self.object:get_hp()-self.light_damage)
 				end
 
 				if self.water_damage and self.water_damage ~= 0
 				and minetest.get_item_group(n.name, "water") ~= 0 then
-					self.object:set_hp(self.object:get_hp()-self.water_damage) ; --print ("water damage")
+					self.object:set_hp(self.object:get_hp()-self.water_damage)
 				end
 				
 				if self.lava_damage and self.lava_damage ~= 0
 				and minetest.get_item_group(n.name, "lava") ~= 0 then
-					self.object:set_hp(self.object:get_hp()-self.lava_damage) ; --print ("lava damage")
+					self.object:set_hp(self.object:get_hp()-self.lava_damage)
 				end
 
 				check_for_death(self)

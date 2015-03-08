@@ -24,7 +24,7 @@ mobs:register_mob("mobs:bee", {
 	},	
 	-- speed and jump
 	walk_velocity = 1,
-	jump = false, -- true,
+	jump = true,
 	-- drops honey when killed
 	drops = {
 		{name = "mobs:honey",

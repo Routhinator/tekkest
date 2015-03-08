@@ -32,6 +32,7 @@ function mobs:register_mob(name, def)
 		water_damage = def.water_damage,
 		lava_damage = def.lava_damage,
 		fall_damage = def.fall_damage or 1,
+		fall_speed = def.fall_speed or -10, -- must be lower than -2
 		drops = def.drops,
 		armor = def.armor,
 		drawtype = def.drawtype,
@@ -42,7 +43,7 @@ function mobs:register_mob(name, def)
 		shoot_interval = def.shoot_interval,
 		sounds = def.sounds or {},
 		animation = def.animation,
-		follow = def.follow,
+		follow = def.follow or "",
 		jump = def.jump or true,
 		walk_chance = def.walk_chance or 50,
 		attacks_monsters = def.attacks_monsters or false,
@@ -199,10 +200,10 @@ function mobs:register_mob(name, def)
 				if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
 					self.object:setacceleration({x = 0, y = 1.5, z = 0})
 				else
-					self.object:setacceleration({x = 0, y = -10, z = 0})
+					self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
 				end
 			else
-				self.object:setacceleration({x=0, y=-10, z=0})
+				self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
 			end
 
 			-- fall damage
@@ -343,6 +344,7 @@ function mobs:register_mob(name, def)
 
 				if self.following:get_wielded_item():get_name() ~= self.follow then
 					self.following = nil
+					self.v_start = false -- ADDED
 				else
 					local s = self.object:getpos()
 					local p = self.following:getpos()
@@ -575,9 +577,9 @@ function mobs:register_mob(name, def)
 
 		on_activate = function(self, staticdata, dtime_s)
 			local pos = self.object:getpos()
-			self.object:set_hp( math.random(self.hp_min, self.hp_max) ) -- reset HP
+			self.object:set_hp( math.random(self.hp_min, self.hp_max) ) -- set HP
 			self.object:set_armor_groups({fleshy=self.armor})
-			self.object:setacceleration({x=0, y=-10, z=0})
+			self.object:setacceleration({x=0, y= self.fall_speed, z=0})
 			self.state = "stand"
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0}) ; self.old_y = self.object:getpos().y
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
@@ -720,7 +722,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 			-- spawn above node
 			pos.y = pos.y + 1
 
-			-- Check if protected area, if so mobs will not spawn
+			-- mobs cannot spawn inside protected areas if enabled
 			if mobs.protected == 1 and minetest.is_protected(pos, "") then
 				return
 			end
@@ -733,7 +735,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 				return
 			end
 
-			-- are we spawning inside a node?
+			-- are we spawning inside a solid node?
 			local nod = minetest.get_node_or_nil(pos)
 			if not nod or minetest.registered_nodes[nod.name].walkable == true then return end
 			pos.y = pos.y + 1
@@ -746,13 +748,8 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 
 			-- spawn mob half block higher
 			pos.y = pos.y - 0.5
-			local mob = minetest.add_entity(pos, name)
+			minetest.add_entity(pos, name)
 
-			-- set mob health (randomly between min and max)
-			if mob then
-				mob = mob:get_luaentity()
-				mob.object:set_hp( math.random(mob.hp_min, mob.hp_max) )
-			end
 		end
 	})
 end

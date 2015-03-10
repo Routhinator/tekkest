@@ -30,7 +30,7 @@ mobs:register_mob("mobs:oerkki", {
 	-- speed and jump
 	walk_velocity = 1,
 	run_velocity = 3,
-	view_range = 15,
+	view_range = 10,
 	jump = true,
 	-- chance of dropping obsidian
 	drops = {
@@ -49,6 +49,11 @@ mobs:register_mob("mobs:oerkki", {
 		punch_start = 37,		punch_end = 49,
 		speed_normal = 15,		speed_run = 15,
 	},
+	-- replace torch with air (remove)
+	replace_rate = 50,
+	replace_what = {"default:torch"},
+	replace_with = "air",
+	replace_offset = -1,
 })
 -- spawns on stone between 0 and 5 light, 1 in 7000 chance, 1 in area starting at -10 and below
 mobs:register_spawn("mobs:oerkki", {"default:stone"}, 5, -1, 7000, 1, -10)

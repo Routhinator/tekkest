@@ -48,6 +48,10 @@ mobs:register_mob("mobs:cow", {
 	},
 	-- follows wheat
 	follow = "farming:wheat", view_range = 7,
+	-- replace grass/wheat with air (eat)
+	replace_rate = 50,
+	replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
+	replace_with = "air",
 	-- right-click cow with empty bucket to get milk, then feed 8 wheat to replenish milk
 	on_rightclick = function(self, clicker)
 		local tool = clicker:get_wielded_item()

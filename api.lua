@@ -1,16 +1,12 @@
- -- Mobs Api (8th March 2015)
+ -- Mobs Api (10th March 2015)
 mobs = {}
-
--- Set global for other mod checks (e.g. Better HUD uses this)
 mobs.mod = "redo"
 
 -- Do mobs spawn in protected areas (0=yes, 1=no)
 mobs.protected = 0
 
--- Initial check to see if damage is enabled
+-- Initial check to see if damage is enabled and peaceful mode active
 local damage_enabled = minetest.setting_getbool("enable_damage")
-
--- Check to see if in peaceful mode
 local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
 
 function mobs:register_mob(name, def)
@@ -57,6 +53,10 @@ function mobs:register_mob(name, def)
 		blood_texture = def.blood_texture or "mobs_blood.png",
 		shoot_offset = def.shoot_offset or 0,
 		floats = def.floats or 1, -- floats in water by default
+		replace_rate = def.replace_rate,
+		replace_what = def.replace_what,
+		replace_with = def.replace_with,
+		replace_offset = def.replace_offset or 0,
 		
 		stimer = 0,
 		timer = 0,
@@ -128,33 +128,25 @@ function mobs:register_mob(name, def)
 				self.animation.current = ""
 			end
 			if type == "stand" and self.animation.current ~= "stand" then
-				if self.animation.stand_start
-				and self.animation.stand_end
-				and self.animation.speed_normal then
+				if self.animation.stand_start and self.animation.stand_end and self.animation.speed_normal then
 					self.object:set_animation({x=self.animation.stand_start,
 						y=self.animation.stand_end},self.animation.speed_normal, 0)
 					self.animation.current = "stand"
 				end
 			elseif type == "walk" and self.animation.current ~= "walk"  then
-				if self.animation.walk_start
-				and self.animation.walk_end
-				and self.animation.speed_normal then
+				if self.animation.walk_start and self.animation.walk_end and self.animation.speed_normal then
 					self.object:set_animation({x=self.animation.walk_start,y=self.animation.walk_end},
 						self.animation.speed_normal, 0)
 					self.animation.current = "walk"
 				end
 			elseif type == "run" and self.animation.current ~= "run"  then
-				if self.animation.run_start
-				and self.animation.run_end
-				and self.animation.speed_run then
+				if self.animation.run_start and self.animation.run_end and self.animation.speed_run then
 					self.object:set_animation({x=self.animation.run_start,y=self.animation.run_end},
 						self.animation.speed_run, 0)
 					self.animation.current = "run"
 				end
 			elseif type == "punch" and self.animation.current ~= "punch"  then
-				if self.animation.punch_start
-				and self.animation.punch_end
-				and self.animation.speed_normal then
+				if self.animation.punch_start and self.animation.punch_end and self.animation.speed_normal then
 					self.object:set_animation({x=self.animation.punch_start,y=self.animation.punch_end},
 						self.animation.speed_normal, 0)
 					self.animation.current = "punch"
@@ -175,7 +167,7 @@ function mobs:register_mob(name, def)
 				local player_count = 0
 				for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 10)) do
 					if obj:is_player() then
-						player_count = player_count+1
+						player_count = player_count + 1
 						break -- only really need 1 player to be found
 					end
 				end
@@ -186,12 +178,12 @@ function mobs:register_mob(name, def)
 				end
 			end
 
-			-- drop egg
-			if name == "mobs:chicken" then
-				if math.random(1, 3000) == 1
-				and minetest.get_node(self.object:getpos()).name == "air"
-				and self.state == "stand" then
-					minetest.set_node(self.object:getpos(), {name="mobs:egg"})
+			-- check for mob drop/replace (used for chicken egg and sheep eating grass/wheat)
+			if self.replace_rate and math.random(1,self.replace_rate) == 1 then
+				local pos = self.object:getpos() ; pos.y = pos.y + self.replace_offset
+				if #minetest.find_nodes_in_area(pos,pos,self.replace_what) > 0
+				and self.object:getvelocity().y == 0 and self.state == "stand" then
+					minetest.set_node(pos, {name = self.replace_with})
 				end
 			end
 
@@ -251,16 +243,19 @@ function mobs:register_mob(name, def)
 				and lit > 4
 				and tod > 0.2 and tod < 0.8 then
 					self.object:set_hp(self.object:get_hp()-self.light_damage)
+					effect(pos, 5, "tnt_smoke.png")
 				end
 
 				if self.water_damage and self.water_damage ~= 0
 				and minetest.get_item_group(n.name, "water") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.water_damage)
+					effect(pos, 5, "bubble.png")
 				end
 				
 				if self.lava_damage and self.lava_damage ~= 0
 				and minetest.get_item_group(n.name, "lava") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.lava_damage)
+					effect(pos, 5, "fire_basic_flame.png")
 				end
 
 				check_for_death(self)
@@ -644,21 +639,7 @@ function mobs:register_mob(name, def)
 			if self.blood_amount > 0 and pos then
 				local p = pos
 				p.y = p.y + self.blood_offset
-				minetest.add_particlespawner({
-					amount = self.blood_amount,
-					time = 0.25,
-					minpos = {x=p.x-0.2, y=p.y-0.2, z=p.z-0.2},
-					maxpos = {x=p.x+0.2, y=p.y+0.2, z=p.z+0.2},
-					minvel = {x=-0, y=-2, z=-0},
-					maxvel = {x=2,  y=2,  z=2},
-					minacc = {x=-4, y=-4, z=-4},
-					maxacc = {x=4, y=4, z=4},
-					minexptime = 0.1,
-					maxexptime = 1,
-					minsize = 0.5,
-					maxsize = 1,
-					texture = self.blood_texture,
-				})
+				effect(p, self.blood_amount, self.blood_texture)
 			end
 
 			-- knock back effect, adapted from blockmen's pyramids mod
@@ -712,7 +693,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 		chance = chance,
 		action = function(pos, node, _, active_object_count_wider)
 
-			-- do not spawn if too many in one active area
+			-- do not spawn if too many active in area
 			if active_object_count_wider > active_object_count
 			or not mobs.spawning_mobs[name] 
 			or not pos then
@@ -728,9 +709,8 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 			end
 
 			-- check if light and height levels are ok to spawn
-			if not minetest.get_node_light(pos)
-			or minetest.get_node_light(pos) > max_light
-			or minetest.get_node_light(pos) < min_light
+			local light = minetest.get_node_light(pos)
+			if not light or light > max_light or light < min_light
 			or pos.y > max_height then
 				return
 			end
@@ -751,6 +731,25 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 			minetest.add_entity(pos, name)
 
 		end
+	})
+end
+
+-- particle effects
+function effect(pos, amount, texture)
+	minetest.add_particlespawner({
+		amount = amount,
+		time = 0.25,
+		minpos = {x=pos.x-0.2, y=pos.y-0.2, z=pos.z-0.2},
+		maxpos = {x=pos.x+0.2, y=pos.y+0.2, z=pos.z+0.2},
+		minvel = {x=-0, y=-2, z=-0},
+		maxvel = {x=2,  y=2,  z=2},
+		minacc = {x=-4, y=-4, z=-4},
+		maxacc = {x=4, y=4, z=4},
+		minexptime = 0.1,
+		maxexptime = 1,
+		minsize = 0.5,
+		maxsize = 1,
+		texture = texture,
 	})
 end
 

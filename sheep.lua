@@ -44,6 +44,10 @@ mobs:register_mob("mobs:sheep", {
 	-- follows wheat
 	follow = "farming:wheat",
 	view_range = 5,
+	-- replace grass/wheat with air (eat)
+	replace_rate = 1000,
+	replace_what = {"air"},
+	replace_with = "mobs:egg",
 	-- right click sheep to shear sheep and get wood, feed 8 wheat for wool to grow back
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()

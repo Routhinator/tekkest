@@ -1,4 +1,4 @@
- -- Mobs Api (10th March 2015)
+ -- Mobs Api (13th March 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -17,7 +17,7 @@ function mobs:register_mob(name, def)
 		physical = true,
 		collisionbox = def.collisionbox,
 		visual = def.visual,
-		visual_size = def.visual_size,
+		visual_size = def.visual_size or {x=1, y=1},
 		mesh = def.mesh,
 		makes_footstep_sound = def.makes_footstep_sound,
 		view_range = def.view_range,
@@ -69,6 +69,9 @@ function mobs:register_mob(name, def)
 		tamed = false,
 		last_state = nil,
 		pause_timer = 0,
+		horny = false,
+		hornytimer = 0,
+		child = false,
 
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
@@ -240,7 +243,7 @@ function mobs:register_mob(name, def)
 
 				if self.light_damage and self.light_damage ~= 0
 				and pos.y > 0
-				and lit > 4
+				and lit > 10 -- direct sunlight (was 4)
 				and tod > 0.2 and tod < 0.8 then
 					self.object:set_hp(self.object:get_hp()-self.light_damage)
 					effect(pos, 5, "tnt_smoke.png")
@@ -329,20 +332,29 @@ function mobs:register_mob(name, def)
 					local p = player:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if self.view_range and dist < self.view_range then
-						self.following = player
+						self.following = player ; self.following_player = true
 						break
+					else self.following_player = nil
 					end
 				end
 			end
 			
-			if self.following and self.following:is_player() then
+			if self.following and self.following:is_player() and self.following:get_wielded_item():get_name() ~= self.follow then
+				self.following = nil
+				self.v_start = false
+			end
 
-				if self.following:get_wielded_item():get_name() ~= self.follow then
-					self.following = nil
-					self.v_start = false -- ADDED
-				else
-					local s = self.object:getpos()
-					local p = self.following:getpos()
+			if self.following then
+
+                local s = self.object:getpos()
+                local p
+                if self.following.is_player and self.following:is_player() then
+					p = self.following:getpos()
+				elseif self.following.object then
+					p = self.following.object:getpos()
+                end
+
+				if p then
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if dist > self.view_range then
 						self.following = nil
@@ -376,6 +388,63 @@ function mobs:register_mob(name, def)
 							self:set_animation("stand")
 						end
 						return
+					end
+				end
+			end
+
+			if self.horny == true and self.hornytimer and self.child == false then
+				self.hornytimer = self.hornytimer + 1
+				effect(self.object:getpos(), 4, "heart.png")
+				if self.hornytimer > 85 then
+					self.hornytimer = 0
+					self.horny = false
+				end
+			end
+
+			if self.child == true then
+				self.hornytimer = self.hornytimer + 1
+				if self.hornytimer > 85 then
+					self.child = false
+					self.hornytimer = 0
+					self.object:set_properties({
+						visual_size = {x=self.visual_size.x,y=self.visual_size.y},
+					})
+				end
+			end
+
+			if self.horny == true then
+				local pos = self.object:getpos()
+				local ents = minetest.get_objects_inside_radius(pos, self.view_range) -- 6)
+				local num = 0
+				for i,obj in ipairs(ents) do
+
+					local ent = obj:get_luaentity()
+					if ent and ent.name == self.name and ent.horny == true then num = num + 1 end
+
+					if num > 1 then
+						--print("2 horny "..name)
+						self.following = ent
+						ent.following = self
+						self.horny = false
+						self.hornytimer = 0
+						self.following = nil
+						ent.horny = false
+						ent.following = nil
+						ent.hornytimer = 0
+
+						minetest.after(7, function(dtime)
+							--print ("spawned baby:",self.name)
+							local mob = minetest.add_entity(pos, self.name)
+							local ent2 = mob:get_luaentity()
+
+							mob:set_properties({
+								visual_size = {x=self.visual_size.x/2,y=self.visual_size.y/2},
+							})
+							ent2.child = true
+							ent2.tamed = true
+						end)
+						num = 0
+						break
 					end
 				end
 			end
@@ -596,6 +665,12 @@ function mobs:register_mob(name, def)
 					if tmp.gotten then -- using this variable for obtaining something from mob (milk/wool)
 						self.gotten = tmp.gotten
 					end
+					if tmp.child then
+						self.child = tmp.child
+					end
+					if tmp.hornytimer then
+						self.hornytimer = tmp.hornytimer
+					end
 				end
 			end
 
@@ -612,18 +687,26 @@ function mobs:register_mob(name, def)
 			-- set mob texture and model
 			local textures = def.available_textures["texture_"..math.random(1,def.available_textures["total"])]
 			local mesh = self.mesh
+			local vis_size = self.visual_size
 			-- if object is a sheared sheep then set texture and model
 			if self.name == "mobs:sheep" and self.gotten == true then
 				textures = {"mobs_sheep_shaved.png"}
 				mesh = "mobs_sheep_shaved.x"
+			end
+			-- if object is child then set half size
+			if self.child == true then
+				vis_size = {x=self.visual_size.x/2,y=self.visual_size.y/2}
 			end
 
 			local tmp = {
 				lifetimer = self.lifetimer,
 				tamed = self.tamed,
 				gotten = self.gotten,
+				child = self.child,
+				hornytimer = self.hornytimer,
 				mesh = mesh,
 				textures = textures,
+				visual_size = vis_size,
 			}
 			self.object:set_properties(tmp)
 			return minetest.serialize(tmp)

@@ -20,6 +20,7 @@ mobs:register_mob("mobs:cow", {
 		texture_1 = {"mobs_cow.png"},
 	},
 	blood_texture = "mobs_blood.png",
+	visual_size = {x=1,y=1},
 	-- sounds
 	makes_footstep_sound = true,
 	sounds = {
@@ -55,20 +56,20 @@ mobs:register_mob("mobs:cow", {
 	-- right-click cow with empty bucket to get milk, then feed 8 wheat to replenish milk
 	on_rightclick = function(self, clicker)
 		local tool = clicker:get_wielded_item()
-		if tool:get_name() == "bucket:bucket_empty" then
+		if tool:get_name() == "bucket:bucket_empty" and self.child == false then
 			if self.gotten then return end
 			clicker:get_inventory():remove_item("main", "bucket:bucket_empty")
 			clicker:get_inventory():add_item("main", "mobs:bucket_milk")
 			self.gotten = true -- milked
 		end
-		if tool:get_name() == "farming:wheat" and self.gotten then
+		if tool:get_name() == "farming:wheat" then -- and self.gotten then
 			if not minetest.setting_getbool("creative_mode") then
 				tool:take_item(1)
 				clicker:set_wielded_item(tool)
 			end
 			self.food = (self.food or 0) + 1
 			if self.food >= 8 then
-				self.food = 0
+				self.food = 0 ; self.horny = true
 				self.gotten = false -- ready to be milked again
 				self.tamed = true
 				minetest.sound_play("mobs_cow", {object = self.object,gain = 1.0,max_hear_distance = 32,loop = false,})

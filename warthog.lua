@@ -19,6 +19,7 @@ mobs:register_mob("mobs:pumba", {
 		total = 1,
 		texture_1 = {"mobs_pumba.png"},
 	},
+	visual_size = {x=1,y=1},
 	-- sounds
 	makes_footstep_sound = true,
 	sounds = {
@@ -58,6 +59,7 @@ mobs:register_mob("mobs:pumba", {
 			end
 			self.food = (self.food or 0) + 1
 			if self.food >= 8 then
+				if self.child == false then self.horny = true end
 				self.food = 0
 				self.tamed = true
 				minetest.sound_play("mobs_pig", {object = self.object,gain = 1.0,max_hear_distance = 32,loop = false,})

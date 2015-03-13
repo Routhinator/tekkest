@@ -18,6 +18,7 @@ mobs:register_mob("mobs:sheep", {
 		texture_1 = {"mobs_sheep.png"},
 	},
 	blood_texture = "mobs_blood.png",
+	visual_size = {x=1,y=1},
 	-- sounds
 	makes_footstep_sound = true,
 	sounds = {
@@ -58,7 +59,7 @@ mobs:register_mob("mobs:sheep", {
 			end
 			self.food = (self.food or 0) + 1
 			if self.food >= 8 then
-				self.food = 0
+				self.food = 0 ; self.horny = true
 				self.gotten = false -- can be shaved again
 				self.tamed = true
 				self.object:set_properties({
@@ -69,7 +70,7 @@ mobs:register_mob("mobs:sheep", {
 			end
 		return
 		end
-		if clicker:get_inventory() and not self.gotten then
+		if clicker:get_inventory() and not self.gotten and self.child == false then
 			self.gotten = true -- shaved
 			if minetest.registered_items["wool:white"] then
 				clicker:get_inventory():add_item("main", ItemStack("wool:white "..math.random(1,3)))
@@ -78,7 +79,6 @@ mobs:register_mob("mobs:sheep", {
 				textures = {"mobs_sheep_shaved.png"},
 				mesh = "mobs_sheep_shaved.x",
 			})
-		else print ("shaved already!")
 		end
 	end,
 })

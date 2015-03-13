@@ -69,7 +69,8 @@ mobs:register_mob("mobs:cow", {
 			end
 			self.food = (self.food or 0) + 1
 			if self.food >= 8 then
-				self.food = 0 ; self.horny = true
+				self.food = 0
+				if self.child == false then self.horny = true end
 				self.gotten = false -- ready to be milked again
 				self.tamed = true
 				minetest.sound_play("mobs_cow", {object = self.object,gain = 1.0,max_hear_distance = 32,loop = false,})

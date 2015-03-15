@@ -1,4 +1,4 @@
- -- Mobs Api (13th March 2015)
+ -- Mobs Api (15th March 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -392,18 +392,22 @@ function mobs:register_mob(name, def)
 				end
 			end
 
-			if self.horny == true and self.hornytimer and self.child == false then
+			-- horny animal can mate for 40 seconds, afterwards horny animal cannot mate again for 60 seconds
+			if self.horny == true and self.hornytimer < 100 and self.child == false then
 				self.hornytimer = self.hornytimer + 1
-				effect(self.object:getpos(), 4, "heart.png")
-				if self.hornytimer > 85 then
+				if self.hornytimer <= 40 then
+					effect(self.object:getpos(), 4, "heart.png")
+				end
+				if self.hornytimer >= 100 then
 					self.hornytimer = 0
 					self.horny = false
 				end
 			end
 
+			-- if animal is child take 120 seconds before growing into adult
 			if self.child == true then
 				self.hornytimer = self.hornytimer + 1
-				if self.hornytimer > 85 then
+				if self.hornytimer > 120 then
 					self.child = false
 					self.hornytimer = 0
 					self.object:set_properties({
@@ -412,14 +416,15 @@ function mobs:register_mob(name, def)
 				end
 			end
 
-			if self.horny == true then
+			-- if animal is horny, find another same animal who is horny and mate
+			if self.horny == true and self.hornytimer <= 40 then
 				local pos = self.object:getpos()
-				local ents = minetest.get_objects_inside_radius(pos, self.view_range) -- 6)
+				local ents = minetest.get_objects_inside_radius(pos, self.view_range)
 				local num = 0
 				for i,obj in ipairs(ents) do
 
 					local ent = obj:get_luaentity()
-					if ent and ent.name == self.name and ent.horny == true then num = num + 1 end
+					if ent and ent.name == self.name and ent.horny == true and ent.hornytimer <= 40 then num = num + 1 end
 
 					if num > 1 then
 						--print("2 horny "..name)
@@ -668,6 +673,9 @@ function mobs:register_mob(name, def)
 					if tmp.child then
 						self.child = tmp.child
 					end
+					if tmp.horny then
+						self.horny = tmp.horny
+					end
 					if tmp.hornytimer then
 						self.hornytimer = tmp.hornytimer
 					end
@@ -703,6 +711,7 @@ function mobs:register_mob(name, def)
 				tamed = self.tamed,
 				gotten = self.gotten,
 				child = self.child,
+				horny = self.horny,
 				hornytimer = self.hornytimer,
 				mesh = mesh,
 				textures = textures,

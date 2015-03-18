@@ -18,11 +18,10 @@ mobs:register_mob("mobs:dungeon_master", {
 	visual = "mesh",
 	mesh = "mobs_dungeon_master.x",
 	drawtype = "front",
-	available_textures = {
-		total = 3,
-		texture_1 = {"mobs_dungeon_master.png"},
-		texture_2 = {"mobs_dungeon_master2.png"},
-		texture_3 = {"mobs_dungeon_master3.png"},
+	textures = {
+		{"mobs_dungeon_master.png"},
+		{"mobs_dungeon_master2.png"},
+		{"mobs_dungeon_master3.png"},
 	},
 	visual_size = {x=8, y=8},
 	blood_texture = "mobs_blood.png",

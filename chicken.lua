@@ -13,14 +13,15 @@ mobs:register_mob("mobs:chicken", {
 	visual = "mesh",
 	mesh = "chicken.x",
 	drawtype = "front",
-	available_textures = {
-		total = 2,
-		texture_1 = {"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
-					"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
-					"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png"},
-		texture_2 = {"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png",
-					"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png",
-					"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png"},
+	textures = {
+		{"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",
+		"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png"},
+		{"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png",
+		"mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png", "mobs_chicken_black.png"},
+	},
+	child_texture = {
+		{"mobs_chick.png", "mobs_chick.png", "mobs_chick.png", "mobs_chick.png",
+		"mobs_chick.png", "mobs_chick.png", "mobs_chick.png", "mobs_chick.png", "mobs_chick.png"},
 	},
 	blood_texture = "mobs_blood.png",
 	-- sounds
@@ -51,14 +52,31 @@ mobs:register_mob("mobs:chicken", {
 		walk_end = 40,
 	},
 	-- follows wheat
-	follow = "farming:wheat", view_range = 5,
+	follow = "farming:seed_wheat", view_range = 5,
 	-- replace air with egg (lay)
 	replace_rate = 1000,
 	replace_what = {"air"},
 	replace_with = "mobs:egg",
 	-- right click to pick up chicken
 	on_rightclick = function(self, clicker)
-		local item = clicker:get_wielded_item()
+		local tool = clicker:get_wielded_item()
+
+		if tool:get_name() == "farming:seed_wheat" then -- and self.gotten then
+			if not minetest.setting_getbool("creative_mode") then
+				tool:take_item(1)
+				clicker:set_wielded_item(tool)
+			end
+			self.food = (self.food or 0) + 1
+			if self.food >= 8 then
+				self.food = 0
+				if self.child == false then self.horny = true end
+				self.gotten = false -- reset
+				self.tamed = true
+				minetest.sound_play("mobs_chicken", {object = self.object,gain = 1.0,max_hear_distance = 15,loop = false,})
+			end
+			return tool
+		end
+
 		if clicker:is_player() and clicker:get_inventory() then
 			clicker:get_inventory():add_item("main", "mobs:chicken")
 			self.object:remove()

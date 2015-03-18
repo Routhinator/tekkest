@@ -15,9 +15,8 @@ mobs:register_mob("mobs:stone_monster", {
 	visual = "mesh",
 	mesh = "mobs_stone_monster.x",
 	drawtype = "front",
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_stone_monster.png"},
+	textures = {
+		{"mobs_stone_monster.png"},
 	},
 	visual_size = {x=3, y=2.6},
 	blood_texture = "mobs_blood.png",

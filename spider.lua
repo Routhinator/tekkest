@@ -15,9 +15,8 @@ mobs:register_mob("mobs:spider", {
 	visual = "mesh",
 	mesh = "mobs_spider.x",
 	drawtype = "front",
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_spider.png"},
+	textures = {
+		{"mobs_spider.png"},
 	},
 	visual_size = {x=7,y=7},
 	-- sounds

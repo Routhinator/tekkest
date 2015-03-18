@@ -57,7 +57,7 @@ function mobs:register_mob(name, def)
 		replace_what = def.replace_what,
 		replace_with = def.replace_with,
 		replace_offset = def.replace_offset or 0,
-		
+
 		stimer = 0,
 		timer = 0,
 		env_damage_timer = 0, -- only if state = "attack"
@@ -72,6 +72,7 @@ function mobs:register_mob(name, def)
 		horny = false,
 		hornytimer = 0,
 		child = false,
+		gotten = false,
 
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
@@ -182,7 +183,7 @@ function mobs:register_mob(name, def)
 			end
 
 			-- check for mob drop/replace (used for chicken egg and sheep eating grass/wheat)
-			if self.replace_rate and math.random(1,self.replace_rate) == 1 then
+			if self.replace_rate and math.random(1,self.replace_rate) == 1 and self.child == false then
 				local pos = self.object:getpos() ; pos.y = pos.y + self.replace_offset
 				if #minetest.find_nodes_in_area(pos,pos,self.replace_what) > 0
 				and self.object:getvelocity().y == 0 and self.state == "stand" then
@@ -411,6 +412,8 @@ function mobs:register_mob(name, def)
 					self.child = false
 					self.hornytimer = 0
 					self.object:set_properties({
+						textures = self.base_texture,
+						mesh = self.base_mesh,
 						visual_size = {x=self.visual_size.x,y=self.visual_size.y},
 					})
 				end
@@ -441,8 +444,13 @@ function mobs:register_mob(name, def)
 							--print ("spawned baby:",self.name)
 							local mob = minetest.add_entity(pos, self.name)
 							local ent2 = mob:get_luaentity()
-
+							local texture = self.base_texture
+							if def.child_texture then
+								print ("child texture detected")
+								textures = def.child_texture[1]
+							end
 							mob:set_properties({
+								textures = textures,
 								visual_size = {x=self.visual_size.x/2,y=self.visual_size.y/2},
 							})
 							ent2.child = true
@@ -667,7 +675,7 @@ function mobs:register_mob(name, def)
 					if tmp.tamed then
 						self.tamed = tmp.tamed
 					end
-					if tmp.gotten then -- using this variable for obtaining something from mob (milk/wool)
+					if tmp.gotten then
 						self.gotten = tmp.gotten
 					end
 					if tmp.child then
@@ -678,6 +686,18 @@ function mobs:register_mob(name, def)
 					end
 					if tmp.hornytimer then
 						self.hornytimer = tmp.hornytimer
+					end
+					if tmp.textures then
+						self.textures = tmp.textures
+					end
+					if tmp.mesh then
+						self.mesh = tmp.mesh
+					end
+					if tmp.base_texture then
+						self.base_texture = tmp.base_texture
+					end
+					if tmp.base_mesh then
+						self.base_mesh = tmp.base_mesh
 					end
 				end
 			end
@@ -692,20 +712,31 @@ function mobs:register_mob(name, def)
 		end,
 
 		get_staticdata = function(self)
-			-- set mob texture and model
-			local textures = def.available_textures["texture_"..math.random(1,def.available_textures["total"])]
-			local mesh = self.mesh
+			-- select random texture, set model
+			if not self.base_texture then
+				self.base_texture = def.textures[math.random(1,#def.textures)]
+				self.base_mesh = def.mesh
+			end
+			-- set texture, model and size
+			local textures = self.base_texture
+			local mesh = self.base_mesh
 			local vis_size = self.visual_size
-			-- if object is a sheared sheep then set texture and model
-			if self.name == "mobs:sheep" and self.gotten == true then
-				textures = {"mobs_sheep_shaved.png"}
-				mesh = "mobs_sheep_shaved.x"
+			-- specific texture if gotten
+			if self.gotten == true and def.gotten_texture then
+				textures = def.gotten_texture
+			end
+			-- specific mesh if gotten
+			if self.gotten == true and def.gotten_mesh then
+				mesh = def.gotten_mesh
 			end
 			-- if object is child then set half size
 			if self.child == true then
 				vis_size = {x=self.visual_size.x/2,y=self.visual_size.y/2}
+				if def.child_texture then
+					textures = def.child_texture[1]
+				end
 			end
-
+			-- remember settings
 			local tmp = {
 				lifetimer = self.lifetimer,
 				tamed = self.tamed,
@@ -716,6 +747,7 @@ function mobs:register_mob(name, def)
 				mesh = mesh,
 				textures = textures,
 				visual_size = vis_size,
+				base_texture = self.base_texture,
 			}
 			self.object:set_properties(tmp)
 			return minetest.serialize(tmp)

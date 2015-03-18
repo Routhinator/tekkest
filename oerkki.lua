@@ -15,10 +15,9 @@ mobs:register_mob("mobs:oerkki", {
 	visual = "mesh",
 	mesh = "mobs_oerkki.x",
 	drawtype = "front",
-	available_textures = {
-		total = 2,
-		texture_1 = {"mobs_oerkki.png"},
-		texture_2 = {"mobs_oerkki2.png"},
+	textures = {
+		{"mobs_oerkki.png"},
+		{"mobs_oerkki2.png"},
 	},
 	visual_size = {x=5, y=5},
 	blood_texture = "mobs_blood.png",

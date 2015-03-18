@@ -13,9 +13,8 @@ mobs:register_mob("mobs:bee", {
 	visual = "mesh",
 	mesh = "mobs_bee.x",
 	drawtype = "front",
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_bee.png"},
+	textures = {
+		{"mobs_bee.png"},
 	},
 	-- sounds
 	makes_footstep_sound = false,

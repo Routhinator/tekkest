@@ -18,9 +18,8 @@ mobs:register_mob("mobs:npc", {
 	visual = "mesh",
 	mesh = "character.b3d",
 	drawtype = "front",
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_npc.png"},
+	textures = {
+		{"mobs_npc.png"},
 	},
 	visual_size = {x=1, y=1},
 	-- sounds

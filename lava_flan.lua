@@ -15,9 +15,8 @@ mobs:register_mob("mobs:lava_flan", {
 	visual = "mesh",
 	mesh = "zmobs_lava_flan.x",
 	drawtype = "front",
-	available_textures = {
-		total = 1,
-		texture_1 = {"zmobs_lava_flan.png"},
+	textures = {
+		{"zmobs_lava_flan.png"},
 	},
 	blood_texture = "fire_basic_flame.png",
 	visual_size = {x=1, y=1},

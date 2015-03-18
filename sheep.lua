@@ -13,12 +13,14 @@ mobs:register_mob("mobs:sheep", {
 	visual = "mesh",
 	mesh = "mobs_sheep.x",
 	drawtype = "front",
-	available_textures = {
-		total = 1,
-		texture_1 = {"mobs_sheep.png"},
+	textures = {
+		{"mobs_sheep.png"},
 	},
 	blood_texture = "mobs_blood.png",
 	visual_size = {x=1,y=1},
+	-- specific texture and mesh for gotten
+	gotten_texture = {"mobs_sheep_shaved.png"},
+	gotten_mesh = "mobs_sheep_shaved.x",
 	-- sounds
 	makes_footstep_sound = true,
 	sounds = {

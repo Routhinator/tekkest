@@ -2,7 +2,7 @@
 
 dofile(minetest.get_modpath("mobs").."/api.lua")
 
--- Animals inc. Krupnovpavel's warthog/bee, JKmurray's chicken, ExeterDad's bunny
+-- Animals inc. Krupnovpavel's warthog/bee, JKmurray's chicken, ExeterDad's bunny, Jordach/BFD's kitten
 
 dofile(minetest.get_modpath("mobs").."/chicken.lua")
 dofile(minetest.get_modpath("mobs").."/cow.lua")
@@ -11,6 +11,7 @@ dofile(minetest.get_modpath("mobs").."/sheep.lua")
 dofile(minetest.get_modpath("mobs").."/warthog.lua")
 dofile(minetest.get_modpath("mobs").."/bee.lua")
 dofile(minetest.get_modpath("mobs").."/bunny.lua")
+dofile(minetest.get_modpath("mobs").."/kitten.lua")
 
 -- Monsters
 

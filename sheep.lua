@@ -32,7 +32,9 @@ mobs:register_mob("mobs:sheep", {
 	-- drops raw meat when dead
 	drops = {
 		{name = "mobs:meat_raw",
-		chance = 1, min = 2, max = 3,},
+		chance = 1, min = 2, max = 3},
+		{name = "wool:white",
+		chance = 1, min = 1, max = 1},
 	},
 	-- damaged by
 	water_damage = 1,

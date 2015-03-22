@@ -59,8 +59,16 @@ mobs:register_mob("mobs:cow", {
 		local tool = clicker:get_wielded_item()
 		if tool:get_name() == "bucket:bucket_empty" and self.child == false then
 			if self.gotten then return end
-			clicker:get_inventory():remove_item("main", "bucket:bucket_empty")
-			clicker:get_inventory():add_item("main", "mobs:bucket_milk")
+			local inv = clicker:get_inventory()
+			inv:remove_item("main", "bucket:bucket_empty")
+			-- if room add bucket of milk to inventory, otherwise drop as item
+			if inv:room_for_item("main", {name="mobs:bucket_milk"}) then
+				clicker:get_inventory():add_item("main", "mobs:bucket_milk")
+			else
+				local pos = self.object:getpos()
+				pos.y = pos.y + 0.5
+				minetest.add_item(pos, {name = "mobs:bucket_milk"})
+			end
 			self.gotten = true -- milked
 		end
 		if tool:get_name() == "farming:wheat" then -- and self.gotten then

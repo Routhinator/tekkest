@@ -11,7 +11,7 @@ mobs:register_mob("mobs:chicken", {
 	-- textures and model
 	collisionbox = {-0.3, -0.75, -0.3, 0.3, 0.1, 0.3},
 	visual = "mesh",
-	mesh = "chicken.x",
+	mesh = "mobs_chicken.x",
 	drawtype = "front",
 	textures = {
 		{"mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png", "mobs_chicken.png",

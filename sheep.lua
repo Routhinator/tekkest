@@ -80,16 +80,11 @@ mobs:register_mob("mobs:sheep", {
 		if inv and item:get_name() == "mobs:shears" and not self.gotten and self.child == false then
 			self.gotten = true -- shaved
 			if minetest.registered_items["wool:white"] then
-				-- if room add wool to inventory, otherwise drop as item
-				local num = math.random(1,3)
-				if inv:room_for_item("main", {name="wool:white "..num}) then
-					clicker:get_inventory():add_item("main", "wool:white "..num)
-				else
-					local pos = self.object:getpos()
-					pos.y = pos.y + 0.5
-					for z = 1, num do -- have to drop num times cause "wool:white 3" doesnt work ?!?!
-						minetest.add_item(pos, {name = "wool:white"})
-					end
+				local pos = self.object:getpos()
+				pos.y = pos.y + 0.5
+				local obj = minetest.add_item(pos, ItemStack("wool:white "..math.random(1,3)))
+				if obj then
+					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
 				end
 				item:add_wear(65535/100)
 				clicker:set_wielded_item(item)

@@ -77,6 +77,9 @@ mobs:register_mob("mobs:cow", {
 				clicker:set_wielded_item(tool)
 			end
 			self.food = (self.food or 0) + 1
+			if self.child == true then
+				self.hornytimer = self.hornytimer + 10
+			end
 			if self.food >= 8 then
 				self.food = 0
 				if self.child == false then self.horny = true end

@@ -85,7 +85,7 @@ mobs:register_mob("mobs:sheep", {
 			if minetest.registered_items["wool:white"] then
 				local pos = self.object:getpos()
 				pos.y = pos.y + 0.5
-				local obj = minetest.add_item(pos, ItemStack("wool:white "..math.random(1,3)))
+				local obj = minetest.add_item(pos, ItemStack("wool:white "..math.random(2,3)))
 				if obj then
 					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
 				end

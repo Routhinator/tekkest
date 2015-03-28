@@ -1,5 +1,5 @@
 
--- Spider by fishyWET (borrowed from Lord of the Test [game])
+-- Spider by AspireMint (fishyWET (CC-BY-SA 3.0 license for texture)
 
 mobs:register_mob("mobs:spider", {
 	-- animal, monster, npc, barbarian

@@ -86,6 +86,7 @@ function mobs:register_mob(name, def)
 		end,
 		
 		set_velocity = function(self, v)
+			if not v then v = 0 end -- added
 			local yaw = self.object:getyaw()
 			if self.drawtype == "side" then
 				yaw = yaw+(math.pi/2)

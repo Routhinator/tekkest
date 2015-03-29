@@ -54,7 +54,7 @@ mobs:register_mob("mobs:chicken", {
 	-- follows wheat
 	follow = "farming:seed_wheat", view_range = 5,
 	-- replace air with egg (lay)
-	replace_rate = 1000,
+	replace_rate = 2000,
 	replace_what = {"air"},
 	replace_with = "mobs:egg",
 	-- right click to pick up chicken
@@ -80,7 +80,8 @@ mobs:register_mob("mobs:chicken", {
 			return tool
 		end
 
-		if clicker:is_player() and clicker:get_inventory() and clicker:get_inventory():room_for_item("main", "mobs:chicken") then
+		if clicker:is_player() and clicker:get_inventory() and self.child == false
+		and clicker:get_inventory():room_for_item("main", "mobs:chicken") then
 			clicker:get_inventory():add_item("main", "mobs:chicken")
 			self.object:remove()
 		end

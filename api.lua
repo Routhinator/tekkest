@@ -867,8 +867,8 @@ function effect(pos, amount, texture)
 	minetest.add_particlespawner({
 		amount = amount,
 		time = 0.25,
-		minpos = {x=pos.x-0.2, y=pos.y-0.2, z=pos.z-0.2},
-		maxpos = {x=pos.x+0.2, y=pos.y+0.2, z=pos.z+0.2},
+		minpos = pos,
+		maxpos = pos,
 		minvel = {x=-0, y=-2, z=-0},
 		maxvel = {x=2,  y=2,  z=2},
 		minacc = {x=-4, y=-4, z=-4},

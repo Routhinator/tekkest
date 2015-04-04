@@ -652,7 +652,7 @@ function mobs:register_mob(name, def)
 				self.object:setyaw(yaw)
 				self.set_velocity(self, 0)
 				
-				if self.timer > self.shoot_interval and math.random(1, 100) <= 60 then
+				if self.shoot_interval and self.timer > self.shoot_interval and math.random(1, 100) <= 60 then
 					self.timer = 0
 
 					self:set_animation("punch")

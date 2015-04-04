@@ -1,4 +1,4 @@
--- Mobs Api (2nd April 2015)
+-- Mobs Api (4th April 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -933,23 +933,45 @@ function mobs:register_arrow(name, def)
 		velocity = def.velocity,
 		hit_player = def.hit_player,
 		hit_node = def.hit_node,
+		hit_mob = def.hit_mob,
+		drop = def.drop or false,
 		collisionbox = {0,0,0,0,0,0}, -- remove box around arrows
 
 		on_step = function(self, dtime)
+			self.timer = (self.timer or 0) + 1
+			if self.timer > 150 then self.object:remove() return end
+
 			local pos = self.object:getpos()
 			local node = minetest.get_node(self.object:getpos()).name
-			if minetest.registered_nodes[node].walkable then
+			-- hit node you can walk on
+			if self.hit_node and node and minetest.registered_nodes[node] and minetest.registered_nodes[node].walkable then
 				self.hit_node(self, pos, node)
+				if self.drop == true then
+					pos.y = pos.y + 1 ; self.lastpos = (self.lastpos or pos)
+					minetest.add_item(self.lastpos, self.object:get_luaentity().name)
+					self.object:remove()
+				end
 				self.object:remove()
 				return
 			end
 
-			for _,player in pairs(minetest.get_objects_inside_radius(pos, 1)) do
-				if player:is_player() then
-					self.hit_player(self, player)
-					self.object:remove()
-					return
+			if self.hit_player or self.hit_mob then
+				for _,player in pairs(minetest.get_objects_inside_radius(pos, 1)) do
+					-- hit player
+					if self.hit_player and self.timer > 5 and player:is_player() then
+						self.hit_player(self, player)
+						self.object:remove()
+						return
+					end
+					-- hit mob
+					if self.hit_mob and self.timer > 5 and player:get_luaentity().name ~= self.object:get_luaentity().name
+					and player:get_luaentity().name ~= "__builtin:item" then
+						self.hit_mob(self, player)
+						self.object:remove()
+						return
+					end
 				end
+				self.lastpos = pos
 			end
 		end
 	})

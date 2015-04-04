@@ -66,17 +66,21 @@ mobs:register_arrow("mobs:mese_arrow", {
 	visual_size = {x=.5, y=.5},
 	textures = {"default_mese_crystal_fragment.png"},
 	velocity = 5,
-	
-	hit_player = function(self, player)
-		local s = self.object:getpos()
-		local p = player:getpos()
 
+	hit_player = function(self, player)
 		player:punch(self.object, 1.0,  {
 			full_punch_interval=1.0,
 			damage_groups = {fleshy=1},
 		}, 0)
 	end,
-	
+
+	hit_mob = function(self, player)
+		player:punch(self.object, 1.0,  {
+			full_punch_interval=1.0,
+			damage_groups = {fleshy=1},
+		}, 0)
+	end,
+
 	hit_node = function(self, pos, node)
 	end
 })

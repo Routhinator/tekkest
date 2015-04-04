@@ -65,7 +65,7 @@ mobs:register_arrow("mobs:mese_arrow", {
 	visual = "sprite",
 	visual_size = {x=.5, y=.5},
 	textures = {"default_mese_crystal_fragment.png"},
-	velocity = 5,
+	velocity = 6,
 
 	hit_player = function(self, player)
 		player:punch(self.object, 1.0,  {

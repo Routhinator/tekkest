@@ -68,7 +68,7 @@ mobs:register_arrow("mobs:fireball", {
 	visual = "sprite",
 	visual_size = {x=1, y=1},
 	textures = {"mobs_fireball.png"},
-	velocity = 5,
+	velocity = 6,
 
 	-- direct hit, no fire... just plenty of pain
 	hit_player = function(self, player)

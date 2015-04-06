@@ -65,7 +65,7 @@ mobs:register_mob("mobs:kitten", {
 			clicker:get_inventory():add_item("main", "mobs:kitten")
 			self.object:remove()
 		end
-	end
+	end,
 })
 
 mobs:register_spawn("mobs:kitten", {"default:dirt_with_grass"}, 20, 0, 12000, 1, 31000)

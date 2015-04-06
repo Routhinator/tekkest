@@ -15,7 +15,8 @@ function mobs:register_mob(name, def)
 
 		owner = def.owner,
 		order = def.order or "",
-
+on_die = def.on_die,
+jump_height = def.jump_height or 6,
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -461,7 +462,7 @@ function mobs:register_mob(name, def)
 							else
 								if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 									local v = self.object:getvelocity()
-									v.y = 7 -- 6
+									v.y = self.jump_height + 1
 									self.object:setvelocity(v)
 								end
 								self.set_velocity(self, self.walk_velocity)
@@ -535,7 +536,7 @@ function mobs:register_mob(name, def)
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 					local v = self.object:getvelocity()
-					v.y = 5
+					v.y = self.jump_height
 					self.object:setvelocity(v)
 				end
 				self:set_animation("walk")
@@ -584,7 +585,7 @@ function mobs:register_mob(name, def)
 					else
 						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 							local v = self.object:getvelocity()
-							v.y = 5
+							v.y = self.jump_height
 							self.object:setvelocity(v)
 						end
 						self.set_velocity(self, self.run_velocity)
@@ -921,6 +922,10 @@ function check_for_death(self)
 	end
 	if self.sounds.death ~= nil then
 		minetest.sound_play(self.sounds.death,{object = self.object,})
+	end
+	if self.on_die then
+		pos.y = pos.y - 0.5
+		self.on_die(self, pos)
 	end
 end
 		

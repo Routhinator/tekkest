@@ -50,6 +50,9 @@ mobs:register_mob("mobs:lava_flan", {
 		run_start = 20,			run_end = 28,
 		punch_start = 20,		punch_end = 28,
 	},
+	on_die = function(self, pos)
+		minetest.set_node(pos, {name="fire:basic_flame"})
+	end,
 })
 -- spawns in lava between 0 and 15 light, 1 in 1000 chance, 3 in area below 0 in height
 mobs:register_spawn("mobs:lava_flan", {"default:lava_source"}, 15, 0, 1000, 3, 0)

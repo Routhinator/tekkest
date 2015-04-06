@@ -925,6 +925,7 @@ function check_for_death(self)
 end
 		
 function mobs:register_arrow(name, def)
+	if not name or not def then return end -- errorcheck
 	minetest.register_entity(name, {
 		physical = false,
 		visual = def.visual,

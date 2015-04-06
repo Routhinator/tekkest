@@ -87,22 +87,44 @@ mobs:register_arrow("mobs:fireball", {
 
 	-- node hit, bursts into flame (cannot blast through obsidian or protection redo mod items)
 	hit_node = function(self, pos, node)
-		for dx=-1,1 do
-			for dy=-1,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.get_node(p).name
-					if n ~= "default:obsidian"
-					and n ~= "default:obsidianbrick"
-					and not n:find("protector:") then	
-					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
-						minetest.set_node(p, {name="fire:basic_flame"})
-					else
-						minetest.set_node(p, {name="air"})
-					end
-					end
-				end
+	local pos = vector.round(pos)
+	local radius = 1
+	local vm = VoxelManip()
+	local p1 = vector.subtract(pos, radius)
+	local p2 = vector.add(pos, radius)
+	local minp, maxp = vm:read_from_map(p1, p2)
+	local a = VoxelArea:new({MinEdge = minp, MaxEdge = maxp})
+	local data = vm:get_data()
+
+	local p = {}
+
+	local c_air = minetest.get_content_id("air")
+	local c_ignore = minetest.get_content_id("ignore")
+	local c_obsidian = minetest.get_content_id("default:obsidian")
+	local c_brick = minetest.get_content_id("default:obsidianbrick")
+
+	for z = -radius, radius do
+	for y = -radius, radius do
+	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)
+	for x = -radius, radius do
+		local cid = data[vi]
+		p.x = pos.x + x
+		p.y = pos.y + y
+		p.z = pos.z + z
+		if cid ~= c_air and cid ~= c_ignore and cid ~= c_obsidian and cid ~= c_brick then
+			local n = minetest.get_node(p).name
+			-- Don't destroy protection nodes but DO destroy nodes in protected area
+			if not n:find("protector:") then -- and not minetest.is_protected(p, "") then
+			if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
+				minetest.set_node(p, {name="fire:basic_flame"})
+			else
+				minetest.remove_node(p)
+			end
 			end
 		end
+		vi = vi + 1
+	end
+	end
+	end
 	end
 })

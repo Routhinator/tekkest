@@ -1,4 +1,4 @@
--- Mobs Api (7th April 2015)
+-- Mobs Api (4th April 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -17,7 +17,6 @@ function mobs:register_mob(name, def)
 		order = def.order or "",
 on_die = def.on_die,
 jump_height = def.jump_height or 6,
-jump_chance = def.jump_chance or 0,
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -459,24 +458,21 @@ jump_chance = def.jump_chance or 0,
 						if dist > 2 and self.order ~= "stand" then
 							if not self.v_start then
 								self.v_start = true
-								self.set_velocity(self, self.walk_velocity) ; print ("v_start")
-							end -- else
-								if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-								or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
+								self.set_velocity(self, self.walk_velocity)
+							else
+								if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 									local v = self.object:getvelocity()
 									v.y = self.jump_height + 1
 									self.object:setvelocity(v)
 								end
 								self.set_velocity(self, self.walk_velocity)
-							--end
-							if self.walk_chance ~= 0 then -- just added the if statement, set_anim was there
-								self:set_animation("walk") ; print ("walky")
 							end
-								
+							self:set_animation("walk")
 						else
 							self.v_start = false
 							self.set_velocity(self, 0)
 							self:set_animation("stand")
+
 						end
 						return
 					end
@@ -526,18 +522,10 @@ jump_chance = def.jump_chance or 0,
 					self.state = "stand"
 					self:set_animation("stand")
 				else
-					if self.walk_chance ~= 0 and math.random(1, 100) <= self.walk_chance then
+					if math.random(1, 100) <= self.walk_chance then
 						self.set_velocity(self, self.walk_velocity)
 						self.state = "walk"
 						self.set_animation(self, "walk")
-					end
-
-					-- ADDED jumping mobs only
-					if self.jump_chance ~= 0 and math.random(1, 100) <= self.jump_chance then
-						local v = self.object:getvelocity()
-						v.y = self.jump_height
-						self.object:setvelocity(v)
-						self.set_velocity(self, self.walk_velocity)
 					end
 				end
 
@@ -551,7 +539,6 @@ jump_chance = def.jump_chance or 0,
 					v.y = self.jump_height
 					self.object:setvelocity(v)
 				end
-
 				self:set_animation("walk")
 				self.set_velocity(self, self.walk_velocity)
 				if math.random(1, 100) <= 30 then
@@ -596,11 +583,7 @@ jump_chance = def.jump_chance or 0,
 						self.v_start = true
 						self.set_velocity(self, self.run_velocity)
 					else
-
-						-- ADDED if not in air and jump_chance isnt 0 them jump attack
-						if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-						or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
-
+						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 							local v = self.object:getvelocity()
 							v.y = self.jump_height
 							self.object:setvelocity(v)
@@ -851,12 +834,11 @@ jump_chance = def.jump_chance or 0,
 end
 
 mobs.spawning_mobs = {}
-
-function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, chance, active_object_count, min_height, max_height)
+function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
 	mobs.spawning_mobs[name] = true	
 	minetest.register_abm({
 		nodenames = nodes,
-		neighbors = neighbors,
+		neighbors = {"air"},
 		interval = 30,
 		chance = chance,
 		action = function(pos, node, _, active_object_count_wider)
@@ -879,7 +861,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, chanc
 			-- check if light and height levels are ok to spawn
 			local light = minetest.get_node_light(pos)
 			if not light or light > max_light or light < min_light
-			or pos.y > max_height or pos.y < min_height then
+			or pos.y > max_height then
 				return
 			end
 
@@ -902,11 +884,6 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, chanc
 
 		end
 	})
-end
-
--- compatibility with older mob registration
-function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
-	mobs:spawn_specific(name, nodes, {"air"}, min_light, max_light, chance, active_object_count, -32000, max_height)
 end
 
 -- particle effects

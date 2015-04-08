@@ -1,4 +1,4 @@
--- Mobs Api (7th April 2015)
+-- Mobs Api (8th April 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -18,6 +18,7 @@ function mobs:register_mob(name, def)
 on_die = def.on_die,
 jump_height = def.jump_height or 6,
 jump_chance = def.jump_chance or 0,
+footstep = def.footstep,
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -35,7 +36,7 @@ jump_chance = def.jump_chance or 0,
 		lava_damage = def.lava_damage,
 		fall_damage = def.fall_damage or 1,
 		fall_speed = def.fall_speed or -10, -- must be lower than -2
-		drops = def.drops,
+		drops = def.drops or {},
 		armor = def.armor,
 		drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
@@ -62,17 +63,12 @@ jump_chance = def.jump_chance or 0,
 		replace_what = def.replace_what,
 		replace_with = def.replace_with,
 		replace_offset = def.replace_offset or 0,
-
-		stimer = 0,
 		timer = 0,
 		env_damage_timer = 0, -- only if state = "attack"
 		attack = {player=nil, dist=nil},
 		state = "stand",
-		v_start = false,
-		old_y = nil,
 		lifetimer = 600,
 		tamed = false,
-		last_state = nil,
 		pause_timer = 0,
 		horny = false,
 		hornytimer = 0,
@@ -82,7 +78,8 @@ jump_chance = def.jump_chance or 0,
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
 					if math.random(0,100) < 90  and self.sounds.war_cry then
-						minetest.sound_play(self.sounds.war_cry,{ object = self.object })
+						minetest.sound_play(self.sounds.war_cry,{object = self.object})
+						print ("attack sound")
 					end
 				self.state = "attack"
 				self.attack.player = player
@@ -191,8 +188,11 @@ jump_chance = def.jump_chance or 0,
 			-- check for mob drop/replace (used for chicken egg and sheep eating grass/wheat)
 			if self.replace_rate and math.random(1,self.replace_rate) == 1 and self.child == false then
 				local pos = self.object:getpos() ; pos.y = pos.y + self.replace_offset
+				if self.footstep and self.object:getvelocity().y == 0 then minetest.set_node(pos, {name = self.footstep}) end
 				if #minetest.find_nodes_in_area(pos,pos,self.replace_what) > 0
-				and self.object:getvelocity().y == 0 and self.state == "stand" then
+				and self.object:getvelocity().y == 0
+				and self.replace_what
+				and self.state == "stand" then
 					minetest.set_node(pos, {name = self.replace_with})
 				end
 			end
@@ -236,7 +236,7 @@ jump_chance = def.jump_chance or 0,
 				self.timer = 0
 			end
 
-			if self.sounds and self.sounds.random and math.random(1, 100) <= 1 then
+			if self.sounds.random and math.random(1, 100) <= 1 then
 				minetest.sound_play(self.sounds.random, {object = self.object})
 			end
 			
@@ -268,6 +268,20 @@ jump_chance = def.jump_chance or 0,
 				end
 
 				check_for_death(self)
+			end
+			
+			local do_jump = function(self)
+				local pos = self.object:getpos()
+				pos.y = pos.y - (-self.collisionbox[2]+self.collisionbox[5])
+				local nod = minetest.get_node(pos)
+				if not nod or not minetest.registered_nodes[nod.name]
+				or minetest.registered_nodes[nod.name].walkable == false then return end
+				local v = self.object:getvelocity()
+				v.y = self.jump_height
+				self.object:setvelocity(v)
+				if self.sounds.jump then
+					minetest.sound_play(self.sounds.jump, {object = self.object})
+				end
 			end
 			
 			self.env_damage_timer = self.env_damage_timer + dtime
@@ -418,13 +432,11 @@ jump_chance = def.jump_chance or 0,
 				-- npc stop following player if not owner
 				if self.following and self.type == "npc" and self.owner and self.owner ~= self.following:get_player_name() then
 					self.following = nil
-					self.v_start = false
 				end
 			else
 				-- stop following player if not holding specific item
 				if self.following and self.following.is_player and self.following:get_wielded_item():get_name() ~= self.follow then
 					self.following = nil
-					self.v_start = false
 				end
 			end
 
@@ -443,7 +455,6 @@ jump_chance = def.jump_chance or 0,
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if dist > self.view_range then
 						self.following = nil
-						self.v_start = false
 					else
 						local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 						local yaw = math.atan(vec.z/vec.x)+math.pi/2
@@ -457,24 +468,22 @@ jump_chance = def.jump_chance or 0,
 
 						-- anyone but standing npc's can move along
 						if dist > 2 and self.order ~= "stand" then
-							if not self.v_start then
-								self.v_start = true
-								self.set_velocity(self, self.walk_velocity) ; print ("v_start")
-							end -- else
-								if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-								or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
-									local v = self.object:getvelocity()
-									v.y = self.jump_height + 1
-									self.object:setvelocity(v)
-								end
-								self.set_velocity(self, self.walk_velocity)
-							--end
-							if self.walk_chance ~= 0 then -- just added the if statement, set_anim was there
-								self:set_animation("walk") ; print ("walky")
+							if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
+							or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
+--								local v = self.object:getvelocity()
+--								v.y = self.jump_height + 1
+--								self.object:setvelocity(v)
+--								if self.sounds.jump then
+--									minetest.sound_play(self.sounds.jump, {object = self.object})
+--								end
+								do_jump(self)
+							end
+							self.set_velocity(self, self.walk_velocity)
+							if self.walk_chance ~= 0 then
+								self:set_animation("walk")
 							end
 								
 						else
-							self.v_start = false
 							self.set_velocity(self, 0)
 							self:set_animation("stand")
 						end
@@ -534,9 +543,13 @@ jump_chance = def.jump_chance or 0,
 
 					-- ADDED jumping mobs only
 					if self.jump_chance ~= 0 and math.random(1, 100) <= self.jump_chance then
-						local v = self.object:getvelocity()
-						v.y = self.jump_height
-						self.object:setvelocity(v)
+--						local v = self.object:getvelocity()
+--						v.y = self.jump_height
+--						self.object:setvelocity(v)
+--						if self.sounds.jump then
+--							minetest.sound_play(self.sounds.jump, {object = self.object})
+--						end
+						do_jump(self)
 						self.set_velocity(self, self.walk_velocity)
 					end
 				end
@@ -547,9 +560,13 @@ jump_chance = def.jump_chance or 0,
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-					local v = self.object:getvelocity()
-					v.y = self.jump_height
-					self.object:setvelocity(v)
+--					local v = self.object:getvelocity()
+--					v.y = self.jump_height
+--					self.object:setvelocity(v)
+--					if self.sounds.jump then
+--						minetest.sound_play(self.sounds.jump, {object = self.object})
+--					end
+					do_jump(self)
 				end
 
 				self:set_animation("walk")
@@ -573,7 +590,6 @@ jump_chance = def.jump_chance or 0,
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
-					self.v_start = false
 					self.set_velocity(self, 0)
 					self.attack = {player=nil, dist=nil}
 					self:set_animation("stand")
@@ -592,26 +608,22 @@ jump_chance = def.jump_chance or 0,
 				end
 				self.object:setyaw(yaw)
 				if self.attack.dist > 2 then
-					if not self.v_start then
-						self.v_start = true
-						self.set_velocity(self, self.run_velocity)
-					else
-
-						-- ADDED if not in air and jump_chance isnt 0 them jump attack
-						if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-						or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
-
-							local v = self.object:getvelocity()
-							v.y = self.jump_height
-							self.object:setvelocity(v)
-						end
-						self.set_velocity(self, self.run_velocity)
+					-- ADDED if not in air and jump_chance isnt 0 them jump attack
+					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
+					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
+--						local v = self.object:getvelocity()
+--						v.y = self.jump_height
+--						self.object:setvelocity(v)
+--						if self.sounds.jump then
+--							minetest.sound_play(self.sounds.jump, {object = self.object})
+--						end
+						do_jump(self)
 					end
+					self.set_velocity(self, self.run_velocity)
 					self:set_animation("run")
 				else
 					self.set_velocity(self, 0)
 					self:set_animation("punch")
-					self.v_start = false
 					if self.timer > 1 then
 						self.timer = 0
 						local p2 = p
@@ -619,7 +631,7 @@ jump_chance = def.jump_chance or 0,
 						p2.y = p2.y + 1.5
 						s2.y = s2.y + 1.5
 						if minetest.line_of_sight(p2,s2) == true then
-							if self.sounds and self.sounds.attack then
+							if self.sounds.attack then
 								minetest.sound_play(self.sounds.attack, {object = self.object})
 							end
 							self.attack.player:punch(self.object, 1.0,  {
@@ -648,7 +660,6 @@ jump_chance = def.jump_chance or 0,
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
-					self.v_start = false
 					self.set_velocity(self, 0)
 					if self.type ~= "npc" then
 						self.attack = {player=nil, dist=nil}
@@ -675,7 +686,7 @@ jump_chance = def.jump_chance or 0,
 
 					self:set_animation("punch")
 
-					if self.sounds and self.sounds.attack then
+					if self.sounds.attack then
 						minetest.sound_play(self.sounds.attack, {object = self.object})
 					end
 
@@ -696,6 +707,7 @@ jump_chance = def.jump_chance or 0,
 		on_activate = function(self, staticdata, dtime_s)
 			local pos = self.object:getpos()
 			self.object:set_hp( math.random(self.hp_min, self.hp_max) ) -- set HP
+			self.oldhp = self.object:get_hp(self)
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y= self.fall_speed, z=0})
 			self.state = "stand"
@@ -852,12 +864,12 @@ end
 
 mobs.spawning_mobs = {}
 
-function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, chance, active_object_count, min_height, max_height)
+function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height)
 	mobs.spawning_mobs[name] = true	
 	minetest.register_abm({
 		nodenames = nodes,
 		neighbors = neighbors,
-		interval = 30,
+		interval = interval,
 		chance = chance,
 		action = function(pos, node, _, active_object_count_wider)
 
@@ -906,7 +918,7 @@ end
 
 -- compatibility with older mob registration
 function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
-	mobs:spawn_specific(name, nodes, {"air"}, min_light, max_light, chance, active_object_count, -32000, max_height)
+	mobs:spawn_specific(name, nodes, {"air"}, min_light, max_light, 30, chance, active_object_count, -32000, max_height)
 end
 
 -- particle effects
@@ -930,7 +942,14 @@ end
 
 -- on mob death drop items
 function check_for_death(self)
-	if self.object:get_hp() > 0 then return end
+	local hp = self.object:get_hp()
+	if hp > 0 then
+		if self.sounds.damage ~= nil and hp < self.oldhp then
+			minetest.sound_play(self.sounds.damage,{object = self.object})
+			self.oldhp = hp
+		end
+		return
+	end
 	local pos = self.object:getpos()
 	pos.y = pos.y + 0.5 -- drop items half a block higher
 	self.object:remove()
@@ -944,7 +963,7 @@ function check_for_death(self)
 		end
 	end
 	if self.sounds.death ~= nil then
-		minetest.sound_play(self.sounds.death,{object = self.object,})
+		minetest.sound_play(self.sounds.death,{object = self.object})
 	end
 	if self.on_die then
 		pos.y = pos.y - 0.5

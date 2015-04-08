@@ -278,7 +278,7 @@ footstep = def.footstep,
 				or minetest.registered_nodes[nod.name].walkable == false then return end
 				local v = self.object:getvelocity()
 				v.y = self.jump_height
-				if self.following then v.y = v.y + 0.5 end
+				if self.following then v.y = v.y + 1 end
 				self.object:setvelocity(v)
 				if self.sounds.jump then
 					minetest.sound_play(self.sounds.jump, {object = self.object})

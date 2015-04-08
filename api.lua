@@ -26,10 +26,10 @@ footstep = def.footstep,
 		visual = def.visual,
 		visual_size = def.visual_size or {x=1, y=1},
 		mesh = def.mesh,
-		makes_footstep_sound = def.makes_footstep_sound,
+		makes_footstep_sound = def.makes_footstep_sound or true,
 		view_range = def.view_range or 5,
-		walk_velocity = def.walk_velocity,
-		run_velocity = def.run_velocity,
+		walk_velocity = def.walk_velocity or 1,
+		run_velocity = def.run_velocity or 2,
 		damage = def.damage,
 		light_damage = def.light_damage,
 		water_damage = def.water_damage,
@@ -278,6 +278,7 @@ footstep = def.footstep,
 				or minetest.registered_nodes[nod.name].walkable == false then return end
 				local v = self.object:getvelocity()
 				v.y = self.jump_height
+				if self.following then v.y = v.y + 0.5 end
 				self.object:setvelocity(v)
 				if self.sounds.jump then
 					minetest.sound_play(self.sounds.jump, {object = self.object})
@@ -470,19 +471,12 @@ footstep = def.footstep,
 						if dist > 2 and self.order ~= "stand" then
 							if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
 							or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
---								local v = self.object:getvelocity()
---								v.y = self.jump_height + 1
---								self.object:setvelocity(v)
---								if self.sounds.jump then
---									minetest.sound_play(self.sounds.jump, {object = self.object})
---								end
 								do_jump(self)
 							end
 							self.set_velocity(self, self.walk_velocity)
 							if self.walk_chance ~= 0 then
 								self:set_animation("walk")
 							end
-								
 						else
 							self.set_velocity(self, 0)
 							self:set_animation("stand")
@@ -543,12 +537,6 @@ footstep = def.footstep,
 
 					-- ADDED jumping mobs only
 					if self.jump_chance ~= 0 and math.random(1, 100) <= self.jump_chance then
---						local v = self.object:getvelocity()
---						v.y = self.jump_height
---						self.object:setvelocity(v)
---						if self.sounds.jump then
---							minetest.sound_play(self.sounds.jump, {object = self.object})
---						end
 						do_jump(self)
 						self.set_velocity(self, self.walk_velocity)
 					end
@@ -560,12 +548,6 @@ footstep = def.footstep,
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
---					local v = self.object:getvelocity()
---					v.y = self.jump_height
---					self.object:setvelocity(v)
---					if self.sounds.jump then
---						minetest.sound_play(self.sounds.jump, {object = self.object})
---					end
 					do_jump(self)
 				end
 
@@ -611,12 +593,6 @@ footstep = def.footstep,
 					-- ADDED if not in air and jump_chance isnt 0 them jump attack
 					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
 					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
---						local v = self.object:getvelocity()
---						v.y = self.jump_height
---						self.object:setvelocity(v)
---						if self.sounds.jump then
---							minetest.sound_play(self.sounds.jump, {object = self.object})
---						end
 						do_jump(self)
 					end
 					self.set_velocity(self, self.run_velocity)
@@ -911,6 +887,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			-- spawn mob half block higher
 			pos.y = pos.y - 0.5
 			minetest.add_entity(pos, name)
+			--print ("Spawned "..name.." at "..minetest.pos_to_string(pos))
 
 		end
 	})

@@ -19,6 +19,7 @@ on_die = def.on_die,
 jump_height = def.jump_height or 6,
 jump_chance = def.jump_chance or 0,
 footstep = def.footstep,
+rotate = def.rotate or 0,
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -38,7 +39,7 @@ footstep = def.footstep,
 		fall_speed = def.fall_speed or -10, -- must be lower than -2
 		drops = def.drops or {},
 		armor = def.armor,
-		drawtype = def.drawtype,
+		--drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
 		type = def.type,
 		attack_type = def.attack_type,
@@ -89,10 +90,8 @@ footstep = def.footstep,
 		
 		set_velocity = function(self, v)
 			if not v then v = 0 end -- added
-			local yaw = self.object:getyaw()
-			if self.drawtype == "side" then
-				yaw = yaw+(math.pi/2)
-			end
+			if def.drawtype and def.drawtype == "side" then self.rotate = 1.5 end
+			local yaw = self.object:getyaw() + self.rotate
 			local x = math.sin(yaw) * -v
 			local z = math.cos(yaw) * v
 			self.object:setvelocity({x=x, y=self.object:getvelocity().y, z=z})
@@ -105,10 +104,7 @@ footstep = def.footstep,
 --[[
 		in_fov = function(self,pos)
 			-- checks if POS is in self's FOV
-			local yaw = self.object:getyaw()
-			if self.drawtype == "side" then
-				yaw = yaw+(math.pi/2)
-			end
+			local yaw = self.object:getyaw() + self.rotate
 			local vx = math.sin(yaw)
 			local vz = math.cos(yaw)
 			local ds = math.sqrt(vx^2 + vz^2)
@@ -458,10 +454,7 @@ footstep = def.footstep,
 						self.following = nil
 					else
 						local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-						local yaw = math.atan(vec.z/vec.x)+math.pi/2
-						if self.drawtype == "side" then
-							yaw = yaw+(math.pi/2)
-						end
+						local yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 						if p.x > s.x then
 							yaw = yaw+math.pi
 						end
@@ -507,10 +500,7 @@ footstep = def.footstep,
 
 					if lp ~= nil then
 						local vec = {x=lp.x-s.x, y=lp.y-s.y, z=lp.z-s.z}
-						yaw = math.atan(vec.z/vec.x)+math.pi/2
-						if self.drawtype == "side" then
-							yaw = yaw+(math.pi/2)
-						end
+						yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 						if lp.x > s.x then
 							yaw = yaw+math.pi
 						end
@@ -581,10 +571,7 @@ footstep = def.footstep,
 				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-				local yaw = math.atan(vec.z/vec.x)+math.pi/2
-				if self.drawtype == "side" then
-					yaw = yaw+(math.pi/2)
-				end
+				local yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -647,10 +634,7 @@ footstep = def.footstep,
 				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-				local yaw = math.atan(vec.z/vec.x)+math.pi/2
-				if self.drawtype == "side" then
-					yaw = yaw+(math.pi/2)
-				end
+				local yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end

@@ -370,8 +370,8 @@ rotate = def.rotate or 0,
 
 			-- if animal is horny, find another same animal who is horny and mate
 			if self.horny == true and self.hornytimer <= 40 then
-				local pos = self.object:getpos()
-				effect(pos, 4, "heart.png")
+				local pos = self.object:getpos() ; pos.y = pos.y + 1
+				effect(pos, 4, "heart.png") ; pos.y = pos.y - 1
 				local ents = minetest.get_objects_inside_radius(pos, self.view_range)
 				local num = 0
 				local ent = nil
@@ -381,14 +381,8 @@ rotate = def.rotate or 0,
 					if ent and ent.name == self.name and ent.horny == true and ent.hornytimer <= 40 then num = num + 1 end
 
 					if num > 1 then
-						self.following = ent
-						ent.following = self
-						self.horny = false
-						self.hornytimer = 0
-						self.following = nil
-						ent.horny = false
-						ent.following = nil
-						ent.hornytimer = 0
+						self.hornytimer = 41
+						ent.hornytimer = 41
 						minetest.after(7, function(dtime)
 							local mob = minetest.add_entity(pos, self.name)
 							local ent2 = mob:get_luaentity()

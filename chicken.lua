@@ -20,7 +20,6 @@ mobs:register_mob("mobs:chicken", {
 		{"mobs_chick.png", "mobs_chick.png", "mobs_chick.png", "mobs_chick.png",
 		"mobs_chick.png", "mobs_chick.png", "mobs_chick.png", "mobs_chick.png", "mobs_chick.png"},
 	},
-	blood_texture = "mobs_blood.png",
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_chicken",
@@ -57,7 +56,7 @@ mobs:register_mob("mobs:chicken", {
 			end
 			if self.child == true then
 				self.hornytimer = self.hornytimer + 10
-				return tool
+				return
 			end
 			self.food = (self.food or 0) + 1
 			if self.food >= 8 then
@@ -68,7 +67,7 @@ mobs:register_mob("mobs:chicken", {
 				self.tamed = true
 				minetest.sound_play("mobs_chicken", {object = self.object,gain = 1.0,max_hear_distance = 15,loop = false,})
 			end
-			return tool
+			return
 		end
 
 		if clicker:is_player()

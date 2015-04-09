@@ -15,7 +15,6 @@ mobs:register_mob("mobs:cow", {
 	textures = {
 		{"mobs_cow.png"},
 	},
-	blood_texture = "mobs_blood.png",
 	visual_size = {x=1,y=1},
 	makes_footstep_sound = true,
 	sounds = {
@@ -71,7 +70,7 @@ mobs:register_mob("mobs:cow", {
 			end
 			if self.child == true then
 				self.hornytimer = self.hornytimer + 10
-				return tool
+				return
 			end
 			self.food = (self.food or 0) + 1
 			if self.food >= 8 then
@@ -83,7 +82,7 @@ mobs:register_mob("mobs:cow", {
 				self.tamed = true
 				minetest.sound_play("mobs_cow", {object = self.object,gain = 1.0,max_hear_distance = 32,loop = false,})
 			end
-			return tool
+			return
 		end
 		
 	end,

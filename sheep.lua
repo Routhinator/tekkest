@@ -13,7 +13,6 @@ mobs:register_mob("mobs:sheep", {
 	textures = {
 		{"mobs_sheep.png"},
 	},
-	blood_texture = "mobs_blood.png",
 	visual_size = {x=1,y=1},
 	gotten_texture = {"mobs_sheep_shaved.png"},
 	gotten_mesh = "mobs_sheep_shaved.x",
@@ -51,7 +50,7 @@ mobs:register_mob("mobs:sheep", {
 			end
 			if self.child == true then
 				self.hornytimer = self.hornytimer + 10
-				return tool
+				return
 			end
 			self.food = (self.food or 0) + 1
 			if self.food >= 8 then
@@ -67,7 +66,7 @@ mobs:register_mob("mobs:sheep", {
 				})
 				minetest.sound_play("mobs_sheep", {object = self.object,gain = 1.0,max_hear_distance = 32,loop = false,})
 			end
-			return tool
+			return
 		end
 
 		if item:get_name() == "mobs:shears"

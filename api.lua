@@ -8,6 +8,7 @@ mobs.protected = 0
 -- Initial check to see if damage is enabled and peaceful mode active
 local damage_enabled = minetest.setting_getbool("enable_damage")
 local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
+local enable_blood = minetest.setting_getbool("mobs_enable_blood") or true
 
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
@@ -19,7 +20,7 @@ on_die = def.on_die,
 jump_height = def.jump_height or 6,
 jump_chance = def.jump_chance or 0,
 footstep = def.footstep,
-rotate = def.rotate or 0,
+rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -771,7 +772,7 @@ rotate = def.rotate or 0,
 			--blood_particles
 			local pos = self.object:getpos()
 			pos.y = pos.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
-			if self.blood_amount > 0 and pos then
+			if self.blood_amount > 0 and pos and enable_blood == true then
 				effect(pos, self.blood_amount, self.blood_texture)
 			end
 

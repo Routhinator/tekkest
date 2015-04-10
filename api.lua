@@ -1,11 +1,11 @@
--- Mobs Api (8th April 2015)
+-- Mobs Api (10th April 2015)
 mobs = {}
 mobs.mod = "redo"
 
 -- Do mobs spawn in protected areas (0=yes, 1=no)
 mobs.protected = 0
 
--- Initial check to see if damage is enabled and peaceful mode active
+-- Initial settings check
 local damage_enabled = minetest.setting_getbool("enable_damage")
 local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
 local enable_blood = minetest.setting_getbool("mobs_enable_blood") or true
@@ -21,6 +21,7 @@ jump_height = def.jump_height or 6,
 jump_chance = def.jump_chance or 0,
 footstep = def.footstep,
 rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
+lifetimer = def.lifetimer or 600,
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -69,7 +70,6 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 		env_damage_timer = 0, -- only if state = "attack"
 		attack = {player=nil, dist=nil},
 		state = "stand",
-		lifetimer = 600,
 		tamed = false,
 		pause_timer = 0,
 		horny = false,
@@ -164,21 +164,19 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 
 			if self.type == "monster" and peaceful_only then
 				self.object:remove()
+				return
 			end
-			
-			self.lifetimer = self.lifetimer - dtime
-			if self.lifetimer <= 0 and not self.tamed and self.type ~= "npc" then
-				local player_count = 0
+
+			if self.type ~= "npc" and not self.tamed then
+				self.lifetimer = self.lifetimer - dtime
+			end
+			if self.lifetimer <= 0 and self.state ~= "attack" then
 				for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 10)) do
 					if obj:is_player() then
-						player_count = player_count + 1
-						break -- only really need 1 player to be found
+						minetest.log("action","lifetimer expired, removed mob "..self.name)
+						self.object:remove()
+						return
 					end
-				end
-				if player_count == 0 and self.state ~= "attack" then
-					minetest.log("action","lifetimer expired, removed mob "..self.name)
-					self.object:remove()
-					return
 				end
 			end
 
@@ -215,8 +213,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				self.old_y = self.object:getpos().y
 			end
 			
-			-- if pause state then this is where the loop ends
-			-- pause is only set after a monster is hit
+			-- knock back timer
 			if self.pause_timer > 0 then
 				self.pause_timer = self.pause_timer - dtime
 				if self.pause_timer < 1 then
@@ -225,6 +222,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				return
 			end
 			
+			-- attack timer
 			self.timer = self.timer + dtime
 			if self.state ~= "attack" then
 				if self.timer < 1 then
@@ -269,7 +267,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 			
 			local do_jump = function(self)
 				local pos = self.object:getpos()
-				pos.y = pos.y - (-self.collisionbox[2]+self.collisionbox[5])
+				pos.y = pos.y - (-self.collisionbox[2] + self.collisionbox[5])
 				local nod = minetest.get_node(pos)
 				if not nod or not minetest.registered_nodes[nod.name]
 				or minetest.registered_nodes[nod.name].walkable == false then return end
@@ -282,6 +280,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				end
 			end
 			
+			-- environmental damage timer
 			self.env_damage_timer = self.env_damage_timer + dtime
 			if self.state == "attack" and self.env_damage_timer > 1 then
 				self.env_damage_timer = 0
@@ -290,7 +289,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				do_env_damage(self)
 			end
 			
-			-- FIND SOMEONE TO ATTACK
+			-- find someone to attack
 			if self.type == "monster" and damage_enabled and self.state ~= "attack" then
 
 				local s = self.object:getpos()
@@ -328,7 +327,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				end
 			end
 			
-			-- NPC FIND A MONSTER TO ATTACK
+			-- npc, find monster to attack
 			if self.type == "npc" and self.attacks_monsters and self.state ~= "attack" then
 				local s = self.object:getpos()
 				local obj = nil
@@ -377,10 +376,8 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				local num = 0
 				local ent = nil
 				for i,obj in ipairs(ents) do
-
 					ent = obj:get_luaentity()
 					if ent and ent.name == self.name and ent.horny == true and ent.hornytimer <= 40 then num = num + 1 end
-
 					if num > 1 then
 						self.hornytimer = 41
 						ent.hornytimer = 41
@@ -407,6 +404,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				end
 			end
 
+			-- find player to follow
 			if (self.follow ~= "" or self.order == "follow") and not self.following and self.state ~= "attack" then
 				local s, p, dist
 				for _,player in pairs(minetest.get_connected_players()) do
@@ -432,8 +430,8 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				end
 			end
 
+			-- follow player or mob
 			if self.following then
-
 				local s = self.object:getpos()
 				local p
 
@@ -520,7 +518,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 						self.set_animation(self, "walk")
 					end
 
-					-- ADDED jumping mobs only
+					-- jumping mobs only
 					if self.jump_chance ~= 0 and math.random(1, 100) <= self.jump_chance then
 						do_jump(self)
 						self.set_velocity(self, self.walk_velocity)
@@ -572,7 +570,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				end
 				self.object:setyaw(yaw)
 				if self.attack.dist > 2 then
-					-- ADDED if not in air and jump_chance isnt 0 them jump attack
+					-- jump attack
 					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
 					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
 						do_jump(self)
@@ -672,7 +670,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 				self.object:remove()
 			end
 			if self.type ~= "npc" then
-				self.lifetimer = 600 - dtime_s
+				self.lifetimer = self.lifetimer - dtime_s
 			end
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
@@ -771,7 +769,7 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 
 			--blood_particles
 			local pos = self.object:getpos()
-			pos.y = pos.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
+			pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) / 2
 			if self.blood_amount > 0 and pos and enable_blood == true then
 				effect(pos, self.blood_amount, self.blood_texture)
 			end
@@ -780,18 +778,13 @@ rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 			-- https://github.com/BlockMen/pyramids
 			local kb = self.knock_back
 			local r = self.recovery_time
-
+			local ykb = 2
+			local v = self.object:getvelocity()
 			if tflp < tool_capabilities.full_punch_interval then
 				kb = kb * ( tflp / tool_capabilities.full_punch_interval )
 				r = r * ( tflp / tool_capabilities.full_punch_interval )
 			end
-
-			local ykb=2
-			local v = self.object:getvelocity()
-			if v.y ~= 0 then
-				ykb = 0
-			end 
-
+			if v.y ~= 0 then ykb = 0 end 
 			self.object:setvelocity({x=dir.x*kb,y=ykb,z=dir.z*kb})
 			self.pause_timer = r
 

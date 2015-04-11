@@ -65,7 +65,6 @@ minetest.register_node("mobs:beehive", {
 	sunlight_propagates = true,
 	walkable = true,
 	groups = {fleshy=3,dig_immediate=3},
-	on_use = minetest.item_eat(4),
 	sounds = default.node_sound_defaults(),
 	after_place_node = function(pos, placer, itemstack)
 		if placer:is_player() then

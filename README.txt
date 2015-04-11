@@ -29,7 +29,7 @@ This mod contains the following additions:
 Changelog:
 
 beta- Npc mob added, kills monsters, attacks player when punched, right click with food to heal or gold lump for drop
-1.09- reworked breeding routine, added mob rotation value, added footstep feature, added jumping mobs with souns feature
+1.09- reworked breeding routine, added mob rotation value, added footstep feature, added jumping mobs with sounds feature, added magic lasso for picking up animals
 1.08- Mob throwing attack has been rehauled so that they can damage one another, also drops and on_die function added
 1.07- Npc's can now be set to follow player or stand by using self.order and self.owner variables
 1.06- Changed recovery times after breeding, and time taken to grow up (can be sped up by feeding baby animal)

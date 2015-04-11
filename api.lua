@@ -170,7 +170,7 @@ lifetimer = def.lifetimer or 600,
 			if self.type ~= "npc" and not self.tamed then
 				self.lifetimer = self.lifetimer - dtime
 			end
-			if self.lifetimer <= 0 and self.state ~= "attack" then
+			if self.lifetimer <= 0 and self.state ~= "attack" and not self.tamed then
 				for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 10)) do
 					if obj:is_player() then
 						minetest.log("action","lifetimer expired, removed mob "..self.name)

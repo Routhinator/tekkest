@@ -24,16 +24,12 @@ mobs:register_mob("mobs:rat", {
 	lava_damage = 4,
 	light_damage = 0,
 	on_rightclick = function(self, clicker)
-		local tool = clicker:get_wielded_item()
-		if tool:get_name() == "mobs:magic_lasso"
-		and clicker:is_player()
+		if clicker:is_player()
 		and clicker:get_inventory()
 		and self.child == false
 		and clicker:get_inventory():room_for_item("main", "mobs:rat") then
 			clicker:get_inventory():add_item("main", "mobs:rat")
 			self.object:remove()
-			item:add_wear(3000) -- 22 uses
-			clicker:set_wielded_item(tool)
 		end
 	end,
 })

@@ -49,10 +49,6 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
-if minetest.setting_get("log_mods") then
-	minetest.log("action", "mobs loaded")
-end
-
 -- Golden Lasso
 
 minetest.register_tool("mobs:magic_lasso", {
@@ -68,3 +64,7 @@ minetest.register_craft({
 		{"farming:string", "default:gold_lump", "farming:string"},
 	}
 })
+
+if minetest.setting_get("log_mods") then
+	minetest.log("action", "mobs loaded")
+end

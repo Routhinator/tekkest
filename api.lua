@@ -167,15 +167,16 @@ lifetimer = def.lifetimer or 600,
 				return
 			end
 
+			-- if lifetimer run out and not npc, tamed or attacking then remove mob
 			if self.type ~= "npc" and not self.tamed then
 				self.lifetimer = self.lifetimer - dtime
-			end
-			if self.lifetimer <= 0 and self.state ~= "attack" and not self.tamed then
-				for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 10)) do
-					if obj:is_player() then
-						minetest.log("action","lifetimer expired, removed mob "..self.name)
-						self.object:remove()
-						return
+				if self.lifetimer <= 0 and self.state ~= "attack" then
+					for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 10)) do
+						if obj:is_player() then
+							minetest.log("action","lifetimer expired, removed mob "..self.name)
+							self.object:remove()
+							return
+						end
 					end
 				end
 			end
@@ -669,14 +670,14 @@ lifetimer = def.lifetimer or 600,
 			if self.type == "monster" and peaceful_only then
 				self.object:remove()
 			end
-			if self.type ~= "npc" then
-				self.lifetimer = self.lifetimer - dtime_s
-			end
+--			if self.type ~= "npc" then
+--				self.lifetimer = self.lifetimer - dtime_s
+--			end
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
 				if tmp then
 					if tmp.lifetimer then
-						self.lifetimer = tmp.lifetimer - dtime_s
+						self.lifetimer = tmp.lifetimer --  - dtime_s
 					end
 					if tmp.tamed then
 						self.tamed = tmp.tamed
@@ -711,9 +712,9 @@ lifetimer = def.lifetimer or 600,
 			if self.type == "monster" and self.tamed == true then
 				self.type = "npc"
 			end
-			if self.lifetimer <= 0 and not self.tamed and self.type ~= "npc" then
-				self.object:remove()
-			end
+--			if self.lifetimer <= 0 and not self.tamed and self.type ~= "npc" then
+--				self.object:remove()
+--			end
 		end,
 
 		get_staticdata = function(self)

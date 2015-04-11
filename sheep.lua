@@ -80,13 +80,25 @@ mobs:register_mob("mobs:sheep", {
 				if obj then
 					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
 				end
-				item:add_wear(65535/100)
+				item:add_wear(650) -- 100 uses
 				clicker:set_wielded_item(item)
 			end
 			self.object:set_properties({
 				textures = {"mobs_sheep_shaved.png"},
 				mesh = "mobs_sheep_shaved.x",
 			})
+		end
+
+		if item:get_name() == "mobs:magic_lasso"
+		and clicker:is_player()
+		and clicker:get_inventory()
+		and self.child == false
+		and clicker:get_inventory():room_for_item("main", "mobs:sheep") then
+			clicker:get_inventory():add_item("main", "mobs:sheep")
+			self.object:remove()
+			item:add_wear(3000) -- 22 uses
+			print ("wear", item:get_wear())
+			clicker:set_wielded_item(item)
 		end
 	end,
 })
@@ -99,14 +111,6 @@ mobs:register_egg("mobs:sheep", "Sheep", "wool_white.png", 1)
 minetest.register_tool("mobs:shears", {
 	description = "Steel Shears (right-click sheep to shear)",
 	inventory_image = "mobs_shears.png",
-	tool_capabilities = {
-		full_punch_interval = 1,
-		max_drop_level=1,
-		groupcaps={
-			snappy={times={[1]=2.5, [2]=1.20, [3]=0.35}, uses=30, maxlevel=2},
-		},
-		damage_groups = {fleshy=0},
-	}
 })
 
 minetest.register_craft({

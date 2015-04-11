@@ -53,11 +53,15 @@ mobs:register_mob("mobs:kitten", {
 			return
 		end
 
-		if clicker:is_player()
+		if item:get_name() == "mobs:magic_lasso"
+		and clicker:is_player()
 		and clicker:get_inventory()
+		and self.child == false
 		and clicker:get_inventory():room_for_item("main", "mobs:kitten") then
 			clicker:get_inventory():add_item("main", "mobs:kitten")
 			self.object:remove()
+			item:add_wear(3000) -- 22 uses
+			clicker:set_wielded_item(item)
 		end
 	end,
 })

@@ -814,14 +814,13 @@ end
 mobs.spawning_mobs = {}
 
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height)
-	mobs.spawning_mobs[name] = true	
+	mobs.spawning_mobs[name] = true
 	minetest.register_abm({
 		nodenames = nodes,
 		neighbors = neighbors,
 		interval = interval,
 		chance = chance,
 		action = function(pos, node, _, active_object_count_wider)
-
 			-- do not spawn if too many active in area
 			if active_object_count_wider > active_object_count
 			or not mobs.spawning_mobs[name] 
@@ -868,7 +867,7 @@ end
 
 -- compatibility with older mob registration
 function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height)
-	mobs:spawn_specific(name, nodes, {"air"}, min_light, max_light, 30, chance, active_object_count, -32000, max_height)
+	mobs:spawn_specific(name, nodes, {"air"}, min_light, max_light, 30, chance, active_object_count, -31000, max_height)
 end
 
 -- particle effects

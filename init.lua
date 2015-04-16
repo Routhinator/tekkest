@@ -1,5 +1,5 @@
 
---= Ambience lite by TenPlus1 (6th March 2015)
+--= Ambience lite by TenPlus1 (16th April 2015)
 
 local max_frequency_all = 1000 -- larger number means more frequent sounds (100-2000)
 local SOUNDVOLUME = 1
@@ -132,7 +132,7 @@ local get_ambience = function(player)
 	end ; --print (num_fire, num_lava, num_water_flowing, num_water_source, num_desert)
 
 	-- is fire redo mod active?
-	if fire.mod and fire.mod == "redo" then
+	if fire and fire.mod and fire.mod == "redo" then
 		if num_fire > 8 then
 			return {largefire=largefire}
 		elseif num_fire > 0 then
@@ -197,7 +197,6 @@ local play_sound = function(player, list, number)
 				end
 			end, {list, player_name})
 		end
-
 	end
 end
 

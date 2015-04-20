@@ -647,6 +647,9 @@ lifetimer = def.lifetimer or 600,
 							if minetest.find_node_near(pos, 1, {"group:water"})
 							or minetest.is_protected(pos, "") then
 								self.object:remove()
+								if self.sounds.explode ~= "" then
+									minetest.sound_play(self.sounds.explode, {pos = pos, gain = 1.0, max_hear_distance = 16})
+								end
 								effect(pos, 10, "tnt_smoke.png")
 								return
 							end

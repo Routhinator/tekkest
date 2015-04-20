@@ -24,6 +24,7 @@ mobs:register_mob("mobs:dungeon_master", {
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_dungeonmaster",
+		attack = "mobs_fireball",
 	},
 	walk_velocity = 1,
 	run_velocity = 3,

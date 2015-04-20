@@ -644,7 +644,7 @@ lifetimer = def.lifetimer or 600,
 						if self.timer > 3 then
 							local pos = vector.round(self.object:getpos())
 							do_tnt_physics(pos, 3, self) -- hurt player/mobs in blast area
-							minetest.sound_play("tnt_explode", {pos = pos, gain = 1.0, max_hear_distance = 16,})
+							minetest.sound_play(self.sounds.explode, {pos = pos, gain = 1.0, max_hear_distance = 16,})
 							if minetest.find_node_near(pos, 1, {"group:water"})
 							or minetest.is_protected(pos, "") then
 								self.object:remove()
@@ -652,7 +652,7 @@ lifetimer = def.lifetimer or 600,
 								return
 							end
 							self.object:remove()
-							mobs:explosion(pos, 2, 1, 1)
+							mobs:explosion(pos, 2, 1, 1, "tnt_explode")
 						end
 				end
 -- Modif MFF "attack type kamicaze" des creepers /FIN
@@ -998,7 +998,7 @@ function effect(pos, amount, texture)
 end
 
 -- explosion
-function mobs:explosion(pos, radius, fire, smoke)
+function mobs:explosion(pos, radius, fire, smoke, sound)
 	-- node hit, bursts into flame (cannot blast through obsidian or protection redo mod items)
 	if not fire then fire = 0 end
 	if not smoke then smoke = 0 end
@@ -1014,7 +1014,7 @@ function mobs:explosion(pos, radius, fire, smoke)
 	local c_obsidian = minetest.get_content_id("default:obsidian")
 	local c_brick = minetest.get_content_id("default:obsidianbrick")
 	local c_chest = minetest.get_content_id("default:chest_locked")
-
+if sound and sound ~= "" then minetest.sound_play(sound, {pos = pos, gain = 1.0, max_hear_distance = 16}) end
 	for z = -radius, radius do
 	for y = -radius, radius do
 	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)

@@ -644,7 +644,6 @@ lifetimer = def.lifetimer or 600,
 						if self.timer > 3 then
 							local pos = vector.round(self.object:getpos())
 							do_tnt_physics(pos, 3, self) -- hurt player/mobs in blast area
-							minetest.sound_play(self.sounds.explode, {pos = pos, gain = 1.0, max_hear_distance = 16,})
 							if minetest.find_node_near(pos, 1, {"group:water"})
 							or minetest.is_protected(pos, "") then
 								self.object:remove()
@@ -652,7 +651,7 @@ lifetimer = def.lifetimer or 600,
 								return
 							end
 							self.object:remove()
-							mobs:explosion(pos, 2, 1, 1, "tnt_explode")
+							mobs:explosion(pos, 2, 1, 1, "tnt_explode", self.sounds.explode)
 						end
 				end
 -- Modif MFF "attack type kamicaze" des creepers /FIN

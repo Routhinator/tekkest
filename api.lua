@@ -1,4 +1,4 @@
--- Mobs Api (19th April 2015)
+-- Mobs Api (20th April 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -19,7 +19,6 @@ function mobs:register_mob(name, def)
 on_die = def.on_die,
 jump_height = def.jump_height or 6,
 jump_chance = def.jump_chance or 0,
-footstep = def.footstep,
 rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 lifetimer = def.lifetimer or 600,
 		hp_min = def.hp_min or 5,
@@ -182,19 +181,19 @@ lifetimer = def.lifetimer or 600,
 			end
 
 			-- check for mob drop/replace (used for chicken egg and sheep eating grass/wheat)
-			if self.replace_rate and math.random(1,self.replace_rate) == 1 and self.child == false then
-				local pos = self.object:getpos() ; pos.y = pos.y + self.replace_offset
-				if self.footstep and self.object:getvelocity().y == 0 and minetest.get_node(pos).name == "air" then minetest.set_node(pos, {name = self.footstep}) end
+			if self.replace_rate
+			and math.random(1,self.replace_rate) == 1
+			and self.child == false then
+				local pos = self.object:getpos()
+				pos.y = pos.y + self.replace_offset
 				if #minetest.find_nodes_in_area(pos,pos,self.replace_what) > 0
 				and self.object:getvelocity().y == 0
-				and self.replace_what
-				and self.state == "stand" then
+				and self.replace_what then
+				--and self.state == "stand" then
 					minetest.set_node(pos, {name = self.replace_with})
 				end
 			end
 
---			-- gravity, falling or floating in water
---			if self.floats == 1 then
 			-- jump direction (adapted from Carbone mobs), gravity, falling or floating in water
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw() + self.rotate
@@ -202,13 +201,11 @@ lifetimer = def.lifetimer or 600,
 				local z = math.cos(yaw) * 2
 
 				if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
---					self.object:setacceleration({x = 0, y = 1.5, z = 0})
 					if self.floats == 1 then self.object:setacceleration({x = x, y = 1.5, z = z}) end
 				else
 					self.object:setacceleration({x = x, y = self.fall_speed, z = z})
 				end
 			else
---				self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
 				if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
 					if self.floats == 1 then self.object:setacceleration({x = 0, y = 1.5, z = 0}) end
 				else
@@ -226,7 +223,7 @@ lifetimer = def.lifetimer or 600,
 				self.old_y = self.object:getpos().y
 			end
 			
-			-- knock back timer
+			-- knockback timer
 			if self.pause_timer > 0 then
 				self.pause_timer = self.pause_timer - dtime
 				if self.pause_timer < 1 then
@@ -582,6 +579,84 @@ lifetimer = def.lifetimer or 600,
 					self:set_animation("stand")
 				end
 
+-- Modif MFF "attack type kamicaze" des creepers /DEBUT
+			elseif self.state == "attack" and self.attack_type == "explode" then 
+				if not self.attack.player or not self.attack.player:is_player() then
+					self.state = "stand"
+					self:set_animation("stand")
+					self.timer = 0
+					self.blinktimer = 0
+					return
+				end
+				local s = self.object:getpos()
+				local p = self.attack.player:getpos()
+				local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
+				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
+					self.state = "stand"
+					self.v_start = false
+					self.set_velocity(self, 0)
+					self.timer = 0
+					self.blinktimer = 0
+					self.attack = {player = nil, dist = nil}
+					self:set_animation("stand")
+					return
+				else
+					self:set_animation("walk")
+					self.attack.dist = dist
+				end
+				
+				local vec = {x = p.x -s.x, y = p.y -s.y, z = p.z -s.z}
+				local yaw = math.atan(vec.z/vec.x)+math.pi/2 + self.rotate
+				if p.x > s.x then
+					yaw = yaw+math.pi
+				end
+				self.object:setyaw(yaw)
+				if self.attack.dist > 3 then
+					if not self.v_start then
+						self.v_start = true
+						self.set_velocity(self, self.run_velocity)
+						self.timer = 0
+						self.blinktimer = 0
+					else
+					     self.timer = 0
+						 self.blinktimer = 0
+						if self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
+							local v = self.object:getvelocity()
+							v.y = 5
+							self.object:setvelocity(v)
+						end
+						self.set_velocity(self, self.run_velocity)
+					end
+					self:set_animation("run")
+				else
+					self.set_velocity(self, 0)
+					self.timer = self.timer + dtime
+					self.blinktimer = (self.blinktimer or 0) + dtime
+						if self.blinktimer > 0.2 then
+							self.blinktimer = 0 -- self.blinktimer - 0.2
+							if self.blinkstatus then
+								self.object:settexturemod("")
+							else
+								self.object:settexturemod("^[brighten")
+							end
+							self.blinkstatus = not self.blinkstatus
+						end
+						if self.timer > 3 then
+							local pos = vector.round(self.object:getpos())
+							do_tnt_physics(pos, 3, self) -- hurt player/mobs in blast area
+							minetest.sound_play("tnt_explode", {pos = pos, gain = 1.0, max_hear_distance = 16,})
+							if minetest.find_node_near(pos, 1, {"group:water"})
+							or minetest.is_protected(pos, "") then
+								self.object:remove()
+								effect(pos, 10, "tnt_smoke.png")
+								return
+							end
+							self.object:remove()
+							mobs:explosion(pos, 2, 1, 1)
+						end
+				end
+-- Modif MFF "attack type kamicaze" des creepers /FIN
+
 			elseif self.state == "attack" and self.attack_type == "dogfight" then
 
 				if not self.attack.player or not self.attack.player:getpos() then
@@ -922,6 +997,63 @@ function effect(pos, amount, texture)
 	})
 end
 
+-- explosion
+function mobs:explosion(pos, radius, fire, smoke)
+	-- node hit, bursts into flame (cannot blast through obsidian or protection redo mod items)
+	if not fire then fire = 0 end
+	if not smoke then smoke = 0 end
+	local pos = vector.round(pos)
+	local radius = 1
+	local vm = VoxelManip()
+	local minp, maxp = vm:read_from_map(vector.subtract(pos, radius), vector.add(pos, radius))
+	local a = VoxelArea:new({MinEdge = minp, MaxEdge = maxp})
+	local data = vm:get_data()
+	local p = {}
+	local c_air = minetest.get_content_id("air")
+	local c_ignore = minetest.get_content_id("ignore")
+	local c_obsidian = minetest.get_content_id("default:obsidian")
+	local c_brick = minetest.get_content_id("default:obsidianbrick")
+	local c_chest = minetest.get_content_id("default:chest_locked")
+
+	for z = -radius, radius do
+	for y = -radius, radius do
+	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)
+	for x = -radius, radius do
+		p.x = pos.x + x
+		p.y = pos.y + y
+		p.z = pos.z + z
+		if data[vi] ~= c_air and data[vi] ~= c_ignore and data[vi] ~= c_obsidian and data[vi] ~= c_brick and data[vi] ~= c_chest then
+			local n = minetest.get_node(p).name
+			-- do NOT destroy protection nodes but DO destroy nodes in protected area
+			if not n:find("protector:")
+			--and not minetest.is_protected(p, "")
+			and minetest.get_item_group(n.name, "unbreakable") ~= 1 then
+			-- if chest then drop items inside
+			if n == "default:chest" then
+				local meta = minetest.get_meta(p)
+				local inv  = meta:get_inventory()
+				for i = 1,32 do
+					local m_stack = inv:get_stack("main",i)
+					local obj = minetest.add_item(pos,m_stack)
+					if obj then
+						obj:setvelocity({x=math.random(-2,2), y=7, z=math.random(-2,2)})
+					end
+				end
+			end
+			if fire > 0 and (minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30) then
+				minetest.set_node(p, {name="fire:basic_flame"})
+			else
+				minetest.remove_node(p)
+			end
+			if smoke > 0 then effect(p, 1, "tnt_smoke.png") end
+			end
+		end
+		vi = vi + 1
+	end
+	end
+	end
+end
+
 -- on mob death drop items
 function check_for_death(self)
 	local hp = self.object:get_hp()
@@ -952,7 +1084,29 @@ function check_for_death(self)
 		self.on_die(self, pos)
 	end
 end
-		
+
+-- Modif MFF "fonction TNT" des creepers /DEBUT
+function do_tnt_physics(tnt_np,tntr,entity)
+    local objs = minetest.get_objects_inside_radius(tnt_np, tntr)
+    for k, obj in pairs(objs) do
+        local oname = obj:get_entity_name()
+        local v = obj:getvelocity()
+        local p = obj:getpos()
+            if v ~= nil then
+                obj:setvelocity({x=(p.x - tnt_np.x) + (tntr / 4) + v.x, y=(p.y - tnt_np.y) + (tntr / 2) + v.y, z=(p.z - tnt_np.z) + (tntr / 4) + v.z})
+            else
+                if obj:get_player_name() ~= nil then
+					if entity.object ~= nil then
+						obj:punch(entity.object, 1.0,  {full_punch_interval=1.0,damage_groups = {fleshy=entity.damage}})
+					else
+						obj:set_hp(obj:get_hp() - 21)
+					end
+                end
+            end
+    end
+end
+-- Modif MFF "fonction TNT" des creepers /FIN
+
 function mobs:register_arrow(name, def)
 	if not name or not def then return end -- errorcheck
 	minetest.register_entity(name, {

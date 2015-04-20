@@ -80,7 +80,6 @@ lifetimer = def.lifetimer or 600,
 			if self.state ~= "attack" then
 					if math.random(0,100) < 90  and self.sounds.war_cry then
 						minetest.sound_play(self.sounds.war_cry,{object = self.object})
-						print ("attack sound")
 					end
 				self.state = "attack"
 				self.attack.player = player
@@ -686,7 +685,7 @@ lifetimer = def.lifetimer or 600,
 					yaw = yaw+math.pi
 				end
 				self.object:setyaw(yaw)
-				if self.attack.dist > 2 then
+				if self.attack.dist > 3 then -- was set to 2 but slimes didnt hurt when above player
 					-- jump attack
 					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
 					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then

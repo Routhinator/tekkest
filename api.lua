@@ -1,4 +1,4 @@
--- Mobs Api (20th April 2015)
+-- Mobs Api (21st April 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -578,7 +578,7 @@ lifetimer = def.lifetimer or 600,
 					self:set_animation("stand")
 				end
 
--- Modif MFF "attack type kamicaze" des creepers /DEBUT
+			-- exploding mobs
 			elseif self.state == "attack" and self.attack_type == "explode" then 
 				if not self.attack.player or not self.attack.player:is_player() then
 					self.state = "stand"
@@ -642,7 +642,7 @@ lifetimer = def.lifetimer or 600,
 						end
 						if self.timer > 3 then
 							local pos = vector.round(self.object:getpos())
-							do_tnt_physics(pos, 3, self) -- hurt player/mobs in blast area
+							entity_physics(pos, 3) -- hurt player/mobs caught in blast area
 							if minetest.find_node_near(pos, 1, {"group:water"})
 							or minetest.is_protected(pos, "") then
 								self.object:remove()
@@ -656,7 +656,7 @@ lifetimer = def.lifetimer or 600,
 							mobs:explosion(pos, 2, 1, 1, "tnt_explode", self.sounds.explode)
 						end
 				end
--- Modif MFF "attack type kamicaze" des creepers /FIN
+				-- end of exploding mobs
 
 			elseif self.state == "attack" and self.attack_type == "dogfight" then
 
@@ -1015,7 +1015,9 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 	local c_obsidian = minetest.get_content_id("default:obsidian")
 	local c_brick = minetest.get_content_id("default:obsidianbrick")
 	local c_chest = minetest.get_content_id("default:chest_locked")
-if sound and sound ~= "" then minetest.sound_play(sound, {pos = pos, gain = 1.0, max_hear_distance = 16}) end
+	if sound and sound ~= "" then
+		minetest.sound_play(sound, {pos = pos, gain = 1.0, max_hear_distance = 16})
+	end
 	for z = -radius, radius do
 	for y = -radius, radius do
 	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)
@@ -1086,28 +1088,37 @@ function check_for_death(self)
 	end
 end
 
--- Modif MFF "fonction TNT" des creepers /DEBUT
-function do_tnt_physics(tnt_np,tntr,entity)
-    local objs = minetest.get_objects_inside_radius(tnt_np, tntr)
-    for k, obj in pairs(objs) do
-        local oname = obj:get_entity_name()
-        local v = obj:getvelocity()
-        local p = obj:getpos()
-            if v ~= nil then
-                obj:setvelocity({x=(p.x - tnt_np.x) + (tntr / 4) + v.x, y=(p.y - tnt_np.y) + (tntr / 2) + v.y, z=(p.z - tnt_np.z) + (tntr / 4) + v.z})
-            else
-                if obj:get_player_name() ~= nil then
-					if entity.object ~= nil then
-						obj:punch(entity.object, 1.0,  {full_punch_interval=1.0,damage_groups = {fleshy=entity.damage}})
-					else
-						obj:set_hp(obj:get_hp() - 21)
-					end
-                end
-            end
-    end
+-- from TNT mod
+function calc_velocity(pos1, pos2, old_vel, power)
+	local vel = vector.direction(pos1, pos2)
+	vel = vector.normalize(vel)
+	vel = vector.multiply(vel, power)
+	local dist = vector.distance(pos1, pos2)
+	dist = math.max(dist, 1)
+	vel = vector.divide(vel, dist)
+	vel = vector.add(vel, old_vel)
+	return vel
 end
--- Modif MFF "fonction TNT" des creepers /FIN
 
+-- modified from TNT mod
+function entity_physics(pos, radius)
+	radius = radius * 2
+	local objs = minetest.get_objects_inside_radius(pos, radius)
+	local obj_pos, obj_vel, dist
+	for _, obj in pairs(objs) do
+		obj_pos = obj:getpos()
+		obj_vel = obj:getvelocity()
+		dist = math.max(1, vector.distance(pos, obj_pos))
+		if obj_vel ~= nil then
+			obj:setvelocity(calc_velocity(pos, obj_pos,
+					obj_vel, radius * 10))
+		end
+		local damage = (4 / dist) * radius
+		obj:set_hp(obj:get_hp() - damage)
+	end
+end
+
+-- register arrow for shoot attack
 function mobs:register_arrow(name, def)
 	if not name or not def then return end -- errorcheck
 	minetest.register_entity(name, {

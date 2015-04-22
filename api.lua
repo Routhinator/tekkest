@@ -632,7 +632,7 @@ lifetimer = def.lifetimer or 600,
 					self.timer = self.timer + dtime
 					self.blinktimer = (self.blinktimer or 0) + dtime
 						if self.blinktimer > 0.2 then
-							self.blinktimer = 0 -- self.blinktimer - 0.2
+							self.blinktimer = 0
 							if self.blinkstatus then
 								self.object:settexturemod("")
 							else
@@ -649,11 +649,12 @@ lifetimer = def.lifetimer or 600,
 								if self.sounds.explode ~= "" then
 									minetest.sound_play(self.sounds.explode, {pos = pos, gain = 1.0, max_hear_distance = 16})
 								end
-								effect(pos, 10, "tnt_smoke.png")
+								pos.y = pos.y + 1
+								effect(pos, 15, "tnt_smoke.png", 5)
 								return
 							end
 							self.object:remove()
-							mobs:explosion(pos, 2, 1, 1, "tnt_explode", self.sounds.explode)
+							mobs:explosion(pos, 2, 0, 1, "tnt_explode", self.sounds.explode)
 						end
 				end
 				-- end of exploding mobs
@@ -685,7 +686,8 @@ lifetimer = def.lifetimer or 600,
 					yaw = yaw+math.pi
 				end
 				self.object:setyaw(yaw)
-				if self.attack.dist > 2.76 then -- was set to 2 but slimes didnt hurt when above player
+				-- attack distance is 2 + half of mob width so the bigger mobs can attack (like slimes)
+				if self.attack.dist > ((-self.collisionbox[1]+self.collisionbox[4])/2)+2 then
 					-- jump attack
 					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
 					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
@@ -968,7 +970,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 			-- spawn mob half block higher
 			pos.y = pos.y - 0.5
 			minetest.add_entity(pos, name)
-			--print ("Spawned "..name.." at "..minetest.pos_to_string(pos))
+			print ("Spawned "..name.." at "..minetest.pos_to_string(pos).." on "..node.name.." near "..neighbors[1])
 
 		end
 	})
@@ -980,7 +982,7 @@ function mobs:register_spawn(name, nodes, max_light, min_light, chance, active_o
 end
 
 -- particle effects
-function effect(pos, amount, texture)
+function effect(pos, amount, texture, max_size)
 	minetest.add_particlespawner({
 		amount = amount,
 		time = 0.25,
@@ -993,7 +995,7 @@ function effect(pos, amount, texture)
 		minexptime = 0.1,
 		maxexptime = 1,
 		minsize = 0.5,
-		maxsize = 1,
+		maxsize = (max_size or 1),
 		texture = texture,
 	})
 end
@@ -1031,24 +1033,26 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 			if not n:find("protector:")
 			--and not minetest.is_protected(p, "")
 			and minetest.get_item_group(n.name, "unbreakable") ~= 1 then
-			-- if chest then drop items inside
-			if n == "default:chest" then
-				local meta = minetest.get_meta(p)
-				local inv  = meta:get_inventory()
-				for i = 1,32 do
-					local m_stack = inv:get_stack("main",i)
-					local obj = minetest.add_item(pos,m_stack)
-					if obj then
-						obj:setvelocity({x=math.random(-2,2), y=7, z=math.random(-2,2)})
+				-- if chest then drop items inside
+				if n == "default:chest" then
+					local meta = minetest.get_meta(p)
+					local inv  = meta:get_inventory()
+					for i = 1,32 do
+						local m_stack = inv:get_stack("main",i)
+						local obj = minetest.add_item(pos,m_stack)
+						if obj then
+							obj:setvelocity({x=math.random(-2,2), y=7, z=math.random(-2,2)})
+						end
 					end
 				end
-			end
-			if fire > 0 and (minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30) then
-				minetest.set_node(p, {name="fire:basic_flame"})
-			else
-				minetest.remove_node(p)
-			end
-			if smoke > 0 then effect(p, 1, "tnt_smoke.png") end
+				if fire > 0 and (minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30) then
+					minetest.set_node(p, {name="fire:basic_flame"})
+				else
+					minetest.remove_node(p)
+				end
+				if smoke > 0 then
+					effect(p, 2, "tnt_smoke.png", 5)
+				end
 			end
 		end
 		vi = vi + 1

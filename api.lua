@@ -1,4 +1,4 @@
--- Mobs Api (21st April 2015)
+-- Mobs Api (26th April 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -312,9 +312,12 @@ lifetimer = def.lifetimer or 600,
 			if self.type == "monster" and damage_enabled and self.state ~= "attack" then
 
 				local s = self.object:getpos()
+				local p, sp, dist
 				local player = nil
 				local type = nil
 				local obj = nil
+				local min_dist = self.view_range + 1
+				local min_player = nil
 
 				for _,oir in ipairs(minetest.get_objects_inside_radius(s,self.view_range)) do
 
@@ -330,36 +333,49 @@ lifetimer = def.lifetimer or 600,
 					end
 					
 					if type == "player" or type == "npc" then
-						local s = self.object:getpos()
-						local p = player:getpos()
-						local sp = s
+						s = self.object:getpos()
+						p = player:getpos()
+						sp = s
 						p.y = p.y + 1
 						sp.y = sp.y + 1		-- aim higher to make looking up hills more realistic
-						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 						if dist < self.view_range then -- and self.in_fov(self,p) then
-							if minetest.line_of_sight(sp,p,2) == true then
-								self.do_attack(self,player,dist)
-								break
+							-- choose closest player to attack
+							if minetest.line_of_sight(sp,p,2) == true
+							and dist < min_dist then
+								min_dist = dist
+								min_player = player
 							end
 						end
 					end
 				end
+				-- attack player
+				if min_player then
+					self.do_attack(self, min_player, min_dist)
+				end
 			end
 			
-			-- npc, find monster to attack
+			-- npc, find closest monster to attack
+			local min_dist = self.view_range + 1
+			local min_player = nil
+
 			if self.type == "npc" and self.attacks_monsters and self.state ~= "attack" then
-				local s = self.object:getpos()
-				local obj = nil
-				local p, dist
+				s = self.object:getpos()
+				obj = nil
 				for _, oir in pairs(minetest.get_objects_inside_radius(s,self.view_range)) do
 					obj = oir:get_luaentity()
 					if obj and obj.type == "monster" then
 						-- attack monster
 						p = obj.object:getpos()
 						dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-						self.do_attack(self,obj.object,dist)
-						break
+						if dist < min_dist then
+							min_dist = dist
+							min_player = obj.object
+						end
 					end
+				end
+				if min_player then
+					self.do_attack(self, min_player, min_dist)
 				end
 			end
 
@@ -548,7 +564,6 @@ lifetimer = def.lifetimer or 600,
 
 			elseif self.state == "walk" then
 
-				local lp = nil
 				local s = self.object:getpos()
 				-- if there is water nearby, try to avoid it
 				local lp = minetest.find_node_near(s, 2, {"group:water"})
@@ -631,31 +646,31 @@ lifetimer = def.lifetimer or 600,
 					self.set_velocity(self, 0)
 					self.timer = self.timer + dtime
 					self.blinktimer = (self.blinktimer or 0) + dtime
-						if self.blinktimer > 0.2 then
-							self.blinktimer = 0
-							if self.blinkstatus then
-								self.object:settexturemod("")
-							else
-								self.object:settexturemod("^[brighten")
-							end
-							self.blinkstatus = not self.blinkstatus
+					if self.blinktimer > 0.2 then
+						self.blinktimer = 0
+						if self.blinkstatus then
+							self.object:settexturemod("")
+						else
+							self.object:settexturemod("^[brighten")
 						end
-						if self.timer > 3 then
-							local pos = vector.round(self.object:getpos())
-							entity_physics(pos, 3) -- hurt player/mobs caught in blast area
-							if minetest.find_node_near(pos, 1, {"group:water"})
-							or minetest.is_protected(pos, "") then
-								self.object:remove()
-								if self.sounds.explode ~= "" then
-									minetest.sound_play(self.sounds.explode, {pos = pos, gain = 1.0, max_hear_distance = 16})
-								end
-								pos.y = pos.y + 1
-								effect(pos, 15, "tnt_smoke.png", 5)
-								return
-							end
+						self.blinkstatus = not self.blinkstatus
+					end
+					if self.timer > 3 then
+						local pos = vector.round(self.object:getpos())
+						entity_physics(pos, 3) -- hurt player/mobs caught in blast area
+						if minetest.find_node_near(pos, 1, {"group:water"})
+						or minetest.is_protected(pos, "") then
 							self.object:remove()
-							mobs:explosion(pos, 2, 0, 1, "tnt_explode", self.sounds.explode)
+							if self.sounds.explode ~= "" then
+								minetest.sound_play(self.sounds.explode, {pos = pos, gain = 1.0, max_hear_distance = 16})
+							end
+							pos.y = pos.y + 1
+							effect(pos, 15, "tnt_smoke.png", 5)
+							return
 						end
+						self.object:remove()
+						mobs:explosion(pos, 2, 0, 1, "tnt_explode", self.sounds.explode)
+					end
 				end
 				-- end of exploding mobs
 

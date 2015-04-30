@@ -693,18 +693,22 @@ if self.fly then return end
 if self.fly and dist > 2 then
 
 	local nod = minetest.get_node_or_nil(s)
+	local p1 = s
+	local me_y = math.floor(p1.y)
+	local p2 = p
+	local p_y = math.floor(p2.y+1)
 	if nod and nod.name == self.fly_in then
-		local p1 = s
-		local me_y = math.floor(p1.y)
-		local p2 = p
-		local p_y = math.floor(p2.y+1)
 		if me_y < p_y then
 			self.object:setvelocity({x=self.object:getvelocity().x,y=1*self.walk_velocity,z=self.object:getvelocity().z})
 		elseif me_y > p_y then
 			self.object:setvelocity({x=self.object:getvelocity().x,y=-1*self.walk_velocity,z=self.object:getvelocity().z})
 		end
 	else
-		self.object:setvelocity({x=self.object:getvelocity().x,y=-0.01,z=self.object:getvelocity().z})
+		if me_y < p_y then
+			self.object:setvelocity({x=self.object:getvelocity().x,y=0.01,z=self.object:getvelocity().z})
+		elseif me_y > p_y then
+			self.object:setvelocity({x=self.object:getvelocity().x,y=-0.01,z=self.object:getvelocity().z})
+		end
 	end
 
 end

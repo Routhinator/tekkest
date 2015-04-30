@@ -1,4 +1,4 @@
--- Mobs Api (26th April 2015)
+-- Mobs Api (30th April 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -13,14 +13,15 @@ local enable_blood = minetest.setting_getbool("mobs_enable_blood") or true
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
 		name = name,
-
+fly = def.fly,
+fly_in = def.fly_in or "air",
 		owner = def.owner,
 		order = def.order or "",
-on_die = def.on_die,
-jump_height = def.jump_height or 6,
-jump_chance = def.jump_chance or 0,
-rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
-lifetimer = def.lifetimer or 600,
+		on_die = def.on_die,
+		jump_height = def.jump_height or 6,
+		jump_chance = def.jump_chance or 50,
+		rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
+		lifetimer = def.lifetimer or 600,
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -194,6 +195,8 @@ lifetimer = def.lifetimer or 600,
 			end
 
 			-- jump direction (adapted from Carbone mobs), gravity, falling or floating in water
+if not self.fly then
+
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw() + self.rotate
 				local x = math.sin(yaw) * -2
@@ -221,6 +224,7 @@ lifetimer = def.lifetimer or 600,
 				end
 				self.old_y = self.object:getpos().y
 			end
+end
 			
 			-- knockback timer
 			if self.pause_timer > 0 then
@@ -275,6 +279,7 @@ lifetimer = def.lifetimer or 600,
 			end
 			
 			local do_jump = function(self)
+if self.fly then return end
 				local pos = self.object:getpos()
 				pos.y = pos.y - (-self.collisionbox[2] + self.collisionbox[5])
 				local nod = minetest.get_node(pos)
@@ -491,7 +496,7 @@ lifetimer = def.lifetimer or 600,
 						-- anyone but standing npc's can move along
 						if dist > 2 and self.order ~= "stand" then
 							if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-							or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
+							or (self.object:getvelocity().y == 0 and self.jump) then
 								self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
 								do_jump(self)
 							end
@@ -555,7 +560,7 @@ lifetimer = def.lifetimer or 600,
 					end
 
 					-- jumping mobs only
-					if self.jump_chance ~= 0 and math.random(1, 100) <= self.jump_chance then
+					if self.jump and math.random(1, 100) <= self.jump_chance then
 						self.direction = {x=0, y=0, z=0}
 						do_jump(self)
 						self.set_velocity(self, self.walk_velocity)
@@ -563,7 +568,6 @@ lifetimer = def.lifetimer or 600,
 				end
 
 			elseif self.state == "walk" then
-
 				local s = self.object:getpos()
 				-- if there is water nearby, try to avoid it
 				local lp = minetest.find_node_near(s, 2, {"group:water"})
@@ -675,7 +679,6 @@ lifetimer = def.lifetimer or 600,
 				-- end of exploding mobs
 
 			elseif self.state == "attack" and self.attack_type == "dogfight" then
-
 				if not self.attack.player or not self.attack.player:getpos() then
 					print("stop attacking")
 					self.state = "stand"
@@ -685,6 +688,28 @@ lifetimer = def.lifetimer or 600,
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+
+-- fly bit modified from BlockMens creatures mod
+if self.fly and dist > 2 then
+
+	local nod = minetest.get_node_or_nil(s)
+	if nod and nod.name == self.fly_in then
+		local p1 = s
+		local me_y = math.floor(p1.y)
+		local p2 = p
+		local p_y = math.floor(p2.y+1)
+		if me_y < p_y then
+			self.object:setvelocity({x=self.object:getvelocity().x,y=1*self.walk_velocity,z=self.object:getvelocity().z})
+		elseif me_y > p_y then
+			self.object:setvelocity({x=self.object:getvelocity().x,y=-1*self.walk_velocity,z=self.object:getvelocity().z})
+		end
+	else
+		self.object:setvelocity({x=self.object:getvelocity().x,y=-0.01,z=self.object:getvelocity().z})
+	end
+
+end
+-- end fly bit
+
 				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
 					self.set_velocity(self, 0)
@@ -705,7 +730,7 @@ lifetimer = def.lifetimer or 600,
 				if self.attack.dist > ((-self.collisionbox[1]+self.collisionbox[4])/2)+2 then
 					-- jump attack
 					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
+					or (self.object:getvelocity().y == 0 and self.jump) then
 						self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
 						do_jump(self)
 					end
@@ -798,7 +823,8 @@ lifetimer = def.lifetimer or 600,
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y= self.fall_speed, z=0})
 			self.state = "stand"
-			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0}) ; self.old_y = self.object:getpos().y
+			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
+			self.old_y = self.object:getpos().y
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
 			if self.type == "monster" and peaceful_only then
 				self.object:remove()
@@ -907,7 +933,7 @@ lifetimer = def.lifetimer or 600,
 			-- https://github.com/BlockMen/pyramids
 			local kb = self.knock_back
 			local r = self.recovery_time
-			local ykb = 2
+			local ykb = 0 -- was 2
 			local v = self.object:getvelocity()
 			if tflp < tool_capabilities.full_punch_interval then
 				kb = kb * ( tflp / tool_capabilities.full_punch_interval )

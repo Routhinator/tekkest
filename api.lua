@@ -1,4 +1,4 @@
--- Mobs Api (30th April 2015)
+-- Mobs Api (1st May 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -19,7 +19,7 @@ fly_in = def.fly_in or "air",
 		order = def.order or "",
 		on_die = def.on_die,
 		jump_height = def.jump_height or 6,
-		jump_chance = def.jump_chance or 50,
+		jump_chance = def.jump_chance or 0,
 		rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
 		lifetimer = def.lifetimer or 600,
 		hp_min = def.hp_min or 5,
@@ -38,7 +38,7 @@ fly_in = def.fly_in or "air",
 		water_damage = def.water_damage,
 		lava_damage = def.lava_damage,
 		fall_damage = def.fall_damage or 1,
-		fall_speed = def.fall_speed or -10, -- must be lower than -2
+		fall_speed = def.fall_speed or -10, -- must be lower than -2 (default: -10)
 		drops = def.drops or {},
 		armor = def.armor,
 		--drawtype = def.drawtype,
@@ -280,6 +280,9 @@ end
 			
 			local do_jump = function(self)
 if self.fly then return end
+
+self.jumptimer = (self.jumptimer or 0) + 1
+if self.jumptimer < 3 then
 				local pos = self.object:getpos()
 				pos.y = pos.y - (-self.collisionbox[2] + self.collisionbox[5])
 				local nod = minetest.get_node(pos)
@@ -302,6 +305,8 @@ if self.fly then return end
 						end
 					end
 				end
+end
+self.jumptimer = 0
 			end
 			
 			-- environmental damage timer
@@ -734,7 +739,7 @@ end
 				if self.attack.dist > ((-self.collisionbox[1]+self.collisionbox[4])/2)+2 then
 					-- jump attack
 					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-					or (self.object:getvelocity().y == 0 and self.jump) then
+					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
 						self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
 						do_jump(self)
 					end

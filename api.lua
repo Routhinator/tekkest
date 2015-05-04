@@ -1,4 +1,4 @@
--- Mobs Api (1st May 2015)
+-- Mobs Api (4th May 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -13,8 +13,8 @@ local enable_blood = minetest.setting_getbool("mobs_enable_blood") or true
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
 		name = name,
-fly = def.fly,
-fly_in = def.fly_in or "air",
+		fly = def.fly,
+		fly_in = def.fly_in or "air",
 		owner = def.owner,
 		order = def.order or "",
 		on_die = def.on_die,
@@ -41,7 +41,6 @@ fly_in = def.fly_in or "air",
 		fall_speed = def.fall_speed or -10, -- must be lower than -2 (default: -10)
 		drops = def.drops or {},
 		armor = def.armor,
-		--drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
 		type = def.type,
 		attack_type = def.attack_type,
@@ -195,36 +194,35 @@ fly_in = def.fly_in or "air",
 			end
 
 			-- jump direction (adapted from Carbone mobs), gravity, falling or floating in water
-if not self.fly then
+			if not self.fly then
+				if self.object:getvelocity().y > 0.1 then
+					local yaw = self.object:getyaw() + self.rotate
+					local x = math.sin(yaw) * -2
+					local z = math.cos(yaw) * 2
 
-			if self.object:getvelocity().y > 0.1 then
-				local yaw = self.object:getyaw() + self.rotate
-				local x = math.sin(yaw) * -2
-				local z = math.cos(yaw) * 2
-
-				if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
-					if self.floats == 1 then self.object:setacceleration({x = x, y = 1.5, z = z}) end
+					if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
+						if self.floats == 1 then self.object:setacceleration({x = x, y = 1.5, z = z}) end
+					else
+						self.object:setacceleration({x = x, y = self.fall_speed, z = z})
+					end
 				else
-					self.object:setacceleration({x = x, y = self.fall_speed, z = z})
+					if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
+						if self.floats == 1 then self.object:setacceleration({x = 0, y = 1.5, z = 0}) end
+					else
+						self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
+					end
 				end
-			else
-				if minetest.get_item_group(minetest.get_node(self.object:getpos()).name, "water") ~= 0 then
-					if self.floats == 1 then self.object:setacceleration({x = 0, y = 1.5, z = 0}) end
-				else
-					self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
+
+				-- fall damage
+				if self.fall_damage == 1 and self.object:getvelocity().y == 0 then
+					local d = self.old_y - self.object:getpos().y
+					if d > 5 then
+						self.object:set_hp(self.object:get_hp() - math.floor(d - 5))
+						check_for_death(self)
+					end
+					self.old_y = self.object:getpos().y
 				end
 			end
-
-			-- fall damage
-			if self.fall_damage == 1 and self.object:getvelocity().y == 0 then
-				local d = self.old_y - self.object:getpos().y
-				if d > 5 then
-					self.object:set_hp(self.object:get_hp() - math.floor(d - 5))
-					check_for_death(self)
-				end
-				self.old_y = self.object:getpos().y
-			end
-end
 			
 			-- knockback timer
 			if self.pause_timer > 0 then
@@ -279,34 +277,34 @@ end
 			end
 			
 			local do_jump = function(self)
-if self.fly then return end
+				if self.fly then return end
 
-self.jumptimer = (self.jumptimer or 0) + 1
-if self.jumptimer < 3 then
-				local pos = self.object:getpos()
-				pos.y = pos.y - (-self.collisionbox[2] + self.collisionbox[5])
-				local nod = minetest.get_node(pos)
-				if not nod or not minetest.registered_nodes[nod.name]
-				or minetest.registered_nodes[nod.name].walkable == false then return end
-
-				if self.direction then
-					local nod = minetest.get_node_or_nil({x=pos.x + self.direction.x,y=pos.y+1,z=pos.z + self.direction.z})
-					if nod and nod.name and (nod.name ~= "air"  or self.walk_chance == 0) then
-						local def = minetest.registered_items[nod.name]
-						if (def and def.walkable and not nod.name:find("fence")) or self.walk_chance == 0 then
-							local v = self.object:getvelocity()
-							v.y = self.jump_height + 1
-							v.x = v.x * 2.2
-							v.z = v.z * 2.2
-							self.object:setvelocity(v)
-							if self.sounds.jump then
-								minetest.sound_play(self.sounds.jump, {object = self.object})
+				self.jumptimer = (self.jumptimer or 0) + 1
+				if self.jumptimer < 3 then
+					local pos = self.object:getpos()
+					pos.y = (pos.y + self.collisionbox[2]) - self.collisionbox[5]
+					local nod = minetest.get_node(pos)
+					if not nod or not minetest.registered_nodes[nod.name]
+					or minetest.registered_nodes[nod.name].walkable == false then return end
+					if self.direction then
+						local nod = minetest.get_node_or_nil({x=pos.x + self.direction.x,y=pos.y+1,z=pos.z + self.direction.z})
+						if nod and nod.name and (nod.name ~= "air"  or self.walk_chance == 0) then
+							local def = minetest.registered_items[nod.name]
+							if (def and def.walkable and not nod.name:find("fence")) or self.walk_chance == 0 then
+								local v = self.object:getvelocity()
+								v.y = self.jump_height + 1
+								v.x = v.x * 2.2
+								v.z = v.z * 2.2
+								self.object:setvelocity(v)
+								if self.sounds.jump then
+									minetest.sound_play(self.sounds.jump, {object = self.object})
+								end
 							end
 						end
 					end
+				else
+					self.jumptimer = 0
 				end
-end
-self.jumptimer = 0
 			end
 			
 			-- environmental damage timer
@@ -501,7 +499,7 @@ self.jumptimer = 0
 						-- anyone but standing npc's can move along
 						if dist > 2 and self.order ~= "stand" then
 							if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-							or (self.object:getvelocity().y == 0 and self.jump) then
+							or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then -- CHANGED from self.jump
 								self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
 								do_jump(self)
 							end
@@ -565,11 +563,11 @@ self.jumptimer = 0
 					end
 
 					-- jumping mobs only
-					if self.jump and math.random(1, 100) <= self.jump_chance then
-						self.direction = {x=0, y=0, z=0}
-						do_jump(self)
-						self.set_velocity(self, self.walk_velocity)
-					end
+--					if self.jump and math.random(1, 100) <= self.jump_chance then
+--						self.direction = {x=0, y=0, z=0}
+--						do_jump(self)
+--						self.set_velocity(self, self.walk_velocity)
+--					end
 				end
 
 			elseif self.state == "walk" then

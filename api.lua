@@ -1,4 +1,4 @@
--- Mobs Api (4th May 2015)
+-- Mobs Api (6th May 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -374,7 +374,7 @@ function mobs:register_mob(name, def)
 
 			if self.type == "npc" and self.attacks_monsters and self.state ~= "attack" then
 				s = self.object:getpos()
-				obj = nil
+				local obj = nil
 				for _, oir in pairs(minetest.get_objects_inside_radius(s,self.view_range)) do
 					obj = oir:get_luaentity()
 					if obj and obj.type == "monster" then

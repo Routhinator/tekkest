@@ -12,6 +12,11 @@ local enable_blood = minetest.setting_getbool("mobs_enable_blood") or true
 
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
+--weight = 5,
+--is_visible = true,
+--automatic_rotate = false,
+--automatic_face_movement_dir = 0.0, -- set yaw direction in degrees, false to disable
+		stepheight = def.stepheight or 0.6,
 		name = name,
 		fly = def.fly,
 		fly_in = def.fly_in or "air",
@@ -826,7 +831,7 @@ end
 		on_activate = function(self, staticdata, dtime_s)
 			local pos = self.object:getpos()
 			self.object:set_hp( math.random(self.hp_min, self.hp_max) ) -- set HP
-			self.oldhp = self.object:get_hp(self)
+			self.oldhp = self.object:get_hp(self) -- used for hurt sound
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y= self.fall_speed, z=0})
 			self.state = "stand"
@@ -1162,8 +1167,7 @@ function entity_physics(pos, radius)
 		obj_vel = obj:getvelocity()
 		dist = math.max(1, vector.distance(pos, obj_pos))
 		if obj_vel ~= nil then
-			obj:setvelocity(calc_velocity(pos, obj_pos,
-					obj_vel, radius * 10))
+			obj:setvelocity(calc_velocity(pos, obj_pos, obj_vel, radius * 10))
 		end
 		local damage = (4 / dist) * radius
 		obj:set_hp(obj:get_hp() - damage)

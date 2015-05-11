@@ -1,4 +1,4 @@
--- Mobs Api (6th May 2015)
+-- Mobs Api (11th May 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -83,9 +83,9 @@ function mobs:register_mob(name, def)
 
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
-					if math.random(0,100) < 90  and self.sounds.war_cry then
-						minetest.sound_play(self.sounds.war_cry,{object = self.object})
-					end
+				if math.random(0,100) < 90  and self.sounds.war_cry then
+					minetest.sound_play(self.sounds.war_cry,{object = self.object})
+				end
 				self.state = "attack"
 				self.attack.player = player
 				self.attack.dist = dist
@@ -186,13 +186,13 @@ function mobs:register_mob(name, def)
 
 			-- check for mob drop/replace (used for chicken egg and sheep eating grass/wheat)
 			if self.replace_rate
-			and math.random(1,self.replace_rate) == 1
-			and self.child == false then
+			and self.child == false
+			and math.random(1,self.replace_rate) == 1 then
 				local pos = self.object:getpos()
 				pos.y = pos.y + self.replace_offset
-				if #minetest.find_nodes_in_area(pos,pos,self.replace_what) > 0
+				if self.replace_what
 				and self.object:getvelocity().y == 0
-				and self.replace_what then
+				and #minetest.find_nodes_in_area(pos, pos, self.replace_what) > 0 then
 				--and self.state == "stand" then
 					minetest.set_node(pos, {name = self.replace_with})
 				end
@@ -260,8 +260,8 @@ function mobs:register_mob(name, def)
 
 				if self.light_damage and self.light_damage ~= 0
 				and pos.y > 0
-				and (minetest.get_node_light(pos) or 0) > 10 -- direct sunlight (was 4)
-				and tod > 0.2 and tod < 0.8 then
+				and tod > 0.2 and tod < 0.8
+				and (minetest.get_node_light(pos) or 0) > 10 then
 					self.object:set_hp(self.object:get_hp()-self.light_damage)
 					effect(pos, 5, "tnt_smoke.png")
 				end
@@ -292,7 +292,8 @@ function mobs:register_mob(name, def)
 					if not nod or not minetest.registered_nodes[nod.name]
 					or minetest.registered_nodes[nod.name].walkable == false then return end
 					if self.direction then
-						local nod = minetest.get_node_or_nil({x=pos.x + self.direction.x,y=pos.y+1,z=pos.z + self.direction.z})
+						pos = self.object:getpos()
+						local nod = minetest.get_node_or_nil({x=pos.x + self.direction.x,y=pos.y,z=pos.z + self.direction.z})
 						if nod and nod.name and (nod.name ~= "air"  or self.walk_chance == 0) then
 							local def = minetest.registered_items[nod.name]
 							if (def and def.walkable and not nod.name:find("fence")) or self.walk_chance == 0 then

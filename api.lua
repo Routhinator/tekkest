@@ -1,4 +1,4 @@
--- Mobs Api (11th May 2015)
+-- Mobs Api (20th May 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -80,6 +80,7 @@ function mobs:register_mob(name, def)
 		hornytimer = 0,
 		child = false,
 		gotten = false,
+		owner = "",
 
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
@@ -374,7 +375,7 @@ function mobs:register_mob(name, def)
 			local min_player = nil
 
 			if self.type == "npc" and self.attacks_monsters and self.state ~= "attack" then
-				s = self.object:getpos()
+				local s = self.object:getpos()
 				local obj = nil
 				for _, oir in pairs(minetest.get_objects_inside_radius(s,self.view_range)) do
 					obj = oir:get_luaentity()
@@ -876,6 +877,9 @@ end
 					if tmp.base_mesh then
 						self.base_mesh = tmp.base_mesh
 					end
+					if tmp.owner then
+						self.owner = tmp.owner
+					end
 				end
 			end
 			-- quick fix for dog so it doesn't revert back to wolf
@@ -925,6 +929,7 @@ end
 				visual_size = vis_size,
 				base_texture = self.base_texture,
 				collisionbox = colbox,
+				owner = self.owner,
 			}
 			self.object:set_properties(tmp)
 			return minetest.serialize(tmp)
@@ -1240,21 +1245,25 @@ end
 
 -- Spawn Egg
 function mobs:register_egg(mob, desc, background, addegg)
-local invimg = background
-if addegg == 1 then
-	invimg = invimg.."^mobs_chicken_egg.png"
-end
-minetest.register_craftitem(mob, {
-	description = desc,
-	inventory_image = invimg,
-	on_place = function(itemstack, placer, pointed_thing)
-		local pos = pointed_thing.above
-		if pointed_thing.above and not minetest.is_protected(pos, placer:get_player_name()) then
-			pos.y = pos.y + 0.5
-			minetest.add_entity(pos, mob)
-			itemstack:take_item()
-		end
-		return itemstack
-	end,
-})
+	local invimg = background
+	if addegg == 1 then
+		invimg = invimg.."^mobs_chicken_egg.png"
+	end
+	minetest.register_craftitem(mob, {
+		description = desc,
+		inventory_image = invimg,
+		on_place = function(itemstack, placer, pointed_thing)
+			local pos = pointed_thing.above
+			if pointed_thing.above and not minetest.is_protected(pos, placer:get_player_name()) then
+				pos.y = pos.y + 0.5
+				local mob = minetest.add_entity(pos, mob)
+				local ent = mob:get_luaentity()
+				-- set owner
+				ent.owner = placer:get_player_name()
+				ent.tamed = true
+				itemstack:take_item()
+			end
+			return itemstack
+		end,
+	})
 end

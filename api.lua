@@ -288,13 +288,15 @@ function mobs:register_mob(name, def)
 				self.jumptimer = (self.jumptimer or 0) + 1
 				if self.jumptimer < 3 then
 					local pos = self.object:getpos()
-					pos.y = (pos.y + self.collisionbox[2]) - self.collisionbox[5]
+					pos.y = (pos.y + self.collisionbox[2]) - 0.2
 					local nod = minetest.get_node(pos)
+--print ("stand", nod.name, pos.y)
 					if not nod or not minetest.registered_nodes[nod.name]
 					or minetest.registered_nodes[nod.name].walkable == false then return end
 					if self.direction then
-						pos = self.object:getpos()
+ 						pos.y = pos.y + 0.2
 						local nod = minetest.get_node_or_nil({x=pos.x + self.direction.x,y=pos.y,z=pos.z + self.direction.z})
+--print ("front", nod.name, pos.y)
 						if nod and nod.name and (nod.name ~= "air"  or self.walk_chance == 0) then
 							local def = minetest.registered_items[nod.name]
 							if (def and def.walkable and not nod.name:find("fence")) or self.walk_chance == 0 then

@@ -34,7 +34,7 @@ function mobs:register_mob(name, def)
 		visual = def.visual,
 		visual_size = def.visual_size or {x=1, y=1},
 		mesh = def.mesh,
-		makes_footstep_sound = def.makes_footstep_sound or true,
+		makes_footstep_sound = def.makes_footstep_sound or false,
 		view_range = def.view_range or 5,
 		walk_velocity = def.walk_velocity or 1,
 		run_velocity = def.run_velocity or 2,
@@ -942,7 +942,26 @@ function mobs:register_mob(name, def)
 
 		on_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
-			process_weapon(hitter,tflp,tool_capabilities)
+			-- weapon wear
+			local weapon = hitter:get_wielded_item()
+			if weapon:get_definition().tool_capabilities ~= nil then
+				local wear = ( weapon:get_definition().tool_capabilities.full_punch_interval / 75 ) * 9000
+				weapon:add_wear(wear)
+				hitter:set_wielded_item(weapon)
+			end
+
+			-- weapon sounds
+			if weapon:get_definition().sounds ~= nil then
+				local s = math.random(0,#weapon:get_definition().sounds)
+				minetest.sound_play(weapon:get_definition().sounds[s], {
+					object=hitter,
+				})
+			else
+				minetest.sound_play("default_punch", {
+					object = hitter,
+				})
+			end
+
 			check_for_death(self)
 
 			--blood_particles
@@ -1237,15 +1256,6 @@ function mobs:register_arrow(name, def)
 			end
 		end
 	})
-end
-
-function process_weapon(player, time_from_last_punch, tool_capabilities)
-local weapon = player:get_wielded_item()
-	if tool_capabilities ~= nil then
-		local wear = ( tool_capabilities.full_punch_interval / 75 ) * 65535
-		weapon:add_wear(wear)
-		player:set_wielded_item(weapon)
-	end
 end
 
 -- Spawn Egg

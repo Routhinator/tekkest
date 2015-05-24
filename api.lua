@@ -81,6 +81,7 @@ function mobs:register_mob(name, def)
 		child = false,
 		gotten = false,
 		owner = "",
+		health = 0,
 
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
@@ -171,17 +172,14 @@ function mobs:register_mob(name, def)
 				return
 			end
 
-			-- if lifetimer run out and not npc, tamed or attacking then remove mob
+			-- if lifetimer run out and not npc; tamed or attacking then remove mob
 			if self.type ~= "npc" and not self.tamed then
 				self.lifetimer = self.lifetimer - dtime
 				if self.lifetimer <= 0 and self.state ~= "attack" then
-					for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 10)) do
-						if obj:is_player() then
-							minetest.log("action","lifetimer expired, removed mob "..self.name)
-							self.object:remove()
-							return
-						end
-					end
+					minetest.log("action","lifetimer expired, removed "..self.name)
+					effect(self.object:getpos(), 15, "tnt_smoke.png")
+					self.object:remove()
+					return
 				end
 			end
 
@@ -266,21 +264,23 @@ function mobs:register_mob(name, def)
 				and (minetest.get_node_light(pos) or 0) > 10 then
 					self.object:set_hp(self.object:get_hp()-self.light_damage)
 					effect(pos, 5, "tnt_smoke.png")
+					check_for_death(self)
 				end
 
 				if self.water_damage and self.water_damage ~= 0
 				and minetest.get_item_group(n.name, "water") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.water_damage)
 					effect(pos, 5, "bubble.png")
+					check_for_death(self)
 				end
 				
 				if self.lava_damage and self.lava_damage ~= 0
 				and minetest.get_item_group(n.name, "lava") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.lava_damage)
 					effect(pos, 5, "fire_basic_flame.png")
+					check_for_death(self)
 				end
 
-				check_for_death(self)
 			end
 			
 			local do_jump = function(self)
@@ -509,7 +509,7 @@ function mobs:register_mob(name, def)
 						-- anyone but standing npc's can move along
 						if dist > 2 and self.order ~= "stand" then
 							if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
-							or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then -- CHANGED from self.jump
+							or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
 								self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
 								do_jump(self)
 							end
@@ -702,30 +702,31 @@ function mobs:register_mob(name, def)
 				local p = self.attack.player:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 
--- fly bit modified from BlockMens creatures mod
-if self.fly and dist > 2 then
+				-- fly bit modified from BlockMens creatures mod
+				if self.fly and dist > 2 then
 
-	local nod = minetest.get_node_or_nil(s)
-	local p1 = s
-	local me_y = math.floor(p1.y)
-	local p2 = p
-	local p_y = math.floor(p2.y+1)
-	if nod and nod.name == self.fly_in then
-		if me_y < p_y then
-			self.object:setvelocity({x=self.object:getvelocity().x,y=1*self.walk_velocity,z=self.object:getvelocity().z})
-		elseif me_y > p_y then
-			self.object:setvelocity({x=self.object:getvelocity().x,y=-1*self.walk_velocity,z=self.object:getvelocity().z})
-		end
-	else
-		if me_y < p_y then
-			self.object:setvelocity({x=self.object:getvelocity().x,y=0.01,z=self.object:getvelocity().z})
-		elseif me_y > p_y then
-			self.object:setvelocity({x=self.object:getvelocity().x,y=-0.01,z=self.object:getvelocity().z})
-		end
-	end
+					local nod = minetest.get_node_or_nil(s)
+					local p1 = s
+					local me_y = math.floor(p1.y)
+					local p2 = p
+					local p_y = math.floor(p2.y+1)
+					local v = self.object:getvelocity()
+					if nod and nod.name == self.fly_in then
+						if me_y < p_y then
+							self.object:setvelocity({x=v.x,y=1*self.walk_velocity,z=v.z})
+						elseif me_y > p_y then
+							self.object:setvelocity({x=v.x,y=-1*self.walk_velocity,z=v.z})
+						end
+					else
+						if me_y < p_y then
+							self.object:setvelocity({x=v.x,y=0.01,z=v.z})
+						elseif me_y > p_y then
+							self.object:setvelocity({x=v.x,y=-0.01,z=v.z})
+						end
+					end
 
-end
--- end fly bit
+				end
+				-- end fly bit
 
 				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
@@ -834,9 +835,9 @@ end
 		end,
 
 		on_activate = function(self, staticdata, dtime_s)
-			local pos = self.object:getpos()
-			self.object:set_hp( math.random(self.hp_min, self.hp_max) ) -- set HP
-			self.oldhp = self.object:get_hp(self) -- used for hurt sound
+			self.health = math.random (self.hp_min, self.hp_max) -- set initial HP
+			self.object:set_hp( self.health )
+			self.health = self.object:get_hp()
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y= self.fall_speed, z=0})
 			self.state = "stand"
@@ -883,11 +884,11 @@ end
 					if tmp.owner then
 						self.owner = tmp.owner
 					end
+					if tmp.health then
+						self.health = tmp.health
+						self.object:set_hp( self.health )
+					end
 				end
-			end
-			-- quick fix for dog so it doesn't revert back to wolf
-			if self.type == "monster" and self.tamed == true then
-				self.type = "npc"
 			end
 		end,
 
@@ -933,6 +934,7 @@ end
 				base_texture = self.base_texture,
 				collisionbox = colbox,
 				owner = self.owner,
+				health = self.health,
 			}
 			self.object:set_properties(tmp)
 			return minetest.serialize(tmp)
@@ -1127,9 +1129,9 @@ end
 function check_for_death(self)
 	local hp = self.object:get_hp()
 	if hp > 0 then
-		if self.sounds.damage ~= nil and hp < self.oldhp then
+		if self.sounds.damage ~= nil then
 			minetest.sound_play(self.sounds.damage,{object = self.object})
-			self.oldhp = hp
+			self.health = hp
 		end
 		return
 	end

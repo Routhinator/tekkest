@@ -1,4 +1,4 @@
--- Mobs Api (24th May 2015)
+-- Mobs Api (27th May 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -12,10 +12,6 @@ local enable_blood = minetest.setting_getbool("mobs_enable_blood") or true
 
 function mobs:register_mob(name, def)
 	minetest.register_entity(name, {
---weight = 5,
---is_visible = true,
---automatic_rotate = false,
---automatic_face_movement_dir = 0.0, -- set yaw direction in degrees, false to disable
 		stepheight = def.stepheight or 0.6,
 		name = name,
 		fly = def.fly,
@@ -165,8 +161,6 @@ function mobs:register_mob(name, def)
 		
 		on_step = function(self, dtime)
 
-			local yaw = 0
-
 			if self.type == "monster" and peaceful_only then
 				self.object:remove()
 				return
@@ -197,10 +191,12 @@ function mobs:register_mob(name, def)
 				end
 			end
 
+			local yaw = 0
+
 			-- jump direction (adapted from Carbone mobs), gravity, falling or floating in water
 			if not self.fly then
 				if self.object:getvelocity().y > 0.1 then
-					local yaw = self.object:getyaw() + self.rotate
+					yaw = self.object:getyaw() + self.rotate
 					local x = math.sin(yaw) * -2
 					local z = math.cos(yaw) * 2
 
@@ -423,8 +419,8 @@ function mobs:register_mob(name, def)
 
 			-- if animal is horny, find another same animal who is horny and mate
 			if self.horny == true and self.hornytimer <= 40 then
-				local pos = self.object:getpos() ; pos.y = pos.y + 1
-				effect(pos, 4, "heart.png") ; pos.y = pos.y - 1
+				local pos = self.object:getpos()
+				effect({x=pos.x, y=pos.y+1, z=pos.z}, 4, "heart.png")
 				local ents = minetest.get_objects_inside_radius(pos, self.view_range)
 				local num = 0
 				local ent = nil
@@ -500,7 +496,7 @@ function mobs:register_mob(name, def)
 						self.following = nil
 					else
 						local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-						local yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
+						yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate -- local
 						if p.x > s.x then
 							yaw = yaw+math.pi
 						end
@@ -582,10 +578,9 @@ function mobs:register_mob(name, def)
 
 			elseif self.state == "walk" then
 				local s = self.object:getpos()
-				-- if there is water nearby, try to avoid it
-				local lp = minetest.find_node_near(s, 2, {"group:water"})
-				
-				if lp ~= nil then
+				local lp = minetest.find_node_near(s, 1, {"group:water"})
+				-- if water nearby then turn away
+				if lp then
 					local vec = {x=lp.x-s.x, y=lp.y-s.y, z=lp.z-s.z}
 					yaw = math.atan(vec.z/vec.x) + 3*math.pi / 2 + self.rotate
 					if lp.x > s.x then
@@ -593,7 +588,7 @@ function mobs:register_mob(name, def)
 					end
 					self.object:setyaw(yaw)
 
-				-- no water near, so randomly turn
+				-- otherwise randomly turn
 				elseif math.random(1, 100) <= 30 then
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
@@ -637,7 +632,7 @@ function mobs:register_mob(name, def)
 				end
 				
 				local vec = {x = p.x -s.x, y = p.y -s.y, z = p.z -s.z}
-				local yaw = math.atan(vec.z/vec.x)+math.pi/2 + self.rotate
+				yaw = math.atan(vec.z/vec.x)+math.pi/2 + self.rotate -- local
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -739,7 +734,7 @@ function mobs:register_mob(name, def)
 				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-				local yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
+				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate -- local
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -804,7 +799,7 @@ function mobs:register_mob(name, def)
 				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-				local yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
+				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate -- local
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -835,6 +830,10 @@ function mobs:register_mob(name, def)
 		end,
 
 		on_activate = function(self, staticdata, dtime_s)
+			if self.type == "monster" and peaceful_only then
+				self.object:remove()
+			end
+
 			self.health = math.random (self.hp_min, self.hp_max) -- set initial HP
 			self.object:set_hp( self.health )
 			self.health = self.object:get_hp()
@@ -844,9 +843,6 @@ function mobs:register_mob(name, def)
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.old_y = self.object:getpos().y
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
-			if self.type == "monster" and peaceful_only then
-				self.object:remove()
-			end
 
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
@@ -941,7 +937,6 @@ function mobs:register_mob(name, def)
 		end,
 
 		on_punch = function(self, hitter, tflp, tool_capabilities, dir)
-
 			-- weapon wear
 			local weapon = hitter:get_wielded_item()
 			if weapon:get_definition().tool_capabilities ~= nil then
@@ -964,7 +959,7 @@ function mobs:register_mob(name, def)
 
 			check_for_death(self)
 
-			--blood_particles
+			-- blood_particles
 			local pos = self.object:getpos()
 			pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) / 2
 			if self.blood_amount > 0 and pos and enable_blood == true then
@@ -972,17 +967,14 @@ function mobs:register_mob(name, def)
 			end
 
 			-- knock back effect, adapted from blockmen's pyramids mod
-			-- https://github.com/BlockMen/pyramids
 			local kb = self.knock_back
 			local r = self.recovery_time
-			local ykb = 0 -- was 2
 			local v = self.object:getvelocity()
 			if tflp < tool_capabilities.full_punch_interval then
 				kb = kb * ( tflp / tool_capabilities.full_punch_interval )
 				r = r * ( tflp / tool_capabilities.full_punch_interval )
 			end
-			if v.y ~= 0 then ykb = 0 end 
-			self.object:setvelocity({x=dir.x*kb,y=ykb,z=dir.z*kb})
+			self.object:setvelocity({x=dir.x*kb,y=0,z=dir.z*kb})
 			self.pause_timer = r
 
 			-- attack puncher and call other mobs for help

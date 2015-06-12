@@ -17,6 +17,7 @@ function mobs:register_mob(name, def)
 		owner = def.owner,
 		order = def.order or "",
 		on_die = def.on_die,
+		do_custom = def.do_custom,
 		jump_height = def.jump_height or 6,
 		jump_chance = def.jump_chance or 0,
 		rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
@@ -463,6 +464,11 @@ function mobs:register_mob(name, def)
 						break
 					end
 				end
+			end
+
+			-- custom function (defined in mob lua file)
+			if self.do_custom then
+				self.do_custom(self)
 			end
 
 			if self.type == "npc" and self.order == "follow" and self.state ~= "attack" then

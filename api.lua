@@ -1,4 +1,4 @@
--- Mobs Api (12th June 2015)
+-- Mobs Api (17th June 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -780,11 +780,11 @@ function mobs:register_mob(name, def)
 
 			elseif self.state == "attack" and self.attack_type == "shoot" then
 
-				if not self.attack.player or not self.attack.player:is_player() then
-					self.state = "stand"
-					self:set_animation("stand")
-					return
-				end
+--				if not self.attack.player or not self.attack.player:is_player() then
+--					self.state = "stand"
+--					self:set_animation("stand")
+--					return
+--				end
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
 				p.y = p.y - .5
@@ -793,9 +793,10 @@ function mobs:register_mob(name, def)
 				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
 					self.set_velocity(self, 0)
-					if self.type ~= "npc" then
-						self.attack = {player=nil, dist=nil}
-					end
+--					if self.type ~= "npc" then
+--						self.attack = {player=nil, dist=nil}
+--					end
+
 					self:set_animation("stand")
 					return
 				else

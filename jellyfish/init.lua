@@ -35,11 +35,12 @@ if mobs.mod and mobs.mod == "redo" then
 		}
 	})
 	
---name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
+	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("jellyfish:jellyfish",
 		{"default:water_flowing","default:water_source"},
 		{"default:water_flowing","default:water_source"},
-		5, 20, 30, 5000, 1, -31000, 0)
-		
+		5, 20, 30, 10000, 1, -31000, 0)
+
 	mobs:register_egg("jellyfish:jellyfish", "Jellyfish", "jellyfish_inv.png", 0)
+	
 end

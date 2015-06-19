@@ -36,13 +36,13 @@ if mobs.mod and mobs.mod == "redo" then
 			walk_start = 80,	walk_end = 160
 		}
 	})
-
---name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
+	
+	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("shark:shark",
 		{"default:water_flowing","default:water_source"},
 		{"default:water_flowing","default:water_source"},
-		5, 20, 60, 20000, 1, -31000, 0)
+		5, 20, 30, 20000, 1, -31000, 0)
 
 	mobs:register_egg("shark:shark", "Shark", "mob_shark_shark_item.png", 0)
-
+	
 end

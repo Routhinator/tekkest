@@ -40,7 +40,8 @@ if mobs.mod and mobs.mod == "redo" then
 	mobs:spawn_specific("crocodile:crocodile",
 		{"default:water_flowing","default:water_source","default:sand", "default:dirt"},
 		{"default:sand", "default:dirt","seaplants:seagrassgreen","seaplants:seagrassred"},
-		-1, 18, 60, 60000, 1, -2, 31000)
+		-1, 18, 30, 60000, 1, -2, 31000)
 	mobs:register_egg("crocodile:crocodile", "Crocodile", "default_grass.png", 1)
-
-end
+	
+	end
+	

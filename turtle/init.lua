@@ -47,9 +47,9 @@ if mobs.mod and mobs.mod == "redo" then
 		end
 	})
 
-	mobs:register_spawn("turtle:turtle", {"default:dirt_with_grass", }, 20, 5, 20000, 1, 31000)
+	mobs:register_spawn("turtle:turtle", {"default:dirt_with_grass", "default:jungle_grass"}, 20, 5, 20000, 1, 31000)
 	mobs:register_egg("turtle:turtle", "Turtle", "default_grass.png", 1)
-
+	
 -- sea turtle
 	mobs:register_mob("turtle:seaturtle", {
 		type = "animal",
@@ -92,6 +92,7 @@ if mobs.mod and mobs.mod == "redo" then
 	mobs:spawn_specific("turtle:seaturtle",
 		{"default:water_flowing","default:water_source"},
 		{"default:water_flowing","default:water_source","seaplants:kelpbrown","seaplants:kelpgreen"},
-		5, 20, 60, 20000, 1, -31000, 0)
+		5, 20, 30, 20000, 1, -31000, 0)
 	mobs:register_egg("turtle:seaturtle", "Sea Turtle", "default_water.png", 1)
+	
 end

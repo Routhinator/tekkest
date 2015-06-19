@@ -1,0 +1,10 @@
+Licenses
+
+
+Model/Textures:
+	
+
+
+GPL v3
+
+, Author: NPX team

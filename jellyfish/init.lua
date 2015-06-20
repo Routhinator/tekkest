@@ -7,9 +7,9 @@ if mobs.mod and mobs.mod == "redo" then
 		passive = false,
 		attack_type = "dogfight",
 		damage = 5,
-		hp_min = 15,
-		hp_max = 25,
-		armor = 150,
+		hp_min = 5,
+		hp_max = 10,
+		armor = 0,
 		collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
 		visual = "mesh",
 		mesh = "jellyfish.b3d",
@@ -34,13 +34,12 @@ if mobs.mod and mobs.mod == "redo" then
 			speed_normal = 1,	speed_run = 1
 		}
 	})
-	
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("jellyfish:jellyfish",
 		{"default:water_flowing","default:water_source"},
 		{"default:water_flowing","default:water_source"},
 		5, 20, 30, 10000, 1, -31000, 0)
-
 	mobs:register_egg("jellyfish:jellyfish", "Jellyfish", "jellyfish_inv.png", 0)
-	
+
 end
+

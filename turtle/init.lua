@@ -8,7 +8,7 @@ if mobs.mod and mobs.mod == "redo" then
 		passive = true,
 		hp_min = 15,
 		hp_max = 20,
-		armor = 300,
+		armor = 200,
 		collisionbox = {-0.4, 0.0, -0.4, 0.4, 0.35, 0.4},
 		visual = "mesh",
 		visual_size = {x=1,y=1},
@@ -46,17 +46,20 @@ if mobs.mod and mobs.mod == "redo" then
 			end)
 		end
 	})
-
-	mobs:register_spawn("turtle:turtle", {"default:dirt_with_grass", "default:jungle_grass"}, 20, 5, 20000, 1, 31000)
+	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
+	mobs:spawn_specific("turtle:turtle",
+		{"default:dirt_with_grass", "default:jungle_grass", "default:sand"},
+		{"default:dirt_with_grass", "default:jungle_grass", "default:sand"},
+		5, 20, 30, 30000, 1, 1, 31000)
 	mobs:register_egg("turtle:turtle", "Turtle", "default_grass.png", 1)
-	
+
 -- sea turtle
 	mobs:register_mob("turtle:seaturtle", {
 		type = "animal",
 		passive = true,
 		hp_min = 20,
 		hp_max = 30,
-		armor = 350,
+		armor = 250,
 		collisionbox = {-0.4, 0.0, -0.4, 0.4, 0.35, 0.4},
 		visual = "mesh",
 		visual_size = {x=2,y=2},
@@ -88,11 +91,11 @@ if mobs.mod and mobs.mod == "redo" then
 			hide_start = 95,	hide_end = 100
 		},
 	})
-
+	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("turtle:seaturtle",
 		{"default:water_flowing","default:water_source"},
 		{"default:water_flowing","default:water_source","seaplants:kelpbrown","seaplants:kelpgreen"},
-		5, 20, 30, 20000, 1, -31000, 0)
+		5, 20, 30, 30000, 1, -31000, 0)
 	mobs:register_egg("turtle:seaturtle", "Sea Turtle", "default_water.png", 1)
-	
+
 end

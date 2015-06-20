@@ -35,13 +35,11 @@ if mobs.mod and mobs.mod == "redo" then
 			walk_start = 81,		walk_end = 155
 		}
 	})
-
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:clownfish",
 		{"default:water_flowing","default:water_source"},
 		{"default:sand", "default:dirt","seaplants:kelpbrown","seaplants:seagrassred"},
 		5, 20, 30, 10000, 1, -31000, 0)
-
 	mobs:register_egg("fishies:clownfish", "Clownfish", "animal_clownfish_clownfish_item.png", 0)
 
 -- Blue/white fish
@@ -55,7 +53,7 @@ if mobs.mod and mobs.mod == "redo" then
 		visual = "mesh",
 		mesh = "fish_blue_white.b3d",
 		textures = {
-			{"fish_blue_white_mesh.png"},
+			{"fish_blue_white_mesh.png"}
 		},
 		visual_size = {x=0.75, y=0.75},
 		makes_footstep_sound = false,
@@ -77,13 +75,11 @@ if mobs.mod and mobs.mod == "redo" then
 			walk_start = 81,		walk_end = 155
 		}
 	})
-
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:blue_white",
 		{"default:water_flowing","default:water_source"},
 		{"default:sand", "default:dirt","seaplants:kelpgreen","seaplants:seagrassgreen"},
 		5, 20, 30, 10000, 1, -31000, 0)
-
 	mobs:register_egg("fishies:blue_white", "Blue white fish", "animal_fish_blue_white_fish_blue_white_item.png", 0)
 
 end

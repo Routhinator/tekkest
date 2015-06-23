@@ -1,6 +1,4 @@
 
--- Turtle by AspireMint??, Sapier??
-
 if mobs.mod and mobs.mod == "redo" then
 -- land turtle
 	mobs:register_mob("turtle:turtle", {
@@ -48,8 +46,8 @@ if mobs.mod and mobs.mod == "redo" then
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("turtle:turtle",
-		{"default:dirt_with_grass", "default:jungle_grass", "default:sand"},
-		{"default:dirt_with_grass", "default:jungle_grass", "default:sand"},
+		{"default:dirt_with_grass","default:jungle_grass","default:sand","default:desert_sand"},
+		{"default:dirt_with_grass","default:jungle_grass","default:sand","default:desert_sand","default:papyrus","default:cactus","dryplants:juncus","dryplants:reedmace"},
 		5, 20, 30, 30000, 1, 1, 31000)
 	mobs:register_egg("turtle:turtle", "Turtle", "default_grass.png", 1)
 
@@ -94,7 +92,7 @@ if mobs.mod and mobs.mod == "redo" then
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("turtle:seaturtle",
 		{"default:water_flowing","default:water_source"},
-		{"default:water_flowing","default:water_source","seaplants:kelpbrown","seaplants:kelpgreen"},
+		{"default:water_flowing","default:water_source","group:seaplants","seawrecks:woodship","seawrecks:uboot"},
 		5, 20, 30, 30000, 1, -31000, 0)
 	mobs:register_egg("turtle:seaturtle", "Sea Turtle", "default_water.png", 1)
 

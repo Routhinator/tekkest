@@ -1,2 +1,4 @@
 Licenses
-Model/Textures: GPL v3, Author: NPX team
+
+Model/Textures: GPL v3
+Author: Team NPX

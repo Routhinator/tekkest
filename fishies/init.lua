@@ -13,13 +13,14 @@ if mobs.mod and mobs.mod == "redo" then
 		visual = "mesh",
 		mesh = "animal_clownfish.b3d",
 		textures = {
-			{"animal_clownfish_mesh.png"},
+			{"clownfish.png"},
+			{"clownfish2.png"}
 		},
 		visual_size = {x=1, y=1},
 		makes_footstep_sound = false,
 		walk_velocity = 1,
 		run_velocity = 2,
-		stepheight = 1,
+		stepheight = 0.2,
 		jump = true,
 		fly = true,
 		fly_in = "default:water_source",
@@ -38,7 +39,7 @@ if mobs.mod and mobs.mod == "redo" then
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:clownfish",
 		{"default:water_flowing","default:water_source"},
-		{"default:sand", "default:dirt","seaplants:kelpbrown","seaplants:seagrassred"},
+		{"default:sand","default:dirt","group:seaplants","group:seacoral"},
 		5, 20, 30, 10000, 1, -31000, 0)
 	mobs:register_egg("fishies:clownfish", "Clownfish", "animal_clownfish_clownfish_item.png", 0)
 
@@ -53,7 +54,9 @@ if mobs.mod and mobs.mod == "redo" then
 		visual = "mesh",
 		mesh = "fish_blue_white.b3d",
 		textures = {
-			{"fish_blue_white_mesh.png"}
+			{"fish.png"},
+			{"fish2.png"},
+			{"fish3.png"}
 		},
 		visual_size = {x=0.75, y=0.75},
 		makes_footstep_sound = false,
@@ -78,7 +81,7 @@ if mobs.mod and mobs.mod == "redo" then
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:blue_white",
 		{"default:water_flowing","default:water_source"},
-		{"default:sand", "default:dirt","seaplants:kelpgreen","seaplants:seagrassgreen"},
+		{"default:sand", "default:dirt","group:seaplants","group:seacoral"},
 		5, 20, 30, 10000, 1, -31000, 0)
 	mobs:register_egg("fishies:blue_white", "Blue white fish", "animal_fish_blue_white_fish_blue_white_item.png", 0)
 

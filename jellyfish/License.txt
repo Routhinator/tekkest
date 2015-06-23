@@ -1,5 +1,7 @@
 Licenses
-Model/Textures:	WTFPL, Author blert2112
+
+Model/Textures:	WTFPL
+Author: blert2112
 
 ***************
 

@@ -583,6 +583,15 @@ function mobs:register_mob(name, def)
 			elseif self.state == "walk" then
 				local s = self.object:getpos()
 				local lp = minetest.find_node_near(s, 1, {"group:water"})
+
+-- water swimmers cannot move out of water
+if self.fly and self.fly_in == "default:water_source" and not lp then
+	print ("out of water")
+	self.set_velocity(self, 0)
+	self.state = "flop" -- "stand"
+	self:set_animation("stand")
+	return
+end
 				-- if water nearby then turn away
 				if lp then
 					local vec = {x=lp.x-s.x, y=lp.y-s.y, z=lp.z-s.z}

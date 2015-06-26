@@ -38,7 +38,6 @@ if mobs.mod and mobs.mod == "redo" then
 		lava_damage = 5,
 		light_damage = 0,
 		animation = l_anims
-	end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:clownfish", l_spawn_in, l_spawn_near, 5, 20, 30, l_spawn_chance, 1, -31000, 0)
@@ -71,7 +70,6 @@ if mobs.mod and mobs.mod == "redo" then
 		lava_damage = 5,
 		light_damage = 0,
 		animation = l_anims
-	end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:tropical", l_spawn_in, l_spawn_near, 5, 20, 30, l_spawn_chance, 1, -31000, 0)

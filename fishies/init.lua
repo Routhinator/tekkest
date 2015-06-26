@@ -1,55 +1,56 @@
 
--- Fishies by Sapier
-
 if mobs.mod and mobs.mod == "redo" then
+
+-- local variables
+	local l_anims = {
+		speed_normal = 24,		speed_run = 24,
+		stand_start = 1,		stand_end = 80,
+		walk_start = 81,		walk_end = 155,
+		run_start = 81,			run_end = 155
+	}
+	local l_spawn_in		= {"default:water_source"}
+	local l_spawn_near		= {"default:sand","default:dirt","group:seaplants","group:seacoral"}
+	local l_spawn_chance	= 10000
+
 -- Clownfish
 	mobs:register_mob("fishies:clownfish", {
 		type = "animal",
 		passive = true,
 		hp_min = 1,
 		hp_max = 4,
-		armor = 0,
-		collisionbox = {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+		armor = 100,
+		collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
 		visual = "mesh",
 		mesh = "animal_clownfish.b3d",
 		textures = {
 			{"clownfish.png"},
 			{"clownfish2.png"}
 		},
-		visual_size = {x=1, y=1},
+		visual_size = {x=.75, y=.75},
 		makes_footstep_sound = false,
-		walk_velocity = 1,
-		run_velocity = 2,
-		stepheight = 0.2,
-		jump = true,
+		stepheight = 0.1,
 		fly = true,
 		fly_in = "default:water_source",
 		fall_speed = 0,
-		rotate = 4.5, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
-		view_range = 10,
+		rotate = 4.5,
+		view_range = 8,
 		water_damage = 0,
 		lava_damage = 5,
 		light_damage = 0,
-		animation = {
-			speed_normal = 15,		speed_run = 25,
-			stand_start = 1,		stand_end = 80,
-			walk_start = 81,		walk_end = 155
-		}
+		animation = l_anims
+	end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
-	mobs:spawn_specific("fishies:clownfish",
-		{"default:water_flowing","default:water_source"},
-		{"default:sand","default:dirt","group:seaplants","group:seacoral"},
-		5, 20, 30, 10000, 1, -31000, 0)
+	mobs:spawn_specific("fishies:clownfish", l_spawn_in, l_spawn_near, 5, 20, 30, l_spawn_chance, 1, -31000, 0)
 	mobs:register_egg("fishies:clownfish", "Clownfish", "animal_clownfish_clownfish_item.png", 0)
 
--- Blue/white fish
-	mobs:register_mob("fishies:blue_white", {
+-- Tropical fish
+	mobs:register_mob("fishies:tropical", {
 		type = "animal",
 		passive = true,
 		hp_min = 1,
 		hp_max = 4,
-		armor = 0,
+		armor = 100,
 		collisionbox = {-0.25, -0.25, -0.25, 0.25, 0.25, 0.25},
 		visual = "mesh",
 		mesh = "fish_blue_white.b3d",
@@ -60,29 +61,20 @@ if mobs.mod and mobs.mod == "redo" then
 		},
 		visual_size = {x=0.75, y=0.75},
 		makes_footstep_sound = false,
-		walk_velocity = 1,
-		run_velocity = 2,
-		stepheight = 1,
-		jump = true,
+		stepheight = 0.1,
 		fly = true,
 		fly_in = "default:water_source",
 		fall_speed = 0,
-		rotate = 4.5, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
-		view_range = 10,
+		rotate = 4.5,
+		view_range = 8,
 		water_damage = 0,
 		lava_damage = 5,
 		light_damage = 0,
-		animation = {
-			speed_normal = 15,		speed_run = 25,
-			stand_start = 1,		stand_end = 80,
-			walk_start = 81,		walk_end = 155
-		}
+		animation = l_anims
+	end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
-	mobs:spawn_specific("fishies:blue_white",
-		{"default:water_flowing","default:water_source"},
-		{"default:sand", "default:dirt","group:seaplants","group:seacoral"},
-		5, 20, 30, 10000, 1, -31000, 0)
-	mobs:register_egg("fishies:blue_white", "Blue white fish", "animal_fish_blue_white_fish_blue_white_item.png", 0)
+	mobs:spawn_specific("fishies:tropical", l_spawn_in, l_spawn_near, 5, 20, 30, l_spawn_chance, 1, -31000, 0)
+	mobs:register_egg("fishies:tropical", "Tropical fish", "animal_fish_blue_white_fish_blue_white_item.png", 0)
 
 end

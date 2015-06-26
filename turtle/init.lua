@@ -1,8 +1,18 @@
 
 if mobs.mod and mobs.mod == "redo" then
 
+	local l_colors = {
+		"#604000:175",	--brown
+		"#604000:100",	--brown2
+		"#ffffff:150",	--white
+		"#404040:150",	--dark_grey
+		"#a0a0a0:150",	--grey
+		"#808000:150",	--olive
+		"#ff0000:150"	--red
+	}
 	local l_skins = {
-		{"mobf_turtle.png"}
+		{"turtle1.png^turtle2.png^turtle3.png^turtle4.png^turtle5.png^turtle6.png^turtle7.png"},
+		{"turtle1.png^(turtle2.png^[colorize:"..l_colors[5]..")^(turtle3.png^[colorize:"..l_colors[4]..")^(turtle4.png^[colorize:"..l_colors[1]..")^(turtle5.png^[colorize:"..l_colors[2]..")^(turtle6.png^[colorize:"..l_colors[6]..")^turtle7.png"}
 	}
 	local l_anims = {
 		speed_normal = 24,	speed_run = 24,

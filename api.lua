@@ -1,4 +1,4 @@
--- Mobs Api (17th June 2015)
+-- Mobs Api (26th June 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -500,7 +500,7 @@ function mobs:register_mob(name, def)
 						self.following = nil
 					else
 						local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-						yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate -- local
+						yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 						if p.x > s.x then
 							yaw = yaw+math.pi
 						end
@@ -588,7 +588,7 @@ function mobs:register_mob(name, def)
 if self.fly and self.fly_in == "default:water_source" and not lp then
 	print ("out of water")
 	self.set_velocity(self, 0)
-	self.state = "flop" -- "stand"
+	self.state = "flop" -- change to undefined state so nothing more happens
 	self:set_animation("stand")
 	return
 end
@@ -645,7 +645,7 @@ end
 				end
 				
 				local vec = {x = p.x -s.x, y = p.y -s.y, z = p.z -s.z}
-				yaw = math.atan(vec.z/vec.x)+math.pi/2 + self.rotate -- local
+				yaw = math.atan(vec.z/vec.x)+math.pi/2 + self.rotate
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -747,7 +747,7 @@ end
 				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate -- local
+				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -789,11 +789,6 @@ end
 
 			elseif self.state == "attack" and self.attack_type == "shoot" then
 
---				if not self.attack.player or not self.attack.player:is_player() then
---					self.state = "stand"
---					self:set_animation("stand")
---					return
---				end
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
 				p.y = p.y - .5
@@ -802,10 +797,6 @@ end
 				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
 					self.set_velocity(self, 0)
---					if self.type ~= "npc" then
---						self.attack = {player=nil, dist=nil}
---					end
-
 					self:set_animation("stand")
 					return
 				else
@@ -813,7 +804,7 @@ end
 				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate -- local
+				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -1109,6 +1100,10 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 	if sound and sound ~= "" then
 		minetest.sound_play(sound, {pos = pos, gain = 1.0, max_hear_distance = 16})
 	end
+	-- if area protected then no blast damage
+	if minetest.is_protected(pos, "") then
+		return
+	end
 	for z = -radius, radius do
 	for y = -radius, radius do
 	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)
@@ -1118,10 +1113,7 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 		p.z = pos.z + z
 		if data[vi] ~= c_air and data[vi] ~= c_ignore and data[vi] ~= c_obsidian and data[vi] ~= c_brick and data[vi] ~= c_chest then
 			local n = minetest.get_node(p).name
-			-- do NOT destroy protection nodes but DO destroy nodes in protected area
-			if not n:find("protector:")
-			--and not minetest.is_protected(p, "")
-			and minetest.get_item_group(n.name, "unbreakable") ~= 1 then
+			if minetest.get_item_group(n, "unbreakable") ~= 1 then
 				-- if chest then drop items inside
 				if n == "default:chest" then
 					local meta = minetest.get_meta(p)

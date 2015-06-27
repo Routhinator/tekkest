@@ -2,31 +2,16 @@
 if mobs.mod and mobs.mod == "redo" then
 
 -- local variables
-	local l_colors = {
-		"#ffffff",	--1 white-
-		"#a0a0a0",	--2 grey-
-		"#000000",	--3 black-
-		"#ff0000",	--4 red-
-		"#ffff00",	--5 yellow-
-		"#00ff00",	--6 green-
-		"#00ffff",	--7 cyan-
-		"#0000ff",	--8 blue-
-		"#ff00ff",	--9 magenta-
-		"#ff8000",	--10 orange-
-		"#8000ff",	--11 violet-
-		"#404040",	--12 dark_grey-
-		"#008000",	--13 dark_green-
-		"#ffb0ff",	--14 pink-
-		"#604000"	--15 brown-
-	}
 	local l_skins = {
 		{"bf1.png^bf2.png^bf3.png^bf4.png^bf5.png"},
-		{"(bf1.png^[colorize:"..l_colors[10]..")^(bf2.png^[colorize:"..l_colors[11]..")^(bf3.png^[colorize:"..l_colors[5]..")^(bf4.png^[colorize:"..l_colors[7]..")^(bf5.png^[colorize:"..l_colors[3]..")"},
-		{"(bf1.png^[colorize:"..l_colors[9]..")^(bf2.png^[colorize:"..l_colors[6]..")^(bf3.png^[colorize:"..l_colors[4]..")^(bf4.png^[colorize:"..l_colors[8]..")^(bf5.png^[colorize:"..l_colors[1]..")"},
-		{"(bf1.png^[colorize:"..l_colors[5]..")^(bf2.png^[colorize:"..l_colors[7]..")^(bf3.png^[colorize:"..l_colors[6]..")^(bf4.png^[colorize:"..l_colors[11]..")^(bf5.png^[colorize:"..l_colors[12]..")"},
-		{"(bf1.png^[colorize:"..l_colors[14]..")^(bf2.png^[colorize:"..l_colors[1]..")^(bf3.png^[colorize:"..l_colors[8]..")^(bf4.png^[colorize:"..l_colors[10]..")^(bf5.png^[colorize:"..l_colors[2]..")"},
-		{"(bf1.png^[colorize:"..l_colors[13]..")^(bf2.png^[colorize:"..l_colors[15]..")^(bf3.png^[colorize:"..l_colors[3]..")^(bf4.png^[colorize:"..l_colors[12]..")^(bf5.png^[colorize:"..l_colors[4]..")"}
+		{"(bf1.png^[colorize:orange)^(bf2.png^[colorize:violet)^(bf3.png^[colorize:yellow)^(bf4.png^[colorize:cyan)^(bf5.png^[colorize:black)"},
+		{"(bf1.png^[colorize:magenta)^(bf2.png^[colorize:green)^(bf3.png^[colorize:red)^(bf4.png^[colorize:blue)^(bf5.png^[colorize:white)"},
+		{"(bf1.png^[colorize:yellow)^(bf2.png^[colorize:cyan)^(bf3.png^[colorize:green)^(bf4.png^[colorize:violet)^(bf5.png^[colorize:darkgray)"},
+		{"(bf1.png^[colorize:pink)^(bf2.png^[colorize:white)^(bf3.png^[colorize:blue)^(bf4.png^[colorize:orange)^(bf5.png^[colorize:gray)"},
+		{"(bf1.png^[colorize:darkgreen)^(bf2.png^[colorize:brown)^(bf3.png^[colorize:black)^(bf4.png^[colorize:darkgray)^(bf5.png^[colorize:red)"}
 	}
+	local l_spawnnear	= {"group:flower"}
+	local l_spawnchance	= 10000
 
 -- Butterfly
 	mobs:register_mob("butterfly:butterfly", {
@@ -49,14 +34,20 @@ if mobs.mod and mobs.mod == "redo" then
 		fall_damage = 0,
 		fall_speed = 0,
 		view_range = 10,
+		capture_chance_hand = 10,
+		capture_chance_net = 80,
+		capture_chance_lasso = 0,
 		animation = {
 			speed_normal = 15,	speed_run = 30,
 			stand_start = 0,	stand_end = 90,
 			walk_start = 0,		walk_end = 90,
-		}
+		},
+		on_rightclick = function(self, clicker)
+			mobs:capture_mob(self, clicker, nil)
+		end
 	})
 	--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
-	mobs:spawn_specific("butterfly:butterfly", {"air"}, {"group:flower"}, 5, 20, 30, 10000, 2, 0, 31000)
+	mobs:spawn_specific("butterfly:butterfly", {"air"}, l_spawnnear, 5, 20, 30, l_spawnchance, 2, 0, 31000)
 	mobs:register_egg("butterfly:butterfly", "Butterfly", "default_cloud.png", 1)
 
 end

@@ -34,17 +34,17 @@ if mobs.mod and mobs.mod == "redo" then
 		fall_damage = 0,
 		fall_speed = 0,
 		view_range = 10,
-		capture_chance_hand = 10,
-		capture_chance_net = 80,
-		capture_chance_lasso = 0,
+--		capture_chance_hand = 10,
+--		capture_chance_net = 80,
+--		capture_chance_lasso = 0,
 		animation = {
 			speed_normal = 15,	speed_run = 30,
 			stand_start = 0,	stand_end = 90,
 			walk_start = 0,		walk_end = 90,
 		},
-		on_rightclick = function(self, clicker)
-			mobs:capture_mob(self, clicker, nil)
-		end
+--		on_rightclick = function(self, clicker)
+--			mobs:capture_mob(self, clicker, nil)
+--		end
 	})
 	--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("butterfly:butterfly", {"air"}, l_spawnnear, 5, 20, 30, l_spawnchance, 2, 0, 31000)

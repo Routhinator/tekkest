@@ -1,4 +1,4 @@
--- Mobs Api (26th June 2015)
+-- Mobs Api (27th June 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -21,7 +21,7 @@ function mobs:register_mob(name, def)
 		jump_height = def.jump_height or 6,
 		jump_chance = def.jump_chance or 0,
 		rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
-		lifetimer = def.lifetimer or 600,
+		lifetimer = def.lifetimer or 180, -- was 600
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,

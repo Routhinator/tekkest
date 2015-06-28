@@ -32,12 +32,11 @@ if mobs.mod and mobs.mod == "redo" then
 		lava_damage = 1,
 		light_damage = 0,
 		fall_damage = 0,
-		fall_speed = 0,
-		view_range = 10,
 --		capture_chance_hand = 10,
 --		capture_chance_net = 80,
 --		capture_chance_lasso = 0,
-		animation = {
+		view_range = 10,
+				animation = {
 			speed_normal = 15,	speed_run = 30,
 			stand_start = 0,	stand_end = 90,
 			walk_start = 0,		walk_end = 90,

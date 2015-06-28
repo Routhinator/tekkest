@@ -90,26 +90,6 @@ mobs:register_mob("mobs:npc", {
 			local pos = self.object:getpos()
 			pos.y = pos.y + 0.5
 			minetest.add_item(pos, {name = mobs.npc_drops[math.random(1,#mobs.npc_drops)]})
-		-- pick up npc
-		elseif item:get_name() == "mobs:magic_lasso"
-		and clicker:is_player()
-		and clicker:get_inventory()
-		and self.child == false
-		and clicker:get_inventory():room_for_item("main", "mobs:npc") then
-
-			-- pick up if owner
-			if self.owner == name then
-				clicker:get_inventory():add_item("main", "mobs:npc")
-				self.object:remove()
-				item:add_wear(3000) -- 22 uses
-				clicker:set_wielded_item(item)
-			-- cannot pick up if not tamed
-			elseif not self.owner or self.owner == "" then
-				minetest.chat_send_player(name, "Not tamed!")
-			-- cannot pick up if not tamed
-			elseif self.owner ~= name then
-				minetest.chat_send_player(name, "Not owner!")
-			end
 
 		else
 			-- if owner switch between follow and stand
@@ -123,6 +103,8 @@ mobs:register_mob("mobs:npc", {
 				self.owner = clicker:get_player_name()
 			end
 		end
+
+		mobs:capture_mob(self, clicker, 0, 5, 80, false, nil)
 	end,
 })
 -- spawning disabled for now

@@ -24,13 +24,7 @@ mobs:register_mob("mobs:rat", {
 	lava_damage = 4,
 	light_damage = 0,
 	on_rightclick = function(self, clicker)
-		if clicker:is_player()
-		and clicker:get_inventory()
-		and self.child == false
-		and clicker:get_inventory():room_for_item("main", "mobs:rat") then
-			clicker:get_inventory():add_item("main", "mobs:rat")
-			self.object:remove()
-		end
+		mobs:capture_mob(self, clicker, 25, 80, 0, true, nil)
 	end,
 --[[
 	do_custom = function(self)

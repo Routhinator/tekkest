@@ -66,7 +66,7 @@ mobs:register_mob("mobs:sheep", {
 				self.gotten = false -- can be shaved again
 				self.tamed = true
 				-- make owner
-				if not self.owner or self.owner == "" then
+				if self.owner == "" then
 					self.owner = name
 				end
 				self.object:set_properties({
@@ -101,28 +101,10 @@ mobs:register_mob("mobs:sheep", {
 				textures = {"mobs_sheep_shaved.png"},
 				mesh = "mobs_sheep_shaved.x",
 			})
+			return
 		end
 
-		if item:get_name() == "mobs:magic_lasso"
-		and clicker:is_player()
-		and clicker:get_inventory()
-		and self.child == false
-		and clicker:get_inventory():room_for_item("main", "mobs:sheep") then
-
-			-- pick up if owner
-			if self.owner == name then
-				clicker:get_inventory():add_item("main", "mobs:sheep")
-				self.object:remove()
-				item:add_wear(3000) -- 22 uses
-				clicker:set_wielded_item(item)
-			-- cannot pick up if not tamed
-			elseif not self.owner or self.owner == "" then
-				minetest.chat_send_player(name, "Not tamed!")
-			-- cannot pick up if not tamed
-			elseif self.owner ~= name then
-				minetest.chat_send_player(name, "Not owner!")
-			end
-		end
+		mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
 	end,
 })
 

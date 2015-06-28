@@ -63,6 +63,7 @@ mobs:register_mob("mobs:cow", {
 				minetest.add_item(pos, {name = "mobs:bucket_milk"})
 			end
 			self.gotten = true -- milked
+			return
 		end
 
 		if tool:get_name() == "farming:wheat" then
@@ -86,7 +87,7 @@ mobs:register_mob("mobs:cow", {
 				self.gotten = false -- ready to be milked again
 				self.tamed = true
 				-- make owner
-				if not self.owner or self.owner == "" then
+				if self.owner == "" then
 					self.owner = name
 				end
 				minetest.sound_play("mobs_cow", {
@@ -99,27 +100,7 @@ mobs:register_mob("mobs:cow", {
 			return
 		end
 
-		if tool:get_name() == "mobs:magic_lasso"
-		and clicker:is_player()
-		and clicker:get_inventory()
-		and self.child == false
-		and clicker:get_inventory():room_for_item("main", "mobs:cow") then
-
-			-- pick up if owner
-			if self.owner == name then
-				clicker:get_inventory():add_item("main", "mobs:cow")
-				self.object:remove()
-				tool:add_wear(3000) -- 22 uses
-				clicker:set_wielded_item(tool)
-			-- cannot pick up if not tamed
-			elseif not self.owner or self.owner == "" then
-				minetest.chat_send_player(name, "Not tamed!")
-			-- cannot pick up if not owner
-			elseif self.owner ~= name then
-				minetest.chat_send_player(name, "Not owner!")
-			end
-
-		end
+		mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
 	end,
 })
 

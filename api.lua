@@ -1,4 +1,4 @@
--- Mobs Api (27th June 2015)
+-- Mobs Api (28th June 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -14,7 +14,7 @@ function mobs:register_mob(name, def)
 		name = name,
 		fly = def.fly,
 		fly_in = def.fly_in or "air",
-		owner = def.owner,
+		owner = def.owner or "",
 		order = def.order or "",
 		on_die = def.on_die,
 		do_custom = def.do_custom,
@@ -75,7 +75,6 @@ function mobs:register_mob(name, def)
 		hornytimer = 0,
 		child = false,
 		gotten = false,
-		owner = "",
 		health = 0,
 
 		do_attack = function(self, player, dist)
@@ -1281,4 +1280,52 @@ function mobs:register_egg(mob, desc, background, addegg)
 			return itemstack
 		end,
 	})
+end
+
+-- capture critter (thanks to blert2112 for idea)
+function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, force_take, replacewith)
+	if clicker:is_player() and clicker:get_inventory() and not self.child then
+		-- get name of clicked mob
+		local mobname = self.name
+		-- if not nil change what will be added to inventory
+		if replacewith then
+			mobname = replacewith
+		end
+--print ("taking by force is", force_take)
+		local name = clicker:get_player_name()
+		if self.owner == "" and force_take == false then
+			minetest.chat_send_player(name, "Not tamed!")
+		-- cannot pick up if not owner
+		elseif self.owner ~= name and force_take == false then
+			minetest.chat_send_player(name, "Not owner!")
+		end
+
+		if clicker:get_inventory():room_for_item("main", name) then
+			-- was mob clicked with hand, net, or lasso?
+			local tool = clicker:get_wielded_item()
+			local chance = 0
+			if tool:is_empty() then
+				chance = chance_hand
+			elseif tool:get_name() == "mobs:net" then
+				chance = chance_net
+				tool:add_wear(4000) -- 17 uses
+				clicker:set_wielded_item(tool)
+			elseif tool:get_name() == "mobs:magic_lasso" then
+				-- pick up if owner
+				chance = chance_lasso
+				tool:add_wear(650) -- 100 uses
+				clicker:set_wielded_item(tool)
+			end
+			-- return if no chance
+			if chance == 0 then return end
+			-- calculate chance.. was capture successful?
+			if math.random(100) <= chance then
+				-- successful capture.. add to inventory
+				clicker:get_inventory():add_item("main", mobname)
+				self.object:remove()
+			else
+				minetest.chat_send_player(name, "Missed!")
+			end
+		end
+	end
 end

@@ -20,6 +20,7 @@ mobs:register_mob("mobs:npc", {
 	drawtype = "front",
 	textures = {
 		{"mobs_npc.png"},
+		{"mobs_npc2.png"}, -- female by nuttmeg20
 	},
 	visual_size = {x=1, y=1},
 	-- sounds

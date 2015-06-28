@@ -80,7 +80,10 @@ function mobs:register_mob(name, def)
 		do_attack = function(self, player, dist)
 			if self.state ~= "attack" then
 				if math.random(0,100) < 90  and self.sounds.war_cry then
-					minetest.sound_play(self.sounds.war_cry,{object = self.object})
+					minetest.sound_play(self.sounds.war_cry,{
+						object = self.object,
+						max_hear_distance = self.sounds.distance
+					})
 				end
 				self.state = "attack"
 				self.attack.player = player
@@ -242,7 +245,10 @@ function mobs:register_mob(name, def)
 			end
 
 			if self.sounds.random and math.random(1, 100) <= 1 then
-				minetest.sound_play(self.sounds.random, {object = self.object})
+				minetest.sound_play(self.sounds.random, {
+					object = self.object,
+					max_hear_distance = self.sounds.distance
+				})
 			end
 			
 			local do_env_damage = function(self)
@@ -301,7 +307,10 @@ function mobs:register_mob(name, def)
 								v.z = v.z * 2.2
 								self.object:setvelocity(v)
 								if self.sounds.jump then
-									minetest.sound_play(self.sounds.jump, {object = self.object})
+									minetest.sound_play(self.sounds.jump, {
+										object = self.object,
+										max_hear_distance = self.sounds.distance
+									})
 								end
 							end
 						end
@@ -686,7 +695,11 @@ end
 						or minetest.is_protected(pos, "") then
 							self.object:remove()
 							if self.sounds.explode ~= "" then
-								minetest.sound_play(self.sounds.explode, {pos = pos, gain = 1.0, max_hear_distance = 16})
+								minetest.sound_play(self.sounds.explode, {
+									pos = pos,
+									gain = 1.0,
+									max_hear_distance = 16
+								})
 							end
 							pos.y = pos.y + 1
 							effect(pos, 15, "tnt_smoke.png", 5)
@@ -772,7 +785,10 @@ end
 						s2.y = s2.y + 1.5
 						if minetest.line_of_sight(p2,s2) == true then
 							if self.sounds.attack then
-								minetest.sound_play(self.sounds.attack, {object = self.object})
+								minetest.sound_play(self.sounds.attack, {
+									object = self.object,
+									max_hear_distance = self.sounds.distance
+								})
 							end
 							self.attack.player:punch(self.object, 1.0,  {
 								full_punch_interval=1.0,
@@ -816,7 +832,10 @@ end
 					self:set_animation("punch")
 
 					if self.sounds.attack then
-						minetest.sound_play(self.sounds.attack, {object = self.object})
+						minetest.sound_play(self.sounds.attack, {
+							object = self.object,
+							max_hear_distance = self.sounds.distance
+						})
 					end
 
 					local p = self.object:getpos()
@@ -847,6 +866,8 @@ end
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.old_y = self.object:getpos().y
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
+
+			if not self.sounds.distance then self.sounds.distance = 10 end
 
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
@@ -954,10 +975,12 @@ end
 				local s = math.random(0,#weapon:get_definition().sounds)
 				minetest.sound_play(weapon:get_definition().sounds[s], {
 					object=hitter,
+					max_hear_distance = 8
 				})
 			else
 				minetest.sound_play("default_punch", {
 					object = hitter,
+					max_hear_distance = 5
 				})
 			end
 
@@ -1097,7 +1120,11 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 	local c_brick = minetest.get_content_id("default:obsidianbrick")
 	local c_chest = minetest.get_content_id("default:chest_locked")
 	if sound and sound ~= "" then
-		minetest.sound_play(sound, {pos = pos, gain = 1.0, max_hear_distance = 16})
+		minetest.sound_play(sound, {
+			pos = pos,
+			gain = 1.0,
+			max_hear_distance = 16
+		})
 	end
 	-- if area protected then no blast damage
 	if minetest.is_protected(pos, "") then
@@ -1146,7 +1173,10 @@ function check_for_death(self)
 	local hp = self.object:get_hp()
 	if hp > 0 then
 		if self.sounds.damage ~= nil then
-			minetest.sound_play(self.sounds.damage,{object = self.object})
+			minetest.sound_play(self.sounds.damage,{
+				object = self.object,
+				max_hear_distance = self.sounds.distance
+			})
 			self.health = hp
 		end
 		return
@@ -1164,7 +1194,10 @@ function check_for_death(self)
 		end
 	end
 	if self.sounds.death ~= nil then
-		minetest.sound_play(self.sounds.death,{object = self.object})
+		minetest.sound_play(self.sounds.death,{
+			object = self.object,
+			max_hear_distance = self.sounds.distance
+		})
 	end
 	if self.on_die then
 		pos.y = pos.y - 0.5

@@ -1333,7 +1333,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 			minetest.chat_send_player(name, "Not owner!")
 		end
 
-		if clicker:get_inventory():room_for_item("main", name) then
+		if clicker:get_inventory():room_for_item("main", mobname) then
 			-- was mob clicked with hand, net, or lasso?
 			local tool = clicker:get_wielded_item()
 			local chance = 0

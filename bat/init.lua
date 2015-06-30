@@ -35,9 +35,6 @@ if mobs.mod and mobs.mod == "redo" then
 		water_damage = 2,
 		lava_damage = 10,
 		light_damage = 0,
---		capture_chance_hand = 5,
---		capture_chance_net = 60,
---		capture_chance_lasso = 0,
 		view_range = 10,
 		animation = {
 			speed_normal = 24,		speed_run = 24,
@@ -46,9 +43,9 @@ if mobs.mod and mobs.mod == "redo" then
 			run_start = 30,			run_end = 59,
 			punch_start = 60,		punch_end = 89
 		},
---		on_rightclick = function(self, clicker)
---			mobs:capture_mob(self, clicker, nil)
---		end
+		on_rightclick = function(self, clicker)
+			mobs:capture_mob(self, clicker, 5, 60, 0, true, nil)
+		end
 	})
 
 	--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height

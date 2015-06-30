@@ -26,7 +26,6 @@ if mobs.mod and mobs.mod == "redo" then
 	local l_egg_texture			= "default_cloud.png"
 	local l_capture_chance_h	= 5
 	local l_capture_chance_n	= 60
-	local l_capture_chance_l	= 0
 	local l_spawn_in			= {"air"}
 	local l_spawn_near_gull		= {"default:water_source", "default:water_flowing"}
 	local l_spawn_near_bird		= {"default:leaves", "default:pine_needles", "default:jungleleaves", "default:cactus"}
@@ -63,14 +62,11 @@ if mobs.mod and mobs.mod == "redo" then
 			water_damage = 0,
 			lava_damage = 10,
 			light_damage = 0,
---			capture_chance_hand = l_capture_chance_h,
---			capture_chance_net = l_capture_chance_n,
---			capture_chance_lasso = l_capture_chance_l,
 			view_range = 14,
 			animation = l_anims,
---			on_rightclick = function(self, clicker)
---				mobs:capture_mob(self, clicker, nil)
---			end
+			on_rightclick = function(self, clicker)
+				mobs:capture_mob(self, clicker, l_capture_chance_h, l_capture_chance_n, 0, true, nil)
+			end
 		})
 		--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
 		mobs:spawn_specific("birds:gull", l_spawn_in, l_spawn_near_gull, 5, 20, 30, l_spawn_chance_gull, 2, 0, 31000)
@@ -99,14 +95,11 @@ if mobs.mod and mobs.mod == "redo" then
 			water_damage = 0,
 			lava_damage = 10,
 			light_damage = 0,
---			capture_chance_hand = l_capture_chance_h,
---			capture_chance_net = l_capture_chance_n,
---			capture_chance_lasso = l_capture_chance_l,
 			view_range = 12,
 			animation = l_anims,
---			on_rightclick = function(self, clicker)
---				mobs:capture_mob(self, clicker, nil)
---			end
+			on_rightclick = function(self, clicker)
+				mobs:capture_mob(self, clicker, l_capture_chance_h, l_capture_chance_n, 0, true, nil)
+			end
 		})
 		--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
 		mobs:spawn_specific("birds:bird_lg", l_spawn_in, l_spawn_near_bird, 5, 20, 30, l_spawn_chance_bird, 2, 0, 31000)
@@ -135,14 +128,11 @@ if mobs.mod and mobs.mod == "redo" then
 			water_damage = 0,
 			lava_damage = 10,
 			light_damage = 0,
---			capture_chance_hand = l_capture_chance_h,
---			capture_chance_net = l_capture_chance_n,
---			capture_chance_lasso = l_capture_chance_l,
 			view_range = 10,
 			animation = l_anims,
---			on_rightclick = function(self, clicker)
---				mobs:capture_mob(self, clicker, nil)
---			end
+			on_rightclick = function(self, clicker)
+				mobs:capture_mob(self, clicker, l_capture_chance_h, l_capture_chance_n, 0, true, nil)
+			end
 		})
 		--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
 		mobs:spawn_specific("birds:bird_sm", l_spawn_in, l_spawn_near_bird, 5, 20, 30, l_spawn_chance_bird, 2, 0, 31000)

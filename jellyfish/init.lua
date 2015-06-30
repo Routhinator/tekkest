@@ -1,6 +1,4 @@
 
--- Jellyfish by blert2112
-
 if mobs.mod and mobs.mod == "redo" then
 
 	mobs:register_mob("jellyfish:jellyfish", {
@@ -25,7 +23,10 @@ if mobs.mod and mobs.mod == "redo" then
 		view_range = 10,
 		water_damage = 0,
 		lava_damage = 5,
-		light_damage = 0
+		light_damage = 0,
+		on_rightclick = function(self, clicker)
+			mobs:capture_mob(self, clicker, 80, 100, 0, true, nil)
+		end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("jellyfish:jellyfish",

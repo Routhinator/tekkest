@@ -11,6 +11,8 @@ if mobs.mod and mobs.mod == "redo" then
 	local l_spawn_in		= {"default:water_source"}
 	local l_spawn_near		= {"default:sand","default:dirt","group:seaplants","group:seacoral"}
 	local l_spawn_chance	= 10000
+	local l_cc_hand			= 25
+	local l_cc_net			= 80
 
 -- Clownfish
 	mobs:register_mob("fishies:clownfish", {
@@ -37,7 +39,10 @@ if mobs.mod and mobs.mod == "redo" then
 		water_damage = 0,
 		lava_damage = 5,
 		light_damage = 0,
-		animation = l_anims
+		animation = l_anims,
+		on_rightclick = function(self, clicker)
+			mobs:capture_mob(self, clicker, l_cc_hand, l_cc_net, 0, true, nil)
+		end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:clownfish", l_spawn_in, l_spawn_near, 5, 20, 30, l_spawn_chance, 1, -31000, 0)
@@ -69,7 +74,10 @@ if mobs.mod and mobs.mod == "redo" then
 		water_damage = 0,
 		lava_damage = 5,
 		light_damage = 0,
-		animation = l_anims
+		animation = l_anims,
+		on_rightclick = function(self, clicker)
+			mobs:capture_mob(self, clicker, l_cc_hand, l_cc_net, 0, true, nil)
+		end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("fishies:tropical", l_spawn_in, l_spawn_near, 5, 20, 30, l_spawn_chance, 1, -31000, 0)

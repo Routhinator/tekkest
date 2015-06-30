@@ -56,6 +56,7 @@ if mobs.mod and mobs.mod == "redo" then
 			minetest.after(5, function() 
 				self.state = "stand"
 			end)
+			mobs:capture_mob(self, clicker, 0, 80, 100, true, nil)
 		end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
@@ -92,7 +93,10 @@ if mobs.mod and mobs.mod == "redo" then
 		lava_damage = 5,
 		light_damage = 0,
 		fall_damage = 0,
-		animation = l_anims
+		animation = l_anims,
+		on_rightclick = function(self, clicker)
+			mobs:capture_mob(self, clicker, 0, 0, 80, true, nil)
+		end
 	})
 	--name, nodes, neighbours, minlight, maxlight, interval, chance, active_object_count, min_height, max_height
 	mobs:spawn_specific("turtle:seaturtle",

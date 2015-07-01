@@ -9,13 +9,13 @@ mobs:register_mob("mobs:stone_monster", {
 	hp_min = 12,
 	hp_max = 35,
 	armor = 80,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	collisionbox = {-0.4, -1, -0.4, 0.4, 0.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_stone_monster.x",
+	mesh = "mobs_stone_monster.b3d",
 	textures = {
 		{"mobs_stone_monster.png"},
 	},
-	visual_size = {x=3, y=2.6},
+	visual_size = {x=1, y=1},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_stonemonster",

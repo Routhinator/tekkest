@@ -7,15 +7,15 @@ mobs:register_mob("mobs:sheep", {
 	hp_min = 8,
 	hp_max = 10,
 	armor = 200,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
+	collisionbox = {-0.4, -1, -0.4, 0.4, 0.3, 0.4},
 	visual = "mesh",
-	mesh = "mobs_sheep.x",
+	mesh = "mobs_sheep.b3d",
 	textures = {
 		{"mobs_sheep.png"},
 	},
 	visual_size = {x=1,y=1},
 	gotten_texture = {"mobs_sheep_shaved.png"},
-	gotten_mesh = "mobs_sheep_shaved.x",
+	gotten_mesh = "mobs_sheep_shaved.b3d",
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_sheep",
@@ -41,6 +41,7 @@ mobs:register_mob("mobs:sheep", {
 	replace_rate = 50,
 	replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
 	replace_with = "air",
+	replace_offset = -1,
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
@@ -71,7 +72,7 @@ mobs:register_mob("mobs:sheep", {
 				end
 				self.object:set_properties({
 					textures = {"mobs_sheep.png"},
-					mesh = "mobs_sheep.x",
+					mesh = "mobs_sheep.b3d",
 				})
 				minetest.sound_play("mobs_sheep", {
 					object = self.object,
@@ -99,7 +100,7 @@ mobs:register_mob("mobs:sheep", {
 			end
 			self.object:set_properties({
 				textures = {"mobs_sheep_shaved.png"},
-				mesh = "mobs_sheep_shaved.x",
+				mesh = "mobs_sheep_shaved.b3d",
 			})
 			return
 		end

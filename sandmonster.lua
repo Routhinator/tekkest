@@ -9,13 +9,13 @@ mobs:register_mob("mobs:sand_monster", {
 	hp_min = 4,
 	hp_max = 20,
 	armor = 100,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	collisionbox = {-0.4, -1, -0.4, 0.4, 0.8, 0.4},
 	visual = "mesh",
-	mesh = "mobs_sand_monster.x",
+	mesh = "mobs_sand_monster.b3d",
 	textures = {
 		{"mobs_sand_monster.png"},
 	},
-	visual_size = {x=8,y=8},
+	visual_size = {x=1,y=1},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_sandmonster",

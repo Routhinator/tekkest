@@ -12,15 +12,15 @@ mobs:register_mob("mobs:dungeon_master", {
 	hp_min = 12,
 	hp_max = 35,
 	armor = 60,
-	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
+	collisionbox = {-0.7, -1, -0.7, 0.7, 1.6, 0.7},
 	visual = "mesh",
-	mesh = "mobs_dungeon_master.x",
+	mesh = "mobs_dungeon_master.b3d",
 	textures = {
 		{"mobs_dungeon_master.png"},
 		{"mobs_dungeon_master2.png"},
 		{"mobs_dungeon_master3.png"},
 	},
-	visual_size = {x=8, y=8},
+	visual_size = {x=1, y=1},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_dungeonmaster",

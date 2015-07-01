@@ -1,4 +1,4 @@
--- Mobs Api (29th June 2015)
+-- Mobs Api (1st July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -34,9 +34,9 @@ function mobs:register_mob(name, def)
 		walk_velocity = def.walk_velocity or 1,
 		run_velocity = def.run_velocity or 2,
 		damage = def.damage,
-		light_damage = def.light_damage,
-		water_damage = def.water_damage,
-		lava_damage = def.lava_damage,
+		light_damage = def.light_damage or 0,
+		water_damage = def.water_damage or 0,
+		lava_damage = def.lava_damage or 0,
 		fall_damage = def.fall_damage or 1,
 		fall_speed = def.fall_speed or -10, -- must be lower than -2 (default: -10)
 		drops = def.drops or {},
@@ -184,6 +184,7 @@ function mobs:register_mob(name, def)
 			and math.random(1,self.replace_rate) == 1 then
 				local pos = self.object:getpos()
 				pos.y = pos.y + self.replace_offset
+				-- print ("replace node = ".. minetest.get_node(pos).name, pos.y)
 				if self.replace_what
 				and self.object:getvelocity().y == 0
 				and #minetest.find_nodes_in_area(pos, pos, self.replace_what) > 0 then
@@ -254,11 +255,12 @@ function mobs:register_mob(name, def)
 			local do_env_damage = function(self)
 
 				local pos = self.object:getpos()
-				local n = minetest.get_node(pos)
 				local tod = minetest.get_timeofday()
 				pos.y = (pos.y + self.collisionbox[2]) -- foot level
---print ("standing on:", minetest.get_node(pos).name)
-				if self.light_damage and self.light_damage ~= 0
+				local n = minetest.get_node_or_nil(pos)
+				pos.y = pos.y + 1
+
+				if self.light_damage ~= 0
 				and pos.y > 0
 				and tod > 0.2 and tod < 0.8
 				and (minetest.get_node_light(pos) or 0) > 10 then
@@ -267,14 +269,16 @@ function mobs:register_mob(name, def)
 					check_for_death(self)
 				end
 
-				if self.water_damage and self.water_damage ~= 0
+				if not n then return end ; -- print ("standing in "..n.name)
+
+				if self.water_damage ~= 0
 				and minetest.get_item_group(n.name, "water") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.water_damage)
 					effect(pos, 5, "bubble.png")
 					check_for_death(self)
 				end
-				
-				if self.lava_damage and self.lava_damage ~= 0
+
+				if self.lava_damage ~= 0
 				and minetest.get_item_group(n.name, "lava") ~= 0 then
 					self.object:set_hp(self.object:get_hp()-self.lava_damage)
 					effect(pos, 5, "fire_basic_flame.png")

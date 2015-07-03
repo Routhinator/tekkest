@@ -15,7 +15,6 @@ mobs:register_mob("mobs:stone_monster", {
 	textures = {
 		{"mobs_stone_monster.png"},
 	},
-	visual_size = {x=1, y=1},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_stonemonster",
@@ -27,21 +26,26 @@ mobs:register_mob("mobs:stone_monster", {
 	view_range = 10,
 	drops = {
 		{name = "default:torch",
-		chance = 2, min = 3, max = 5,},
+		chance = 2, min = 3, max = 5},
 		{name = "default:iron_lump",
-		chance=5, min=1, max=2,},
+		chance=5, min=1, max=2},
 		{name = "default:coal_lump",
-		chance=3, min=1, max=3,},
+		chance=3, min=1, max=3},
 	},
 	water_damage = 0,
 	lava_damage = 1,
 	light_damage = 0,
 	animation = {
-		speed_normal = 15,		speed_run = 15,
-		stand_start = 0,		stand_end = 14,
-		walk_start = 15,		walk_end = 38,
-		run_start = 40,			run_end = 63,
-		punch_start = 40,		punch_end = 63,
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 14,
+		walk_start = 15,
+		walk_end = 38,
+		run_start = 40,
+		run_end = 63,
+		punch_start = 40,
+		punch_end = 63,
 	},
 })
 

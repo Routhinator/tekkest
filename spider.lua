@@ -15,7 +15,7 @@ mobs:register_mob("mobs:spider", {
 	textures = {
 		{"mobs_spider.png"},
 	},
-	visual_size = {x=7,y=7},
+	visual_size = {x = 7, y = 7},
 	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_spider",
@@ -26,21 +26,26 @@ mobs:register_mob("mobs:spider", {
 	jump = true,
 	view_range = 15,
 	floats = 0,
-    drops = {
+	drops = {
 		{name = "farming:string",
-		chance = 1, min = 1, max = 5,},
+		chance = 1, min = 1, max = 5},
 		{name = "ethereal:crystal_spike",
-		chance = 15, min = 1, max = 2,},
+		chance = 15, min = 1, max = 2},
 	},
 	water_damage = 5,
 	lava_damage = 5,
 	light_damage = 0,
 	animation = {
-		speed_normal = 15,		speed_run = 15,
-		stand_start = 1,		stand_end = 1,
-		walk_start = 20,		walk_end = 40,
-		run_start = 20,			run_end = 40,
-		punch_start = 50,		punch_end = 90,
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 1,
+		stand_end = 1,
+		walk_start = 20,
+		walk_end = 40,
+		run_start = 20,
+		run_end = 40,
+		punch_start = 50,
+		punch_end = 90,
 	},
 })
 
@@ -69,7 +74,7 @@ minetest.register_node("mobs:cobweb", {
 	liquid_renewable = false,
 	liquid_range = 0,
 	walkable = false,
-	groups = {snappy=1,liquid=3},
+	groups = {snappy = 1, liquid = 3},
 	drop = "farming:cotton",
 	sounds = default.node_sound_leaves_defaults(),
 })

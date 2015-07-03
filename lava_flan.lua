@@ -16,7 +16,6 @@ mobs:register_mob("mobs:lava_flan", {
 		{"zmobs_lava_flan.png"},
 	},
 	blood_texture = "fire_basic_flame.png",
-	visual_size = {x=1, y=1},
 	makes_footstep_sound = false,
 	sounds = {
 		random = "mobs_lavaflan",
@@ -29,20 +28,25 @@ mobs:register_mob("mobs:lava_flan", {
 	floats = 0,
 	drops = {
 		{name = "mobs:lava_orb",
-		chance = 15, min = 1, max = 1,},
+		chance = 15, min = 1, max = 1},
 	},
 	water_damage = 5,
 	lava_damage = 0,
 	light_damage = 0,
 	animation = {
-		speed_normal = 15,		speed_run = 15,
-		stand_start = 0,		stand_end = 8,
-		walk_start = 10,		walk_end = 18,
-		run_start = 20,			run_end = 28,
-		punch_start = 20,		punch_end = 28,
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 8,
+		walk_start = 10,
+		walk_end = 18,
+		run_start = 20,
+		run_end = 28,
+		punch_start = 20,
+		punch_end = 28,
 	},
 	on_die = function(self, pos)
-		minetest.set_node(pos, {name="fire:basic_flame"})
+		minetest.set_node(pos, {name = "fire:basic_flame"})
 	end,
 })
 

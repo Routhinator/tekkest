@@ -15,7 +15,6 @@ mobs:register_mob("mobs:cow", {
 	textures = {
 		{"mobs_cow.png"},
 	},
-	visual_size = {x=1,y=1},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_cow",
@@ -33,11 +32,16 @@ mobs:register_mob("mobs:cow", {
 	lava_damage = 5,
 	light_damage = 0,
 	animation = {
-		speed_normal = 15,		speed_run = 15,
-		stand_start = 0,		stand_end = 30,
-		walk_start = 35,		walk_end = 65,
-		run_start = 105,		run_end = 135,
-		punch_start = 70,		punch_end = 100,
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 30,
+		walk_start = 35,
+		walk_end = 65,
+		run_start = 105,
+		run_end = 135,
+		punch_start = 70,
+		punch_end = 100,
 	},
 	follow = "farming:wheat",
 	view_range = 7,
@@ -55,7 +59,7 @@ mobs:register_mob("mobs:cow", {
 			end
 			local inv = clicker:get_inventory()
 			inv:remove_item("main", "bucket:bucket_empty")
-			if inv:room_for_item("main", {name="mobs:bucket_milk"}) then
+			if inv:room_for_item("main", {name = "mobs:bucket_milk"}) then
 				clicker:get_inventory():add_item("main", "mobs:bucket_milk")
 			else
 				local pos = self.object:getpos()
@@ -93,7 +97,7 @@ mobs:register_mob("mobs:cow", {
 				minetest.sound_play("mobs_cow", {
 					object = self.object,
 					gain = 1.0,
-					max_hear_distance = 32,
+					max_hear_distance = 10,
 					loop = false,
 				})
 			end
@@ -142,7 +146,7 @@ minetest.register_node("mobs:cheeseblock", {
 	description = "Cheese Block",
 	tiles = {"mobs_cheeseblock.png"},
 	is_ground_content = false,
-	groups = {crumbly=3},
+	groups = {crumbly = 3},
 	sounds = default.node_sound_dirt_defaults()
 })
 

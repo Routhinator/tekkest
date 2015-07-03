@@ -15,7 +15,6 @@ mobs:register_mob("mobs:pumba", {
 	textures = {
 		{"mobs_pumba.png"},
 	},
-	visual_size = {x=1,y=1},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_pig",
@@ -28,16 +27,19 @@ mobs:register_mob("mobs:pumba", {
 	view_range = 10,
 	drops = {
 		{name = "mobs:pork_raw",
-		chance = 1, min = 2, max = 3,},
+		chance = 1, min = 2, max = 3},
 	},
 	water_damage = 1,
 	lava_damage = 5,
 	light_damage = 0,
 	animation = {
 		speed_normal = 15,
-		stand_start = 25,		stand_end = 55,
-		walk_start = 70,		walk_end = 100,
-		punch_start = 70,		punch_end = 100,
+		stand_start = 25,
+		stand_end = 55,
+		walk_start = 70,
+		walk_end = 100,
+		punch_start = 70,
+		punch_end = 100,
 	},
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
@@ -69,7 +71,7 @@ mobs:register_mob("mobs:pumba", {
 				minetest.sound_play("mobs_pig", {
 					object = self.object,
 					gain = 1.0,
-					max_hear_distance = 16,
+					max_hear_distance = 10,
 					loop = false,
 				})
 			end
@@ -84,13 +86,14 @@ mobs:register_spawn("mobs:pumba", {"ethereal:mushroom_dirt"}, 20, 10, 15000, 1, 
 
 mobs:register_egg("mobs:pumba", "Warthog", "wool_pink.png", 1)
 
--- porkchop (raw and cooked)
+-- raw porkchop
 minetest.register_craftitem("mobs:pork_raw", {
 	description = "Raw Porkchop",
 	inventory_image = "mobs_pork_raw.png",
 	on_use = minetest.item_eat(4),
 })
 
+-- cooked porkchop
 minetest.register_craftitem("mobs:pork_cooked", {
 	description = "Cooked Porkchop",
 	inventory_image = "mobs_pork_cooked.png",

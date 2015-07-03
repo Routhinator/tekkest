@@ -13,7 +13,6 @@ mobs:register_mob("mobs:sheep", {
 	textures = {
 		{"mobs_sheep.png"},
 	},
-	visual_size = {x=1,y=1},
 	gotten_texture = {"mobs_sheep_shaved.png"},
 	gotten_mesh = "mobs_sheep_shaved.b3d",
 	makes_footstep_sound = true,
@@ -32,9 +31,12 @@ mobs:register_mob("mobs:sheep", {
 	lava_damage = 5,
 	light_damage = 0,
 	animation = {
-		speed_normal = 15,		speed_run = 15,
-		stand_start = 0,		stand_end = 80,
-		walk_start = 81,		walk_end = 100,
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 80,
+		walk_start = 81,
+		walk_end = 100,
 	},
 	follow = "farming:wheat",
 	view_range = 5,
@@ -77,7 +79,7 @@ mobs:register_mob("mobs:sheep", {
 				minetest.sound_play("mobs_sheep", {
 					object = self.object,
 					gain = 1.0,
-					max_hear_distance = 20,
+					max_hear_distance = 10,
 					loop = false,
 				})
 			end
@@ -93,7 +95,7 @@ mobs:register_mob("mobs:sheep", {
 				pos.y = pos.y + 0.5
 				local obj = minetest.add_item(pos, ItemStack("wool:white "..math.random(2,3)))
 				if obj then
-					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
+					obj:setvelocity({x = math.random(-1,1), y = 5, z = math.random(-1,1)})
 				end
 				item:add_wear(650) -- 100 uses
 				clicker:set_wielded_item(item)

@@ -2,13 +2,11 @@
 -- Bunny by ExeterDad
 
 mobs:register_mob("mobs:bunny", {
-	-- animal, monster, npc
 	type = "animal",
-	-- is it aggressive
 	passive = true,
-	-- health & armor
-	hp_min = 1, hp_max = 4, armor = 200, 
-	-- textures and model
+	hp_min = 1,
+	hp_max = 4,
+	armor = 200,
 	collisionbox = {-0.268, -0.5, -0.268,  0.268, 0.167, 0.268},
 	visual = "mesh",
 	mesh = "mobs_bunny.b3d",
@@ -18,36 +16,32 @@ mobs:register_mob("mobs:bunny", {
 		{"mobs_bunny_brown.png"},
 		{"mobs_bunny_white.png"},
 	},
-	-- sounds
 	sounds = {},
 	makes_footstep_sound = false,
-	-- speed and jump
-	walk_velocity = 1, run_velocity = 2,
+	walk_velocity = 1,
+	run_velocity = 2,
 	jump = true,
-	-- drops meat when dead
 	drops = {
 		{name = "mobs:meat_raw",
-		chance = 1, min = 1, max = 2,},
+		chance = 1, min = 1, max = 2},
 	},
-	-- damaged by
 	water_damage = 1,
 	lava_damage = 4,
 	light_damage = 0,
-	-- model animation
 	animation = {
 		speed_normal = 15,
-		stand_start = 1,		stand_end = 15,
-		walk_start = 16,		walk_end = 24,
-		punch_start = 16,		punch_end = 24,
+		stand_start = 1,
+		stand_end = 15,
+		walk_start = 16,
+		walk_end = 24,
+		punch_start = 16,
+		punch_end = 24,
 	},
-	-- follows carrot from farming redo
 	follow = "farming:carrot",
 	view_range = 5,
-	-- eat carrots
 	replace_rate = 80,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
 	replace_with = "air",
-	-- right click to pick up rabbit
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
 		local name = clicker:get_player_name()
@@ -95,4 +89,5 @@ mobs:register_mob("mobs:bunny", {
 })
 
 mobs:register_spawn("mobs:bunny", {"default:dirt_with_grass", "ethereal:prairie_dirt"}, 20, 10, 15000, 1, 31000)
+
 mobs:register_egg("mobs:bunny", "Bunny", "mobs_bunny_inv.png", 0)

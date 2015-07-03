@@ -15,7 +15,6 @@ mobs:register_mob("mobs:sand_monster", {
 	textures = {
 		{"mobs_sand_monster.png"},
 	},
-	visual_size = {x=1,y=1},
 	makes_footstep_sound = true,
 	sounds = {
 		random = "mobs_sandmonster",
@@ -27,17 +26,22 @@ mobs:register_mob("mobs:sand_monster", {
 	floats = 0,
 	drops = {
 		{name = "default:desert_sand",
-		chance = 1, min = 3, max = 5,},
+		chance = 1, min = 3, max = 5},
 	},
 	water_damage = 3,
 	lava_damage = 4,
 	light_damage = 0,
 	animation = {
-		speed_normal = 15,		speed_run = 15,
-		stand_start = 0,		stand_end = 39,
-		walk_start = 41,		walk_end = 72,
-		run_start = 74,			run_end = 105,
-		punch_start = 74,		punch_end = 105,
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 39,
+		walk_start = 41,
+		walk_end = 72,
+		run_start = 74,
+		run_end = 105,
+		punch_start = 74,
+		punch_end = 105,
 	},
 })
 

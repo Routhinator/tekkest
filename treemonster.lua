@@ -15,7 +15,6 @@ mobs:register_mob("mobs:tree_monster", {
 	textures = {
 		{"mobs_tree_monster.png"},
 	},
-	visual_size = {x=1,y=1},
 	blood_texture = "default_wood.png",
 	makes_footstep_sound = true,
 	sounds = {
@@ -38,11 +37,16 @@ mobs:register_mob("mobs:tree_monster", {
 	light_damage = 2,
 	fall_damage = 0,
 	animation = {
-		speed_normal = 15,		speed_run = 15,
-		stand_start = 0,		stand_end = 24,
-		walk_start = 25,		walk_end = 47,
-		run_start = 48,			run_end = 62,
-		punch_start = 48,		punch_end = 62,
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 24,
+		walk_start = 25,
+		walk_end = 47,
+		run_start = 48,
+		run_end = 62,
+		punch_start = 48,
+		punch_end = 62,
 	},
 })
 

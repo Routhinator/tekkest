@@ -1,4 +1,4 @@
--- Mobs Api (1st July 2015)
+-- Mobs Api (3rd July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -27,7 +27,7 @@ function mobs:register_mob(name, def)
 		physical = true,
 		collisionbox = def.collisionbox,
 		visual = def.visual,
-		visual_size = def.visual_size or {x=1, y=1},
+		visual_size = def.visual_size or {x = 1, y = 1},
 		mesh = def.mesh,
 		makes_footstep_sound = def.makes_footstep_sound or false,
 		view_range = def.view_range or 5,
@@ -97,12 +97,12 @@ function mobs:register_mob(name, def)
 			local yaw = self.object:getyaw() + self.rotate
 			local x = math.sin(yaw) * -v
 			local z = math.cos(yaw) * v
-			self.object:setvelocity({x=x, y=self.object:getvelocity().y, z=z})
+			self.object:setvelocity({x = x, y = self.object:getvelocity().y, z = z})
 		end,
 		
 		get_velocity = function(self)
 			local v = self.object:getvelocity()
-			return (v.x^2 + v.z^2)^(0.5)
+			return (v.x ^ 2 + v.z ^ 2) ^ (0.5)
 		end,
 --[[
 		in_fov = function(self,pos)
@@ -110,11 +110,10 @@ function mobs:register_mob(name, def)
 			local yaw = self.object:getyaw() + self.rotate
 			local vx = math.sin(yaw)
 			local vz = math.cos(yaw)
-			local ds = math.sqrt(vx^2 + vz^2)
-			local ps = math.sqrt(pos.x^2 + pos.z^2)
+			local ds = math.sqrt(vx ^ 2 + vz ^ 2)
+			local ps = math.sqrt(pos.x ^ 2 + pos.z ^ 2)
 			local d = { x = vx / ds, z = vz / ds }
 			local p = { x = pos.x / ps, z = pos.z / ps }
-			
 			local an = ( d.x * p.x ) + ( d.z * p.z )
 			
 			a = math.deg( math.acos( an ) )
@@ -135,26 +134,26 @@ function mobs:register_mob(name, def)
 			end
 			if type == "stand" and self.animation.current ~= "stand" then
 				if self.animation.stand_start and self.animation.stand_end and self.animation.speed_normal then
-					self.object:set_animation({x=self.animation.stand_start,
-						y=self.animation.stand_end},self.animation.speed_normal, 0)
+					self.object:set_animation({x = self.animation.stand_start,
+						y = self.animation.stand_end}, self.animation.speed_normal, 0)
 					self.animation.current = "stand"
 				end
 			elseif type == "walk" and self.animation.current ~= "walk"  then
 				if self.animation.walk_start and self.animation.walk_end and self.animation.speed_normal then
-					self.object:set_animation({x=self.animation.walk_start,y=self.animation.walk_end},
-						self.animation.speed_normal, 0)
+					self.object:set_animation({x = self.animation.walk_start,
+						y = self.animation.walk_end}, self.animation.speed_normal, 0)
 					self.animation.current = "walk"
 				end
 			elseif type == "run" and self.animation.current ~= "run"  then
 				if self.animation.run_start and self.animation.run_end and self.animation.speed_run then
-					self.object:set_animation({x=self.animation.run_start,y=self.animation.run_end},
-						self.animation.speed_run, 0)
+					self.object:set_animation({x = self.animation.run_start,
+						y = self.animation.run_end}, self.animation.speed_run, 0)
 					self.animation.current = "run"
 				end
 			elseif type == "punch" and self.animation.current ~= "punch"  then
 				if self.animation.punch_start and self.animation.punch_end and self.animation.speed_normal then
-					self.object:set_animation({x=self.animation.punch_start,y=self.animation.punch_end},
-						self.animation.speed_normal, 0)
+					self.object:set_animation({x = self.animation.punch_start,
+						y = self.animation.punch_end}, self.animation.speed_normal, 0)
 					self.animation.current = "punch"
 				end
 			end
@@ -300,7 +299,11 @@ function mobs:register_mob(name, def)
 					or minetest.registered_nodes[nod.name].walkable == false then return end
 					if self.direction then
  						pos.y = pos.y + 0.5
-						local nod = minetest.get_node_or_nil({x=pos.x + self.direction.x,y=pos.y,z=pos.z + self.direction.z})
+						local nod = minetest.get_node_or_nil({
+							x = pos.x + self.direction.x,
+							y = pos.y,
+							z = pos.z + self.direction.z
+						})
 --print ("in front:", nod.name, pos.y)
 						if nod and nod.name and (nod.name ~= "air"  or self.walk_chance == 0) then
 							local def = minetest.registered_items[nod.name]
@@ -362,11 +365,11 @@ function mobs:register_mob(name, def)
 						p = player:getpos()
 						sp = s
 						p.y = p.y + 1
-						sp.y = sp.y + 1		-- aim higher to make looking up hills more realistic
-						dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						sp.y = sp.y + 1 -- aim higher to make looking up hills more realistic
+						dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
 						if dist < self.view_range then -- and self.in_fov(self,p) then
 							-- choose closest player to attack
-							if minetest.line_of_sight(sp,p,2) == true
+							if minetest.line_of_sight(sp, p, 2) == true
 							and dist < min_dist then
 								min_dist = dist
 								min_player = player
@@ -392,7 +395,7 @@ function mobs:register_mob(name, def)
 					if obj and obj.type == "monster" then
 						-- attack monster
 						p = obj.object:getpos()
-						dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
 						if dist < min_dist then
 							min_dist = dist
 							min_player = obj.object
@@ -422,7 +425,7 @@ function mobs:register_mob(name, def)
 					self.object:set_properties({
 						textures = self.base_texture,
 						mesh = self.base_mesh,
-						visual_size = {x=self.visual_size.x,y=self.visual_size.y},
+						visual_size = {x = self.visual_size.x, y = self.visual_size.y},
 						collisionbox = self.collisionbox,
 					})
 				end
@@ -431,7 +434,7 @@ function mobs:register_mob(name, def)
 			-- if animal is horny, find another same animal who is horny and mate
 			if self.horny == true and self.hornytimer <= 40 then
 				local pos = self.object:getpos()
-				effect({x=pos.x, y=pos.y+1, z=pos.z}, 4, "heart.png")
+				effect({x = pos.x, y = pos.y + 1, z = pos.z}, 4, "heart.png")
 				local ents = minetest.get_objects_inside_radius(pos, self.view_range)
 				local num = 0
 				local ent = nil
@@ -450,9 +453,11 @@ function mobs:register_mob(name, def)
 							end
 							mob:set_properties({
 								textures = textures,
-								visual_size = {x=self.visual_size.x/2,y=self.visual_size.y/2},
-								collisionbox = {self.collisionbox[1]/2, self.collisionbox[2]/2, self.collisionbox[3]/2,
-												self.collisionbox[4]/2, self.collisionbox[5]/2, self.collisionbox[6]/2},
+								visual_size = {x = self.visual_size.x / 2, y = self.visual_size.y / 2},
+								collisionbox = {
+									self.collisionbox[1] / 2, self.collisionbox[2] / 2, self.collisionbox[3] / 2,
+									self.collisionbox[4] / 2, self.collisionbox[5] / 2, self.collisionbox[6] / 2
+								},
 							})
 							ent2.child = true
 							ent2.tamed = true
@@ -470,7 +475,7 @@ function mobs:register_mob(name, def)
 				for _,player in pairs(minetest.get_connected_players()) do
 					s = self.object:getpos()
 					p = player:getpos()
-					dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+					dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
 					if dist < self.view_range then
 						self.following = player
 						break
@@ -507,14 +512,14 @@ function mobs:register_mob(name, def)
 				end
 
 				if p then
-					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+					local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
 					if dist > self.view_range then
 						self.following = nil
 					else
-						local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-						yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
+						local vec = {x = p.x - s.x, y = p.y - s.y, z = p.z - s.z}
+						yaw = (math.atan(vec.z / vec.x) + math.pi / 2) + self.rotate
 						if p.x > s.x then
-							yaw = yaw+math.pi
+							yaw = yaw + math.pi
 						end
 						self.object:setyaw(yaw)
 
@@ -522,7 +527,7 @@ function mobs:register_mob(name, def)
 						if dist > 2 and self.order ~= "stand" then
 							if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
 							or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
-								self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
+								self.direction = {x = math.sin(yaw) * -1, y = -20, z = math.cos(yaw)}
 								do_jump(self)
 							end
 							self.set_velocity(self, self.walk_velocity)
@@ -558,13 +563,13 @@ function mobs:register_mob(name, def)
 					end
 
 					if lp ~= nil then
-						local vec = {x=lp.x-s.x, y=lp.y-s.y, z=lp.z-s.z}
-						yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
+						local vec = {x = lp.x - s.x, y = lp.y - s.y, z = lp.z - s.z}
+						yaw = (math.atan(vec.z / vec.x) + math.pi / 2) + self.rotate
 						if lp.x > s.x then
-							yaw = yaw+math.pi
+							yaw = yaw + math.pi
 						end
 					else 
-						yaw = self.object:getyaw()+((math.random(0,360)-180)/180*math.pi)
+						yaw = self.object:getyaw() + ((math.random(0, 360) - 180) / 180 * math.pi)
 					end
 					self.object:setyaw(yaw)
 				end
@@ -586,7 +591,7 @@ function mobs:register_mob(name, def)
 
 					-- jumping mobs only
 --					if self.jump and math.random(1, 100) <= self.jump_chance then
---						self.direction = {x=0, y=0, z=0}
+--						self.direction = {x = 0, y = 0, z = 0}
 --						do_jump(self)
 --						self.set_velocity(self, self.walk_velocity)
 --					end
@@ -606,19 +611,19 @@ if self.fly and self.fly_in == "default:water_source" and not lp then
 end
 				-- if water nearby then turn away
 				if lp then
-					local vec = {x=lp.x-s.x, y=lp.y-s.y, z=lp.z-s.z}
-					yaw = math.atan(vec.z/vec.x) + 3*math.pi / 2 + self.rotate
+					local vec = {x = lp.x - s.x, y = lp.y - s.y, z = lp.z - s.z}
+					yaw = math.atan(vec.z / vec.x) + 3 * math.pi / 2 + self.rotate
 					if lp.x > s.x then
-						yaw = yaw+math.pi
+						yaw = yaw + math.pi
 					end
 					self.object:setyaw(yaw)
 
 				-- otherwise randomly turn
 				elseif math.random(1, 100) <= 30 then
-					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
+					self.object:setyaw(self.object:getyaw() + ((math.random(0, 360) - 180) / 180 * math.pi))
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-					self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
+					self.direction = {x = math.sin(yaw) * -1, y = -20, z = math.cos(yaw)}
 					do_jump(self)
 				end
 
@@ -656,8 +661,8 @@ end
 					self.attack.dist = dist
 				end
 				
-				local vec = {x = p.x -s.x, y = p.y -s.y, z = p.z -s.z}
-				yaw = math.atan(vec.z/vec.x)+math.pi/2 + self.rotate
+				local vec = {x = p.x - s.x, y = p.y - s.y, z = p.z - s.z}
+				yaw = math.atan(vec.z / vec.x) + math.pi / 2 + self.rotate
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -724,7 +729,7 @@ end
 				end
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
-				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
 
 				-- fly bit modified from BlockMens creatures mod
 				if self.fly and dist > 2 then
@@ -733,19 +738,19 @@ end
 					local p1 = s
 					local me_y = math.floor(p1.y)
 					local p2 = p
-					local p_y = math.floor(p2.y+1)
+					local p_y = math.floor(p2.y + 1)
 					local v = self.object:getvelocity()
 					if nod and nod.name == self.fly_in then
 						if me_y < p_y then
-							self.object:setvelocity({x=v.x,y=1*self.walk_velocity,z=v.z})
+							self.object:setvelocity({x = v.x, y = 1 * self.walk_velocity, z = v.z})
 						elseif me_y > p_y then
-							self.object:setvelocity({x=v.x,y=-1*self.walk_velocity,z=v.z})
+							self.object:setvelocity({x = v.x, y = -1 * self.walk_velocity, z = v.z})
 						end
 					else
 						if me_y < p_y then
-							self.object:setvelocity({x=v.x,y=0.01,z=v.z})
+							self.object:setvelocity({x = v.x, y = 0.01,z = v.z})
 						elseif me_y > p_y then
-							self.object:setvelocity({x=v.x,y=-0.01,z=v.z})
+							self.object:setvelocity({x = v.x, y = -0.01, z = v.z})
 						end
 					end
 
@@ -762,18 +767,18 @@ end
 					self.attack.dist = dist
 				end
 				
-				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
+				local vec = {x = p.x - s.x, y = p.y - s.y, z = p.z - s.z}
+				yaw = (math.atan(vec.z / vec.x) + math.pi / 2) + self.rotate
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
 				self.object:setyaw(yaw)
 				-- attack distance is 2 + half of mob width so the bigger mobs can attack (like slimes)
-				if self.attack.dist > ((-self.collisionbox[1]+self.collisionbox[4])/2)+2 then
+				if self.attack.dist > ((-self.collisionbox[1] + self.collisionbox[4]) / 2) + 2 then
 					-- jump attack
 					if (self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0)
 					or (self.object:getvelocity().y == 0 and self.jump_chance > 0) then
-						self.direction = {x = math.sin(yaw)*-1, y = -20, z = math.cos(yaw)}
+						self.direction = {x = math.sin(yaw) * -1, y = -20, z = math.cos(yaw)}
 						do_jump(self)
 					end
 					self.set_velocity(self, self.run_velocity)
@@ -787,7 +792,7 @@ end
 						local s2 = s
 						p2.y = p2.y + 1.5
 						s2.y = s2.y + 1.5
-						if minetest.line_of_sight(p2,s2) == true then
+						if minetest.line_of_sight(p2, s2) == true then
 							if self.sounds.attack then
 								minetest.sound_play(self.sounds.attack, {
 									object = self.object,
@@ -812,7 +817,7 @@ end
 				local p = self.attack.player:getpos()
 				p.y = p.y - .5
 				s.y = s.y + .5
-				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
 				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
 					self.state = "stand"
 					self.set_velocity(self, 0)
@@ -822,10 +827,10 @@ end
 					self.attack.dist = dist
 				end
 				
-				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
+				local vec = {x = p.x - s.x, y = p.y - s.y, z = p.z - s.z}
 				yaw = (math.atan(vec.z/vec.x)+math.pi/2) + self.rotate
 				if p.x > s.x then
-					yaw = yaw+math.pi
+					yaw = yaw + math.pi
 				end
 				self.object:setyaw(yaw)
 				self.set_velocity(self, 0)
@@ -843,14 +848,14 @@ end
 					end
 
 					local p = self.object:getpos()
-					p.y = p.y + (self.collisionbox[2]+self.collisionbox[5])/2
+					p.y = p.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
 					local obj = minetest.add_entity(p, self.arrow)
-					local amount = (vec.x^2+vec.y^2+vec.z^2)^0.5
+					local amount = (vec.x ^ 2 + vec.y ^ 2 + vec.z ^ 2) ^ 0.5
 					local v = obj:get_luaentity().velocity
 					vec.y = vec.y + self.shoot_offset -- this makes shoot aim accurate
-					vec.x = vec.x*v/amount
-					vec.y = vec.y*v/amount
-					vec.z = vec.z*v/amount
+					vec.x = vec.x *v / amount
+					vec.y = vec.y *v / amount
+					vec.z = vec.z *v / amount
 					obj:setvelocity(vec)
 				end
 			end
@@ -864,12 +869,12 @@ end
 			self.health = math.random (self.hp_min, self.hp_max) -- set initial HP
 			self.object:set_hp( self.health )
 			self.health = self.object:get_hp()
-			self.object:set_armor_groups({fleshy=self.armor})
-			self.object:setacceleration({x=0, y= self.fall_speed, z=0})
+			self.object:set_armor_groups({fleshy = self.armor})
+			self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
 			self.state = "stand"
-			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
+			self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
 			self.old_y = self.object:getpos().y
-			self.object:setyaw(math.random(1, 360)/180*math.pi)
+			self.object:setyaw(math.random(1, 360) / 180 * math.pi)
 
 			if not self.sounds.distance then self.sounds.distance = 10 end
 
@@ -920,7 +925,7 @@ end
 		get_staticdata = function(self)
 			-- select random texture, set model
 			if not self.base_texture then
-				self.base_texture = def.textures[math.random(1,#def.textures)]
+				self.base_texture = def.textures[math.random(1, #def.textures)]
 				self.base_mesh = def.mesh
 			end
 			-- set texture, model and size
@@ -938,12 +943,14 @@ end
 			end
 			-- if object is child then set half size
 			if self.child == true then
-				vis_size = {x=self.visual_size.x/2,y=self.visual_size.y/2}
+				vis_size = {x = self.visual_size.x / 2, y = self.visual_size.y / 2}
 				if def.child_texture then
 					textures = def.child_texture[1]
 				end
-				colbox = {self.collisionbox[1]/2, self.collisionbox[2]/2, self.collisionbox[3]/2,
-						self.collisionbox[4]/2, self.collisionbox[5]/2, self.collisionbox[6]/2}
+				colbox = {
+					self.collisionbox[1] / 2, self.collisionbox[2] / 2, self.collisionbox[3] / 2,
+					self.collisionbox[4] / 2, self.collisionbox[5] / 2, self.collisionbox[6] / 2
+				}
 			end
 			-- remember settings
 			local tmp = {
@@ -976,7 +983,7 @@ end
 
 			-- weapon sounds
 			if weapon:get_definition().sounds ~= nil then
-				local s = math.random(0,#weapon:get_definition().sounds)
+				local s = math.random(0, #weapon:get_definition().sounds)
 				minetest.sound_play(weapon:get_definition().sounds[s], {
 					object=hitter,
 					max_hear_distance = 8
@@ -1005,21 +1012,21 @@ end
 				kb = kb * ( tflp / tool_capabilities.full_punch_interval )
 				r = r * ( tflp / tool_capabilities.full_punch_interval )
 			end
-			self.object:setvelocity({x=dir.x*kb,y=0,z=dir.z*kb})
+			self.object:setvelocity({x = dir.x * kb,y = 0,z = dir.z * kb})
 			self.pause_timer = r
 
 			-- attack puncher and call other mobs for help
 			if self.passive == false and not self.tamed then
 				if self.state ~= "attack" then
-					self.do_attack(self,hitter,1)
+					self.do_attack(self, hitter, 1)
 				end
 				-- alert others to the attack
 				local obj = nil
-				for _, oir in pairs(minetest.get_objects_inside_radius(hitter:getpos(),5)) do
+				for _, oir in pairs(minetest.get_objects_inside_radius(hitter:getpos(), 5)) do
 					obj = oir:get_luaentity()
 					if obj then
 						if obj.group_attack == true and obj.state ~= "attack" then
-							obj.do_attack(obj,hitter,1)
+							obj.do_attack(obj, hitter, 1)
 						end
 					end
 				end
@@ -1094,10 +1101,10 @@ function effect(pos, amount, texture, max_size)
 		time = 0.25,
 		minpos = pos,
 		maxpos = pos,
-		minvel = {x=-0, y=-2, z=-0},
-		maxvel = {x=2,  y=2,  z=2},
-		minacc = {x=-4, y=-4, z=-4},
-		maxacc = {x=4, y=4, z=4},
+		minvel = {x = -0, y = -2, z = -0},
+		maxvel = {x = 2,  y = 2,  z = 2},
+		minacc = {x = -4, y = -4, z = -4},
+		maxacc = {x = 4, y = 4, z = 4},
 		minexptime = 0.1,
 		maxexptime = 1,
 		minsize = 0.5,
@@ -1149,10 +1156,10 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 					local meta = minetest.get_meta(p)
 					local inv  = meta:get_inventory()
 					for i = 1,32 do
-						local m_stack = inv:get_stack("main",i)
-						local obj = minetest.add_item(pos,m_stack)
+						local m_stack = inv:get_stack("main", i)
+						local obj = minetest.add_item(pos, m_stack)
 						if obj then
-							obj:setvelocity({x=math.random(-2,2), y=7, z=math.random(-2,2)})
+							obj:setvelocity({x = math.random(-2, 2), y = 7, z = math.random(-2, 2)})
 						end
 					end
 				end
@@ -1193,7 +1200,7 @@ function check_for_death(self)
 		if math.random(1, drop.chance) == 1 then
 			obj = minetest.add_item(pos, ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
 			if obj then
-				obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
+				obj:setvelocity({x = math.random(-1, 1), y = 5, z = math.random(-1, 1)})
 			end
 		end
 	end
@@ -1251,7 +1258,7 @@ function mobs:register_arrow(name, def)
 		hit_node = def.hit_node,
 		hit_mob = def.hit_mob,
 		drop = def.drop or false,
-		collisionbox = {0,0,0,0,0,0}, -- remove box around arrows
+		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
 
 		on_step = function(self, dtime)
 			self.timer = (self.timer or 0) + 1
@@ -1263,7 +1270,8 @@ function mobs:register_arrow(name, def)
 			if self.hit_node and node and minetest.registered_nodes[node] and minetest.registered_nodes[node].walkable then
 				self.hit_node(self, pos, node)
 				if self.drop == true then
-					pos.y = pos.y + 1 ; self.lastpos = (self.lastpos or pos)
+					pos.y = pos.y + 1
+					self.lastpos = (self.lastpos or pos)
 					minetest.add_item(self.lastpos, self.object:get_luaentity().name)
 				end
 				self.object:remove()

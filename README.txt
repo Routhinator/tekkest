@@ -28,7 +28,7 @@ This mod contains the following additions:
 
 Changelog:
 
-1.13- Added capture function (thanks blert2112) chance of picking up mob with hand, net and magic lasso
+1.13- Added capture function (thanks blert2112) chance of picking up mob with hand; net; magic lasso, replaced some .x models with newer .b3d one's
 1.12- Added animal ownership so that players cannot steal your tamed animals
 1.11- Added flying mobs (and swimming), fly=true and fly_in="air" or "deafult:water_source" for fishy
 1,10- Footstep removed (use replace), explosion routine added for exploding mobs. 

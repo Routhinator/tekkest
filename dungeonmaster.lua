@@ -8,7 +8,7 @@ mobs:register_mob("mobs:dungeon_master", {
 	attack_type = "shoot",
 	shoot_interval = 2.5,
 	arrow = "mobs:fireball",
-	shoot_offset = 0,
+	shoot_offset = 1,
 	hp_min = 12,
 	hp_max = 35,
 	armor = 60,

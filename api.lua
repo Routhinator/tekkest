@@ -1,4 +1,4 @@
--- Mobs Api (3rd July 2015)
+-- Mobs Api (6rd July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -1263,39 +1263,43 @@ function mobs:register_arrow(name, def)
 		on_step = function(self, dtime)
 			self.timer = (self.timer or 0) + 1
 			if self.timer > 150 then self.object:remove() return end
+
 			local engage = 10 - (self.velocity / 2) -- clear entity before arrow becomes active
 			local pos = self.object:getpos()
-			local node = minetest.get_node(self.object:getpos()).name
-			-- hit node you can walk on
-			if self.hit_node and node and minetest.registered_nodes[node] and minetest.registered_nodes[node].walkable then
+			local node = minetest.get_node_or_nil(self.object:getpos())
+			if node then node = node.name else node = "air" end
+
+			if self.hit_node
+			and minetest.registered_nodes[node]
+			and minetest.registered_nodes[node].walkable then
 				self.hit_node(self, pos, node)
 				if self.drop == true then
 					pos.y = pos.y + 1
 					self.lastpos = (self.lastpos or pos)
 					minetest.add_item(self.lastpos, self.object:get_luaentity().name)
 				end
-				self.object:remove()
+				self.object:remove() ; -- print ("hit node")
 				return
 			end
 
-			if self.hit_player or self.hit_mob then
-				for _,player in pairs(minetest.get_objects_inside_radius(pos, 1)) do
-					-- hit player
-					if self.hit_player and self.timer > engage and player:is_player() then
+			if (self.hit_player or self.hit_mob) and self.timer > engage then
+				for _,player in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+					if self.hit_player
+					and player:is_player() then
 						self.hit_player(self, player)
-						self.object:remove()
+						self.object:remove() ; -- print ("hit player")
 						return
 					end
-					-- hit mob
-					if self.hit_mob and self.timer > engage and player:get_luaentity().name ~= self.object:get_luaentity().name
+					if self.hit_mob
+					and player:get_luaentity().name ~= self.object:get_luaentity().name
 					and player:get_luaentity().name ~= "__builtin:item" then
 						self.hit_mob(self, player)
-						self.object:remove()
+						self.object:remove() ; -- print ("hit mob")
 						return
 					end
 				end
-				self.lastpos = pos
 			end
+			self.lastpos = pos
 		end
 	})
 end

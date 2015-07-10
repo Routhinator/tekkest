@@ -255,30 +255,34 @@ function mobs:register_mob(name, def)
 
 				local pos = self.object:getpos()
 				local tod = minetest.get_timeofday()
-				pos.y = (pos.y + self.collisionbox[2]) -- foot level
-				local n = minetest.get_node_or_nil(pos)
-				pos.y = pos.y + 1
 
+				-- daylight above ground
 				if self.light_damage ~= 0
 				and pos.y > 0
 				and tod > 0.2 and tod < 0.8
-				and (minetest.get_node_light(pos) or 0) > 10 then
+				and (minetest.get_node_light(pos) or 0) > 12 then
 					self.object:set_hp(self.object:get_hp()-self.light_damage)
 					effect(pos, 5, "tnt_smoke.png")
 					check_for_death(self)
 				end
 
-				if not n then return end ; -- print ("standing in "..n.name)
+				pos.y = pos.y + self.collisionbox[2] -- foot level
+				local nod = minetest.get_node_or_nil(pos)
+				if not nod then return end ;  -- print ("standing in "..nod.name)
+				local nodef = minetest.registered_nodes[nod.name]
+				pos.y = pos.y + 1
 
+				-- water
 				if self.water_damage ~= 0
-				and minetest.get_item_group(n.name, "water") ~= 0 then
+				and nodef.groups.water then
 					self.object:set_hp(self.object:get_hp()-self.water_damage)
 					effect(pos, 5, "bubble.png")
 					check_for_death(self)
 				end
 
+				-- lava or fire
 				if self.lava_damage ~= 0
-				and minetest.get_item_group(n.name, "lava") ~= 0 then
+				and (nodef.groups.lava or nod.name == "fire:basic_flame") then
 					self.object:set_hp(self.object:get_hp()-self.lava_damage)
 					effect(pos, 5, "fire_basic_flame.png")
 					check_for_death(self)

@@ -1,4 +1,4 @@
--- Mobs Api (6rd July 2015)
+-- Mobs Api (10th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -1283,7 +1283,7 @@ function mobs:register_arrow(name, def)
 			end
 
 			if (self.hit_player or self.hit_mob) and self.timer > engage then
-				for _,player in pairs(minetest.get_objects_inside_radius(pos, 0.5)) do
+				for _,player in pairs(minetest.get_objects_inside_radius(pos, 1.0)) do
 					if self.hit_player
 					and player:is_player() then
 						self.hit_player(self, player)

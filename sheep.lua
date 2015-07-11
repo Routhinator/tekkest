@@ -261,7 +261,7 @@ mobs:register_mob("mobs:sheep_"..col, {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
-
+--[[
 		for _, col in ipairs(all_colours) do
 			if item:get_name() == "dye:"..col
 			and self.gotten == false
@@ -276,7 +276,7 @@ mobs:register_mob("mobs:sheep_"..col, {
 				end
 			end
 		end
-
+]]
 	end,
 })
 

@@ -1,4 +1,4 @@
--- Mobs Api (10th July 2015)
+-- Mobs Api (11th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -808,12 +808,12 @@ end
 									max_hear_distance = 16
 								})
 							end
-							pos.y = pos.y + 1
 							effect(pos, 15, "tnt_smoke.png", 5)
 							return
 						end
 						self.object:remove()
-						mobs:explosion(pos, 2, 0, 1, "tnt_explode", self.sounds.explode)
+						pos.y = pos.y - 1
+						mobs:explosion(pos, 2, 0, 1, self.sounds.explode)
 					end
 				end
 				-- end of exploding mobs

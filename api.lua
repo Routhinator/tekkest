@@ -231,7 +231,7 @@ function mobs:register_mob(name, def)
 					if self.floats == 1 then
 						self.object:setacceleration({
 							x = 0,
-							y = 1.5,
+							y = -self.fall_speed / 2, -- 1.5,
 							z = 0
 						})
 					end

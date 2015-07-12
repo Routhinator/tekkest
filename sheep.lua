@@ -112,23 +112,30 @@ mobs:register_mob("mobs:sheep", {
 			return
 		end
 
-		mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
-
 		for _, col in ipairs(all_colours) do
 			if item:get_name() == "dye:"..col
 			and self.gotten == false
-			and self.child == false then
+			and self.child == false
+			and self.tamed == true
+			and name == self.owner then
 				local pos = self.object:getpos()
 				self.object:remove()
-				minetest.add_entity(pos, "mobs:sheep_"..col)
+				local mob = minetest.add_entity(pos, "mobs:sheep_"..col)
+				local ent = mob:get_luaentity()
+				ent.owner = clicker:get_player_name()
+				ent.tamed = true
 				-- take item
 				if not minetest.setting_getbool("creative_mode") then
 					item:take_item()
 					clicker:set_wielded_item(item)
 				end
+				break
+			else
+				print ("not owner/tamed, cant dye sheep")
 			end
 		end
 
+		mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
 	end,
 })
 
@@ -261,22 +268,7 @@ mobs:register_mob("mobs:sheep_"..col, {
 		end
 
 		mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
---[[
-		for _, col in ipairs(all_colours) do
-			if item:get_name() == "dye:"..col
-			and self.gotten == false
-			and self.child == false then
-				local pos = self.object:getpos()
-				self.object:remove()
-				minetest.add_entity(pos, "mobs:sheep_"..col)
-				-- take item
-				if not minetest.setting_getbool("creative_mode") then
-					item:take_item()
-					clicker:set_wielded_item(item)
-				end
-			end
-		end
-]]
+
 	end,
 })
 

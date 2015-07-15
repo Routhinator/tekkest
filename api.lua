@@ -509,6 +509,12 @@ function mobs:register_mob(name, def)
 				local ent = nil
 				for i,obj in ipairs(ents) do
 					ent = obj:get_luaentity()
+
+				-- quick fix for racist sheep
+				if ent
+				and string.find(ent.name, "mobs:sheep_") then
+					ent.name = "mobs:sheep"
+				end
 					if ent
 					and ent.name == self.name
 					and ent.horny == true

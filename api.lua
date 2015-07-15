@@ -1,4 +1,4 @@
--- Mobs Api (11th July 2015)
+-- Mobs Api (15th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -227,11 +227,20 @@ function mobs:register_mob(name, def)
 				local nod = minetest.get_node_or_nil(pos)
 				if nod then nod = nod.name else nod = "default:dirt" end
 				local nodef = minetest.registered_nodes[nod]
+
+				local v = self.object:getvelocity()
+				if v.y > 0.1 then
+					self.object:setacceleration({
+						x = 0,
+						y= self.fall_speed,
+						z = 0
+					})
+				end
 				if nodef.groups.water then
 					if self.floats == 1 then
 						self.object:setacceleration({
 							x = 0,
-							y = -self.fall_speed / 2, -- 1.5,
+							y = -self.fall_speed / (math.max(1, v.y) ^ 2),
 							z = 0
 						})
 					end

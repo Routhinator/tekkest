@@ -1016,9 +1016,9 @@ end
 			self.object:set_hp( self.health )
 			self.health = self.object:get_hp()
 			self.object:set_armor_groups({fleshy = self.armor})
-			self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
+			--self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
 			self.state = "stand"
-			self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
+			--self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
 			self.old_y = self.object:getpos().y
 			self.object:setyaw(math.random(1, 360) / 180 * math.pi)
 			self.sounds.distance = (self.sounds.distance or 10)

@@ -1,4 +1,4 @@
--- Mobs Api (15th July 2015)
+-- Mobs Api (16th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -1519,14 +1519,15 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 		if replacewith then
 			mobname = replacewith
 		end
---print ("taking by force is", force_take)
 		local name = clicker:get_player_name()
-		if self.owner == ""
+		-- is mob tamed?
+		if self.tamed == false --self.owner == ""
 		and force_take == false then
 			minetest.chat_send_player(name, "Not tamed!")
 			return
+		end
 		-- cannot pick up if not owner
-		elseif self.owner ~= name
+		if self.owner ~= name
 		and force_take == false then
 			minetest.chat_send_player(name, "Not owner!")
 			return

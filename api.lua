@@ -1,4 +1,4 @@
--- Mobs Api (16th July 2015)
+-- Mobs Api (17th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -957,6 +957,10 @@ end
 
 				local s = self.object:getpos()
 				local p = self.attack.player:getpos()
+				if not p then
+					self.state = "stand"
+					return
+				end
 				p.y = p.y - .5
 				s.y = s.y + .5
 				local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5

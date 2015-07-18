@@ -7,15 +7,15 @@ You set off into the new world with pickaxe in hand, a few tools in your pack, a
 
 ## Current Biomes
 
-Birch Forest
-Jungle
-Grasslands
-Tundra
-Evergreen Snows
-Desert
+- Birch Forest
+- Jungle
+- Grasslands
+- Tundra
+- Evergreen Snows
+- Desert
 
 ## Planned Biomes
 
-Impact Zones
-City Ruins
-Tar Pits
+- Impact Zones
+- City Ruins
+- Tar Pits

@@ -12,4 +12,3 @@ minetest.register_on_mapgen_init(function(params)
 end)
 
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/biomes.lua")
-dofile(minetest.get_modpath(minetest.get_current_modname()).."/decorations.lua")

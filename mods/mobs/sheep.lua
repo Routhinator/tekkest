@@ -100,7 +100,11 @@ mobs:register_mob("mobs:sheep", {
 				pos.y = pos.y + 0.5
 				local obj = minetest.add_item(pos, ItemStack("wool:white "..math.random(2,3)))
 				if obj then
-					obj:setvelocity({x = math.random(-1,1), y = 5, z = math.random(-1,1)})
+					obj:setvelocity({
+						x = math.random(-1,1),
+						y = 5,
+						z = math.random(-1,1)
+					})
 				end
 				item:add_wear(650) -- 100 uses
 				clicker:set_wielded_item(item)
@@ -130,8 +134,6 @@ mobs:register_mob("mobs:sheep", {
 					clicker:set_wielded_item(item)
 				end
 				break
-			else
-				print ("not owner/tamed, cant dye sheep")
 			end
 		end
 
@@ -255,7 +257,11 @@ mobs:register_mob("mobs:sheep_"..col, {
 				pos.y = pos.y + 0.5
 				local obj = minetest.add_item(pos, ItemStack("wool:"..col.." "..math.random(2,3)))
 				if obj then
-					obj:setvelocity({x = math.random(-1,1), y = 5, z = math.random(-1,1)})
+					obj:setvelocity({
+						x = math.random(-1,1),
+						y = 5,
+						z = math.random(-1,1)
+					})
 				end
 				item:add_wear(650) -- 100 uses
 				clicker:set_wielded_item(item)

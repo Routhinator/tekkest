@@ -96,8 +96,8 @@ mobs:register_mob("mobs:npc", {
 				else
 					self.order = "follow"
 				end
-			else
-				self.owner = clicker:get_player_name()
+--			else
+--				self.owner = clicker:get_player_name()
 			end
 		end
 

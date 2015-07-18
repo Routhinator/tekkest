@@ -1,4 +1,4 @@
--- Mobs Api (11th July 2015)
+-- Mobs Api (16th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -227,11 +227,20 @@ function mobs:register_mob(name, def)
 				local nod = minetest.get_node_or_nil(pos)
 				if nod then nod = nod.name else nod = "default:dirt" end
 				local nodef = minetest.registered_nodes[nod]
+
+				local v = self.object:getvelocity()
+				if v.y > 0.1 then
+					self.object:setacceleration({
+						x = 0,
+						y= self.fall_speed,
+						z = 0
+					})
+				end
 				if nodef.groups.water then
 					if self.floats == 1 then
 						self.object:setacceleration({
 							x = 0,
-							y = -self.fall_speed / 2, -- 1.5,
+							y = -self.fall_speed / (math.max(1, v.y) ^ 2),
 							z = 0
 						})
 					end
@@ -500,6 +509,12 @@ function mobs:register_mob(name, def)
 				local ent = nil
 				for i,obj in ipairs(ents) do
 					ent = obj:get_luaentity()
+
+				-- quick fix for racist sheep
+				if ent
+				and string.find(ent.name, "mobs:sheep_") then
+					ent.name = "mobs:sheep"
+				end
 					if ent
 					and ent.name == self.name
 					and ent.horny == true
@@ -1001,9 +1016,9 @@ end
 			self.object:set_hp( self.health )
 			self.health = self.object:get_hp()
 			self.object:set_armor_groups({fleshy = self.armor})
-			self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
+			--self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
 			self.state = "stand"
-			self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
+			--self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
 			self.old_y = self.object:getpos().y
 			self.object:setyaw(math.random(1, 360) / 180 * math.pi)
 			self.sounds.distance = (self.sounds.distance or 10)
@@ -1504,14 +1519,15 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 		if replacewith then
 			mobname = replacewith
 		end
---print ("taking by force is", force_take)
 		local name = clicker:get_player_name()
-		if self.owner == ""
+		-- is mob tamed?
+		if self.tamed == false --self.owner == ""
 		and force_take == false then
 			minetest.chat_send_player(name, "Not tamed!")
 			return
+		end
 		-- cannot pick up if not owner
-		elseif self.owner ~= name
+		if self.owner ~= name
 		and force_take == false then
 			minetest.chat_send_player(name, "Not owner!")
 			return

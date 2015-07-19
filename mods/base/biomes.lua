@@ -50,7 +50,103 @@ minetest.register_biome({
 	humidity_point = 80,
 })
 
+minetest.register_biome({
+	name = "base_redwood_forest",
+	node_top = "default:dirt_with_grass",
+	depth_top = 1,
+	node_filler = "default:dirt",
+	depth_filler = 2,
+	y_min = 6,
+	y_max = 32000,
+	heat_point = 45,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
+	name = "base_redwood_forest_ocean",
+	node_top = "default:sand",
+	depth_top = 1,
+	node_filler = "default:sand",
+	depth_filler = 2,
+	y_min = -192,
+	y_max = 5,
+	heat_point = 45,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
+	name = "base_pine_forest",
+	node_top = "default:dirt_with_grass",
+	depth_top = 1,
+	node_filler = "default:dirt",
+	depth_filler = 2,
+	y_min = 6,
+	y_max = 32000,
+	heat_point = 45,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
+	name = "base_pine_forest_ocean",
+	node_top = "default:sand",
+	depth_top = 1,
+	node_filler = "default:sand",
+	depth_filler = 2,
+	y_min = -192,
+	y_max = 5,
+	heat_point = 45,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
+	name = "base_oak_forest",
+	node_top = "default:dirt_with_grass",
+	depth_top = 1,
+	node_filler = "default:dirt",
+	depth_filler = 2,
+	y_min = 6,
+	y_max = 32000,
+	heat_point = 45,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
+	name = "base_oak_forest_ocean",
+	node_top = "default:sand",
+	depth_top = 1,
+	node_filler = "default:sand",
+	depth_filler = 2,
+	y_min = -192,
+	y_max = 5,
+	heat_point = 45,
+	humidity_point = 80,
+})
+
 -- Warm temp
+
+minetest.register_biome({
+	name = "base_deciduous_forest",
+	node_top = "default:dirt_with_grass",
+	depth_top = 1,
+	node_filler = "default:dirt",
+	depth_filler = 2,
+	y_min = 6,
+	y_max = 32000,
+	heat_point = 70,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
+	name = "base_deciduous_forest_ocean",
+	node_top = "default:sand",
+	depth_top = 1,
+	node_filler = "default:sand",
+	depth_filler = 2,
+	y_min = -31000,
+	y_max = 5,
+	heat_point = 70,
+	humidity_point = 80,
+})
 
 minetest.register_biome({
 	name = "base_birch_forest",
@@ -62,7 +158,7 @@ minetest.register_biome({
 	node_dust      = "air",
 
 	height_min     = 1,
-	height_max     = 100,
+	height_max     = 32000,
 	heat_point     = 50,
 	humidity_point = 40,
 })
@@ -84,13 +180,37 @@ minetest.register_biome({
 })
 
 minetest.register_biome({
+	name = "base_wild_orchard",
+	node_top = "default:dirt_with_grass",
+	depth_top = 1,
+	node_filler = "default:dirt",
+	depth_filler = 2,
+	y_min = 6,
+	y_max = 32000,
+	heat_point = 70,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
+	name = "base_wild_orchard_ocean",
+	node_top = "default:sand",
+	depth_top = 1,
+	node_filler = "default:sand",
+	depth_filler = 2,
+	y_min = -31000,
+	y_max = 5,
+	heat_point = 70,
+	humidity_point = 80,
+})
+
+minetest.register_biome({
 	name = "base_grass_dry",
 	node_top       = "default:dirt_with_grass",
 	depth_top      = 1,
 	node_filler    = "default:dirt",
 	depth_filler   = 3,
 	height_min     = 6,
-	height_max     = 3200,
+	height_max     = 32000,
 	heat_point     = 70,
 	humidity_point = 20,
 })
@@ -202,7 +322,7 @@ minetest.register_biome({
 	depth_top      = 1,
 	node_filler    = "default:dirt",
 	depth_filler   = 2,
-	node_dust      = "default:snow",
+	--node_dust      = "default:snow",
 
 	y_min          = 2,
 	y_max          = 32000,

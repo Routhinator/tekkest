@@ -1,13 +1,13 @@
 OIL_VISC = 16
 OIL_ALPHA = 210
-FUEL_VISC = 4
+FUEL_VISC = 1
 FUEL_ALPHA = 90
 SEWAGE_VISC = 7
-SEWAGE_ALPHA = 210
+SEWAGE_ALPHA = 150
 TOXIC_WASTE_VISC = 6
 TOXIC_WASTE_ALPHA = 210
 CRYOGEL_VISC = 100
-CRYOGEL_ALPHA = 130
+CRYOGEL_ALPHA = 120
 TAR_VISC = 100
 TAR_ALPHA = 210
 
@@ -71,7 +71,7 @@ minetest.register_node("moreliquids:fuel_flowing", {
 	liquid_alternative_flowing = "moreliquids:fuel_flowing",
 	liquid_alternative_source = "moreliquids:fuel_source",
 	liquid_viscosity = FUEL_VISC,
-	post_effect_color = {a=FUEL_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=FUEL_ALPHA, r=233, g=187, b=3},
 	special_materials = {
 		{image="fuel.png", backface_culling=false},
 		{image="fuel.png", backface_culling=true},
@@ -92,7 +92,7 @@ minetest.register_node("moreliquids:fuel_source", {
 	liquid_alternative_flowing = "moreliquids:fuel_flowing",
 	liquid_alternative_source = "moreliquids:fuel_source",
 	liquid_viscosity = FUEL_VISC,
-	post_effect_color = {a=FUEL_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=FUEL_ALPHA, r=233, g=187, b=3},
 	special_materials = {
 		{image="fuel.png", backface_culling=false},
 	},
@@ -114,7 +114,7 @@ minetest.register_node("moreliquids:sewage_flowing", {
 	liquid_alternative_flowing = "moreliquids:sewage_flowing",
 	liquid_alternative_source = "moreliquids:sewage_source",
 	liquid_viscosity = SEWAGE_VISC,
-	post_effect_color = {a=SEWAGE_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=SEWAGE_ALPHA, r=172, g=97, b=0},
 	special_materials = {
 		{image="sewage.png", backface_culling=false},
 		{image="sewage.png", backface_culling=true},
@@ -135,7 +135,7 @@ minetest.register_node("moreliquids:sewage_source", {
 	liquid_alternative_flowing = "moreliquids:sewage_flowing",
 	liquid_alternative_source = "moreliquids:sewage_source",
 	liquid_viscosity = SEWAGE_VISC,
-	post_effect_color = {a=SEWAGE_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=SEWAGE_ALPHA, r=172, g=97, b=0},
 	special_materials = {
 		{image="sewage.png", backface_culling=false},
 	},
@@ -153,11 +153,12 @@ minetest.register_node("moreliquids:toxic_waste_flowing", {
 	pointable = false,
 	diggable = false,
 	buildable_to = true,
+  light_source = default.LIGHT_MAX - 1,
 	liquidtype = "flowing",
 	liquid_alternative_flowing = "moreliquids:toxic_waste_flowing",
 	liquid_alternative_source = "moreliquids:toxic_waste_source",
 	liquid_viscosity = TOXIC_WASTE_VISC,
-	post_effect_color = {a=TOXIC_WASTE_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=TOXIC_WASTE_ALPHA, r=41, g=250, b=0},
 	special_materials = {
 		{image="toxic_waste.png", backface_culling=false},
 		{image="toxic_waste.png", backface_culling=true},
@@ -174,11 +175,12 @@ minetest.register_node("moreliquids:toxic_waste_source", {
 	pointable = false,
 	diggable = false,
 	buildable_to = true,
+  light_source = default.LIGHT_MAX - 1,
 	liquidtype = "source",
 	liquid_alternative_flowing = "moreliquids:toxic_waste_flowing",
 	liquid_alternative_source = "moreliquids:toxic_waste_source",
 	liquid_viscosity = TOXIC_WASTE_VISC,
-	post_effect_color = {a=TOXIC_WASTE_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=TOXIC_WASTE_ALPHA, r=41, g=250, b=0},
 	special_materials = {
 		{image="toxic_waste.png", backface_culling=false},
 	},
@@ -197,10 +199,11 @@ minetest.register_node("moreliquids:cryogel_flowing", {
 	diggable = false,
 	buildable_to = true,
 	liquidtype = "flowing",
+  light_source = default.LIGHT_MAX - 1,
 	liquid_alternative_flowing = "moreliquids:cryogel_flowing",
 	liquid_alternative_source = "moreliquids:cryogel_source",
 	liquid_viscosity = CRYOGEL_VISC,
-	post_effect_color = {a=CRYOGEL_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=CRYOGEL_ALPHA, r=100, g=203, b=203},
 	special_materials = {
 		{image="cryogel.png", backface_culling=false},
 		{image="cryogel.png", backface_culling=true},
@@ -218,10 +221,11 @@ minetest.register_node("moreliquids:cryogel_source", {
 	diggable = false,
 	buildable_to = true,
 	liquidtype = "source",
+  light_source = default.LIGHT_MAX - 1,
 	liquid_alternative_flowing = "moreliquids:cryogel_flowing",
 	liquid_alternative_source = "moreliquids:cryogel_source",
 	liquid_viscosity = CRYOGEL_VISC,
-	post_effect_color = {a=CRYOGEL_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=CRYOGEL_ALPHA, r=100, g=203, b=203},
 	special_materials = {
 		{image="cryogel.png", backface_culling=false},
 	},
@@ -243,7 +247,7 @@ minetest.register_node("moreliquids:tar_flowing", {
 	liquid_alternative_flowing = "moreliquids:tar_flowing",
 	liquid_alternative_source = "moreliquids:tar_source",
 	liquid_viscosity = TAR_VISC,
-	post_effect_color = {a=TAR_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=TAR_ALPHA, r=54, g=0, b=150},
 	special_materials = {
 		{image="tar.png", backface_culling=false},
 		{image="tar.png", backface_culling=true},
@@ -264,7 +268,7 @@ minetest.register_node("moreliquids:toxic_waste_source", {
 	liquid_alternative_flowing = "moreliquids:tar_flowing",
 	liquid_alternative_source = "moreliquids:tar_source",
 	liquid_viscosity = TAR_VISC,
-	post_effect_color = {a=TAR_ALPHA, r=0, g=0, b=0},
+	post_effect_color = {a=TAR_ALPHA, r=54, g=0, b=150},
 	special_materials = {
 		{image="tar.png", backface_culling=false},
 	},

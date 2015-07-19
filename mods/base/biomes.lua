@@ -3,7 +3,7 @@
 --
 
 minetest.register_biome({
-	name = "stone_grassland",
+	name = "base_stone_grassland",
 	node_top = "default:dirt_with_grass",
 	depth_top = 1,
 	node_filler = "default:dirt",
@@ -15,7 +15,7 @@ minetest.register_biome({
 })
 
 minetest.register_biome({
-	name = "stone_grassland_ocean",
+	name = "base_stone_grassland_ocean",
 	node_top = "default:sand",
 	depth_top = 1,
 	node_filler = "default:sand",
@@ -27,7 +27,7 @@ minetest.register_biome({
 })
 
 minetest.register_biome({
-	name = "coniferous_forest",
+	name = "base_coniferous_forest",
 	node_top = "default:dirt_with_grass",
 	depth_top = 1,
 	node_filler = "default:dirt",
@@ -39,7 +39,7 @@ minetest.register_biome({
 })
 
 minetest.register_biome({
-	name = "coniferous_forest_ocean",
+	name = "base_coniferous_forest_ocean",
 	node_top = "default:sand",
 	depth_top = 1,
 	node_filler = "default:sand",
@@ -167,14 +167,14 @@ minetest.register_biome({
 minetest.register_biome({
 	name = "base_tundra",
 
-	node_top       = "default:snowblock",
+	node_top       = "default:dirt_with_snow",
 	depth_top      = 1,
 	node_filler    = "default:dirt",
 	depth_filler   = 1,
 	node_dust      = "default:snow",
 
-	height_min     = 2,
-	height_max     = 32000,
+	y_min          = 2,
+	y_max          = 32000,
 	heat_point     = 20,
 	humidity_point = 20,
 })
@@ -186,8 +186,8 @@ minetest.register_biome({
 	depth_top      = 5,
 	node_filler    = "default:stone",
 	depth_filler   = 0,
-	node_water     = "default:ice",
-	node_dust_water= "default:ice",
+	node_water_top = "default:ice",
+	depth_water_top = 2,
 
 	y_min     		 = -31000,
 	y_max          = 1,
@@ -198,7 +198,7 @@ minetest.register_biome({
 minetest.register_biome({
 	name = "base_taiga",
 
-	node_top       = "default:dirt_with_snow",
+	node_top       = "default:snowblock",
 	depth_top      = 1,
 	node_filler    = "default:dirt",
 	depth_filler   = 2,
@@ -212,11 +212,12 @@ minetest.register_biome({
 
 minetest.register_biome({
 	name = "base_taiga_ocean",
-
 	node_top       = "default:dirt",
 	depth_top      = 1,
 	node_filler    = "default:stone",
 	depth_filler   = 2,
+  node_water_top = "default:ice",
+  depth_water_top = 1,
 
 	height_min     = -31000,
 	height_max     = 1,

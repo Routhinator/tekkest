@@ -1,5 +1,0 @@
-default
-plants_lib
-moreblocks?
-intllib?
-

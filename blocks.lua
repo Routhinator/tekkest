@@ -1,4 +1,4 @@
-minetest.register_node("moreliquids:tar_block", {
+minetest.register_node("tekkest_blocks:tar_block", {
   description = "Tar Block",
 	tiles = {"tar.png"},
 	groups = {fleshy=3, falling_node=1},

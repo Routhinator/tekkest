@@ -1,4 +1,4 @@
--- Mobs Api (17th July 2015)
+-- Mobs Api (19th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -1011,115 +1011,95 @@ end
 		end,
 
 		on_activate = function(self, staticdata, dtime_s)
+
 			if self.type == "monster"
 			and peaceful_only then
 				self.object:remove()
 			end
 
-			self.health = math.random (self.hp_min, self.hp_max) -- set initial HP
-			self.object:set_hp( self.health )
-			self.health = self.object:get_hp()
-			self.object:set_armor_groups({fleshy = self.armor})
-			--self.object:setacceleration({x = 0, y = self.fall_speed, z = 0})
-			self.state = "stand"
-			--self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
-			self.old_y = self.object:getpos().y
-			self.object:setyaw(math.random(1, 360) / 180 * math.pi)
-			self.sounds.distance = (self.sounds.distance or 10)
-
+			-- load entity variables
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
 				if tmp then
-					if tmp.lifetimer then
-						self.lifetimer = tmp.lifetimer
-					end
-					if tmp.tamed then
-						self.tamed = tmp.tamed
-					end
-					if tmp.gotten then
-						self.gotten = tmp.gotten
-					end
-					if tmp.child then
-						self.child = tmp.child
-					end
-					if tmp.horny then
-						self.horny = tmp.horny
-					end
-					if tmp.hornytimer then
-						self.hornytimer = tmp.hornytimer
-					end
-					if tmp.textures then
-						self.textures = tmp.textures
-					end
-					if tmp.mesh then
-						self.mesh = tmp.mesh
-					end
-					if tmp.base_texture then
-						self.base_texture = tmp.base_texture
-					end
-					if tmp.base_mesh then
-						self.base_mesh = tmp.base_mesh
-					end
-					if tmp.owner then
-						self.owner = tmp.owner
-					end
-					if tmp.health then
-						self.health = tmp.health
-						self.object:set_hp( self.health )
+					for _,stat in pairs(tmp) do
+						self[_] = stat
 					end
 				end
 			end
-		end,
 
-		get_staticdata = function(self)
 			-- select random texture, set model
 			if not self.base_texture then
 				self.base_texture = def.textures[math.random(1, #def.textures)]
 				self.base_mesh = def.mesh
 			end
+
 			-- set texture, model and size
 			local textures = self.base_texture
 			local mesh = self.base_mesh
-			local vis_size = self.visual_size
-			local colbox = self.collisionbox
+			local vis_size = def.visual_size
+			local colbox = def.collisionbox
+
 			-- specific texture if gotten
 			if self.gotten == true
 			and def.gotten_texture then
 				textures = def.gotten_texture
 			end
+
 			-- specific mesh if gotten
 			if self.gotten == true
 			and def.gotten_mesh then
 				mesh = def.gotten_mesh
 			end
+
 			-- if object is child then set half size
 			if self.child == true then
-				vis_size = {x = self.visual_size.x / 2, y = self.visual_size.y / 2}
+				vis_size = {
+					x = def.visual_size.x / 2,
+					y = def.visual_size.y / 2
+				}
 				if def.child_texture then
 					textures = def.child_texture[1]
 				end
 				colbox = {
-					self.collisionbox[1] / 2, self.collisionbox[2] / 2, self.collisionbox[3] / 2,
-					self.collisionbox[4] / 2, self.collisionbox[5] / 2, self.collisionbox[6] / 2
+					def.collisionbox[1] / 2,
+					def.collisionbox[2] / 2,
+					def.collisionbox[3] / 2,
+					def.collisionbox[4] / 2,
+					def.collisionbox[5] / 2,
+					def.collisionbox[6] / 2
 				}
 			end
-			-- remember settings
-			local tmp = {
-				lifetimer = self.lifetimer,
-				tamed = self.tamed,
-				gotten = self.gotten,
-				child = self.child,
-				horny = self.horny,
-				hornytimer = self.hornytimer,
-				mesh = mesh,
-				textures = textures,
-				visual_size = vis_size,
-				base_texture = self.base_texture,
-				collisionbox = colbox,
-				owner = self.owner,
-				health = self.health,
-			}
-			self.object:set_properties(tmp)
+
+			if self.health == 0 then
+				self.health = math.random (self.hp_min, self.hp_max)
+			end
+
+			self.object:set_hp( self.health )
+			self.object:set_armor_groups({fleshy = self.armor})
+			self.state = "stand"
+			self.old_y = self.object:getpos().y
+			self.object:setyaw(math.random(1, 360) / 180 * math.pi)
+			self.sounds.distance = (self.sounds.distance or 10)
+			self.textures = textures
+			self.mesh = mesh
+			self.collisionbox = colbox
+			self.visual_size = vis_size
+			-- set anything changed above
+			self.object:set_properties(self)
+
+		end,
+
+		get_staticdata = function(self)
+			local tmp = {}
+			for _,stat in pairs(self) do
+				local t = type(stat)
+				if  t ~= 'function'
+				and t ~= 'nil'
+				and t ~= 'userdata' then
+					tmp[_] = self[_]
+				end
+			end
+			-- print('===== '..self.name..'\n'.. dump(tmp)..'\n=====\n')
 			return minetest.serialize(tmp)
 		end,
 
@@ -1357,12 +1337,12 @@ end
 function check_for_death(self)
 	local hp = self.object:get_hp()
 	if hp > 0 then
+		self.health = hp
 		if self.sounds.damage ~= nil then
 			minetest.sound_play(self.sounds.damage,{
 				object = self.object,
 				max_hear_distance = self.sounds.distance
 			})
-			self.health = hp
 		end
 		return
 	end

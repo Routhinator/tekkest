@@ -254,7 +254,7 @@ minetest.register_node("moreliquids:tar_flowing", {
 	},
 })
 
-minetest.register_node("moreliquids:toxic_waste_source", {
+minetest.register_node("moreliquids:tar_source", {
 	description = "Tar",
 	inventory_image = minetest.inventorycube("tar.png"),
 	drawtype = "liquid",

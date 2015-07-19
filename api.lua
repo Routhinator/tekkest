@@ -21,7 +21,7 @@ function mobs:register_mob(name, def)
 		jump_height = def.jump_height or 6,
 		jump_chance = def.jump_chance or 0,
 		rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
-		lifetimer = def.lifetimer or 180, -- was 600
+		lifetimer = def.lifetimer or 180, -- 3 minutes
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -1182,8 +1182,8 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 		action = function(pos, node, _, active_object_count_wider)
 			-- do not spawn if too many active entities in area
 			if active_object_count_wider > active_object_count
-			or not mobs.spawning_mobs[name] 
-			or not pos then
+			or not mobs.spawning_mobs[name] then
+			--or not pos then
 				return
 			end
 
@@ -1347,7 +1347,6 @@ function check_for_death(self)
 		return
 	end
 	local pos = self.object:getpos()
-	pos.y = pos.y + 0.5 -- drop items half a block higher
 	self.object:remove()
 	local obj = nil
 	for _,drop in ipairs(self.drops) do
@@ -1370,7 +1369,6 @@ function check_for_death(self)
 		})
 	end
 	if self.on_die then
-		pos.y = pos.y - 0.5
 		self.on_die(self, pos)
 	end
 end

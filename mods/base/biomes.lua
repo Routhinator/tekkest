@@ -444,3 +444,21 @@ minetest.register_biome({
 	heat_point = 50,
 	humidity_point = 50,
 })
+
+-- Danger Zones
+
+minetest.register_biome({
+	name = "base_tarpit",
+	node_top = "tekkest_blocks:sticky_tar_block",
+	depth_top = 1,
+	node_filler = "moreblocks:tar",
+	node_stone = "moreblocks:tar",
+	node_water_top = "tekkest_blocks:sticky_tar_block",
+  node_water = "moreliquids:oil_source",
+	depth_water_top = 2,
+	depth_filler = 1,
+	y_min = 5,
+	y_max = 32000,
+	heat_point = 95,
+	humidity_point = 100,
+})

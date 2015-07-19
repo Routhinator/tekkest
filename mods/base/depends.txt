@@ -3,3 +3,7 @@ farming
 wool
 stairs
 moretrees
+moreliquids
+moreores
+moreblocks
+tekkest_blocks

@@ -28,20 +28,10 @@ minetest.register_craftitem("moreliquids:sewage_bucket", {
 	description = "Bucket of Sewage",
 })
 
-minetest.register_craft({
-	type = "shapeless",
-	recipe = "moreliquids:sewage_bucket",
-})
-
 minetest.register_craftitem("moreliquids:toxic_waste_bucket", {
 	inventory_image = "toxic_waste_bucket.png",
 	stack_max = 50,
 	description = "Bucket of Toxic Waste",
-})
-
-minetest.register_craft({
-	type = "shapeless",
-	recipe = "moreliquids:toxic_waste_bucket",
 })
 
 minetest.register_craftitem("moreliquids:cryogel_bucket", {
@@ -50,18 +40,8 @@ minetest.register_craftitem("moreliquids:cryogel_bucket", {
 	description = "Bucket of Cryogel",
 })
 
-minetest.register_craft({
-	type = "shapeless",
-	recipe = "moreliquids:cryogel_bucket",
-})
-
 minetest.register_craftitem("moreliquids:tar_bucket", {
 	inventory_image = "tar_bucket.png",
 	stack_max = 50,
 	description = "Bucket of Tar",
-})
-
-minetest.register_craft({
-	type = "",
-	recipe = "moreliquids:tar_bucket",
 })

@@ -29,7 +29,7 @@ minetest.register_craftitem("moreliquids:sewage_bucket", {
 })
 
 minetest.register_craft({
-	type = "",
+	type = "shapeless",
 	recipe = "moreliquids:sewage_bucket",
 })
 
@@ -40,7 +40,7 @@ minetest.register_craftitem("moreliquids:toxic_waste_bucket", {
 })
 
 minetest.register_craft({
-	type = "",
+	type = "shapeless",
 	recipe = "moreliquids:toxic_waste_bucket",
 })
 
@@ -51,7 +51,7 @@ minetest.register_craftitem("moreliquids:cryogel_bucket", {
 })
 
 minetest.register_craft({
-	type = "",
+	type = "shapeless",
 	recipe = "moreliquids:cryogel_bucket",
 })
 

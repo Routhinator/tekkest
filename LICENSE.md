@@ -2,7 +2,7 @@ Minetest mod moreliquids
 ========================
 
 All source code:
-	© 2013, Chris Routh <chris@routh.io>
+	© 2015, Chris Routh-O'Neill <chris@routh.io>
 	Published under the terms and conditions of the WTFPL.
 
 -------------------------------------------------------------------------------

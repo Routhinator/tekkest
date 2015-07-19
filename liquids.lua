@@ -242,8 +242,8 @@ minetest.register_node("moreliquids:tar_flowing", {
 	liquidtype = "flowing",
 	liquid_alternative_flowing = "moreliquids:tar_flowing",
 	liquid_alternative_source = "moreliquids:tar_source",
-	liquid_viscosity = TAR_WASTE_VISC,
-	post_effect_color = {a=TAR_WASTE_ALPHA, r=0, g=0, b=0},
+	liquid_viscosity = TAR_VISC,
+	post_effect_color = {a=TAR_ALPHA, r=0, g=0, b=0},
 	special_materials = {
 		{image="tar.png", backface_culling=false},
 		{image="tar.png", backface_culling=true},

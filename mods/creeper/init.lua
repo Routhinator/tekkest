@@ -9,14 +9,13 @@ mobs:register_mob("creeper:creeper", {
 	hp_min = 30,
 	hp_max = 40,
 	armor = 90,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	collisionbox = {-0.4, -1, -0.4, 0.4, 0.8, 0.4},
 	visual = "mesh",
 	mesh = "mobs_tree_monster.b3d",
 	drawtype = "front",
 	textures = {
 		{"mobs_creeper.png"},
 	},
-	visual_size = {x=4.5,y=4.5},
 	blood_texture = "mobs_creeper_inv.png",
 	makes_footstep_sound = true,
 	sounds = {

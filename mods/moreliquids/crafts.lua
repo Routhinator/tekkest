@@ -39,9 +39,3 @@ minetest.register_craftitem("moreliquids:cryogel_bucket", {
 	stack_max = 50,
 	description = "Bucket of Cryogel",
 })
-
-minetest.register_craftitem("moreliquids:tar_bucket", {
-	inventory_image = "tar_bucket.png",
-	stack_max = 50,
-	description = "Bucket of Tar",
-})

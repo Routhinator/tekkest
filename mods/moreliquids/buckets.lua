@@ -32,10 +32,3 @@ bucket.register_liquid(
 	"moreliquids:bucket_cryogel",
 	"cryogel_bucket.png"
 )
-
-bucket.register_liquid(
-	"moreliquids:tar_source",
-	"moreliquids:tar_flowing",
-	"moreliquids:bucket_tar",
-	"tar_bucket.png"
-)

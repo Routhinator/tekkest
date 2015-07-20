@@ -322,7 +322,7 @@ minetest.register_biome({
 	depth_top      = 1,
 	node_filler    = "default:dirt",
 	depth_filler   = 2,
-	--node_dust      = "default:snow",
+	node_dust      = "default:snow",
 
 	y_min          = 2,
 	y_max          = 32000,

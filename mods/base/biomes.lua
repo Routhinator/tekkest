@@ -132,8 +132,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 70,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 40,
 })
 
 minetest.register_biome({
@@ -144,8 +144,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -31000,
 	y_max = 5,
-	heat_point = 70,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 40,
 })
 
 minetest.register_biome({
@@ -187,8 +187,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 70,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 40,
 })
 
 minetest.register_biome({
@@ -199,8 +199,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -31000,
 	y_max = 5,
-	heat_point = 70,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 40,
 })
 
 minetest.register_biome({
@@ -212,7 +212,7 @@ minetest.register_biome({
 	height_min     = 6,
 	height_max     = 32000,
 	heat_point     = 70,
-	humidity_point = 20,
+	humidity_point = 40,
 })
 
 minetest.register_biome({
@@ -224,7 +224,7 @@ minetest.register_biome({
 	height_min     = -31000,
 	height_max     = 5,
 	heat_point     = 70,
-	humidity_point = 20,
+	humidity_point = 40,
 })
 
 minetest.register_biome({
@@ -381,7 +381,7 @@ minetest.register_biome({
 	depth_filler   = 2,
 	y_min          = 1,
 	y_max          = 32000,
-	heat_point     = 95,
+	heat_point     = 70,
 	humidity_point = 90,
 })
 
@@ -391,9 +391,9 @@ minetest.register_biome({
 	depth_top = 1,
 	node_filler = "default:dirt",
 	depth_filler = 2,
-	y_min = -1,
-	y_max = 0,
-	heat_point = 95,
+	y_min = -2,
+	y_max = 3,
+	heat_point = 80,
 	humidity_point = 90,
 })
 
@@ -405,7 +405,7 @@ minetest.register_biome({
 	depth_filler   = 2,
 	y_min          = -31000,
 	y_max          = -2,
-	heat_point     = 95,
+	heat_point     = 60,
 	humidity_point = 90,
 })
 
@@ -459,6 +459,6 @@ minetest.register_biome({
 	depth_filler = 1,
 	y_min = -6,
 	y_max = 100,
-	heat_point = 95,
-	humidity_point = 80,
+	heat_point = 80,
+	humidity_point = 50,
 })

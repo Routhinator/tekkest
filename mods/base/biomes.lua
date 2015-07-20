@@ -457,8 +457,8 @@ minetest.register_biome({
   node_water = "moreliquids:oil_source",
 	depth_water_top = 2,
 	depth_filler = 1,
-	y_min = 5,
-	y_max = 32000,
+	y_min = -6,
+	y_max = 100,
 	heat_point = 95,
-	humidity_point = 100,
+	humidity_point = 80,
 })

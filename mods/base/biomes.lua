@@ -471,7 +471,7 @@ minetest.register_biome({
 
 minetest.register_biome({
 	name = "base_tarpit",
-	node_top = "tekkest_blocks:sticky_tar_block",
+	node_top = "default:dirt_with_dry_grass",
 	depth_top = 1,
 	node_filler = "moreblocks:tar",
 	node_stone = "moreblocks:tar",
@@ -479,8 +479,8 @@ minetest.register_biome({
   node_water = "moreliquids:oil_source",
 	depth_water_top = 2,
 	depth_filler = 1,
-	y_min = -6,
+	y_min = -31000,
 	y_max = 100,
-	heat_point = 95,
+	heat_point = 90,
 	humidity_point = 90,
 })

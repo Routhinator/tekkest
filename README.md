@@ -12,14 +12,24 @@ You set off into the new world with pickaxe in hand, a few tools in your pack, a
 ## Current Biomes
 
 - Birch Forest
+- Oak Forest
+- Confierous Forest
 - Jungle
-- Grasslands
+- Grasslands (Wet and dry)
 - Tundra
-- Evergreen Snows
+- Tiaga Forest
 - Desert
+- Savanna
+ 
+## Defined Biomes that do not seem to be generating
+
+- Wild Orchards
+- Tarpits
+- Pine Forests
+- Deciduous Forests
+- Redwood Forests
 
 ## Planned Biomes
 
 - Impact Zones
 - City Ruins
-- Tar Pits

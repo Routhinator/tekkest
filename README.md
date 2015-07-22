@@ -1,6 +1,6 @@
 ### WARNING
 
-This gamepack is prealpha. It is still missing key biomes and blocks. It is posted here for those that wish to test and assit with development. 
+This gamepack is pre-alpha. It is still missing key biomes and blocks. It is posted here for those that wish to test and assist with development. 
 
 # Tekkest: A Minetest Subgame
 

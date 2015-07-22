@@ -11,5 +11,8 @@ minetest.register_on_mapgen_init(function(params)
 	})
 end)
 
+minetest.clear_registered_biomes()
+minetest.clear_registered_decorations()
+
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/biomes.lua")
 dofile(minetest.get_modpath(minetest.get_current_modname()).."/decorations.lua")

@@ -7,3 +7,4 @@ moreliquids
 moreores
 moreblocks
 tekkest_blocks
+technic

@@ -1,6 +1,5 @@
---
--- Cool Temp
---
+-- Stone Grassland
+
 
 minetest.register_biome({
 	name = "base_stone_grassland",
@@ -10,8 +9,8 @@ minetest.register_biome({
 	depth_filler = 0,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 45,
-	humidity_point = 20,
+	heat_point = 25,
+	humidity_point = 5,
 })
 
 minetest.register_biome({
@@ -22,9 +21,11 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -192,
 	y_max = 5,
-	heat_point = 45,
-	humidity_point = 20,
+	heat_point = 25,
+	humidity_point = 5,
 })
+
+-- Coniferous Forest
 
 minetest.register_biome({
 	name = "base_coniferous_forest",
@@ -34,8 +35,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 25,
+	humidity_point = 50,
 })
 
 minetest.register_biome({
@@ -46,9 +47,11 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -192,
 	y_max = 5,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 25,
+	humidity_point = 50,
 })
+
+-- Redwood Forest
 
 minetest.register_biome({
 	name = "base_redwood_forest",
@@ -58,8 +61,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 75,
 })
 
 minetest.register_biome({
@@ -70,9 +73,11 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -192,
 	y_max = 5,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 75,
 })
+
+-- Pine Forest
 
 minetest.register_biome({
 	name = "base_pine_forest",
@@ -82,8 +87,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 25,
+	humidity_point = 20,
 })
 
 minetest.register_biome({
@@ -94,9 +99,11 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -192,
 	y_max = 5,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 25,
+	humidity_point = 20,
 })
+
+-- Oak Forest
 
 minetest.register_biome({
 	name = "base_oak_forest",
@@ -106,8 +113,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 50,
 })
 
 minetest.register_biome({
@@ -118,11 +125,11 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -192,
 	y_max = 5,
-	heat_point = 45,
-	humidity_point = 80,
+	heat_point = 50,
+	humidity_point = 50,
 })
 
--- Warm temp
+-- Deciduous Forest
 
 minetest.register_biome({
 	name = "base_deciduous_forest",
@@ -132,8 +139,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = 6,
 	y_max = 32000,
-	heat_point = 50,
-	humidity_point = 40,
+	heat_point = 25,
+	humidity_point = 80,
 })
 
 minetest.register_biome({
@@ -144,9 +151,11 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -31000,
 	y_max = 5,
-	heat_point = 50,
-	humidity_point = 40,
+	heat_point = 25,
+	humidity_point = 80,
 })
+
+-- Birch Forest
 
 minetest.register_biome({
 	name = "base_birch_forest",
@@ -159,8 +168,8 @@ minetest.register_biome({
 
 	height_min     = 1,
 	height_max     = 32000,
-	heat_point     = 50,
-	humidity_point = 40,
+	heat_point     = 65,
+	humidity_point = 60,
 })
 
 minetest.register_biome({
@@ -175,9 +184,11 @@ minetest.register_biome({
 
 	height_min     = -31000,
 	height_max     = 1,
-	heat_point     = 50,
-	humidity_point = 40,
+	heat_point     = 65,
+	humidity_point = 60,
 })
+
+-- Wild Orchard
 
 minetest.register_biome({
 	name = "base_wild_orchard",
@@ -188,7 +199,7 @@ minetest.register_biome({
 	y_min = 6,
 	y_max = 32000,
 	heat_point = 50,
-	humidity_point = 40,
+	humidity_point = 75,
 })
 
 minetest.register_biome({
@@ -200,8 +211,10 @@ minetest.register_biome({
 	y_min = -31000,
 	y_max = 5,
 	heat_point = 50,
-	humidity_point = 40,
+	humidity_point = 75,
 })
+
+-- Dry Grasslands
 
 minetest.register_biome({
 	name = "base_grass_dry",
@@ -211,8 +224,8 @@ minetest.register_biome({
 	depth_filler   = 3,
 	height_min     = 6,
 	height_max     = 32000,
-	heat_point     = 70,
-	humidity_point = 40,
+	heat_point     = 50,
+	humidity_point = 5,
 })
 
 minetest.register_biome({
@@ -223,9 +236,11 @@ minetest.register_biome({
 	depth_filler   = 0,
 	height_min     = -31000,
 	height_max     = 5,
-	heat_point     = 70,
-	humidity_point = 40,
+	heat_point     = 50,
+	humidity_point = 5,
 })
+
+-- Wet Grasslands
 
 minetest.register_biome({
 	name = "base_grass_wet",
@@ -235,8 +250,8 @@ minetest.register_biome({
 	depth_filler   = 3,
 	height_min     = 6,
 	height_max     = 100,
-	heat_point     = 70,
-	humidity_point = 80,
+	heat_point     = 65,
+	humidity_point = 30,
 })
 
 minetest.register_biome({
@@ -247,11 +262,11 @@ minetest.register_biome({
 	depth_filler   = 0,
 	y_min          = -31000,
 	y_max          = 5,
-	heat_point     = 70,
-	humidity_point = 80,
+	heat_point     = 65,
+	humidity_point = 30,
 })
 
--- Cold Temp
+-- Glacier
 
 minetest.register_biome({
 	name = "base_glacier",
@@ -267,7 +282,7 @@ minetest.register_biome({
 	y_min = -6,
 	y_max = 32000,
 	heat_point = -5,
-	humidity_point = 50,
+	humidity_point = 0,
 })
 
 minetest.register_biome({
@@ -277,12 +292,13 @@ minetest.register_biome({
 	depth_top = 1,
 	node_filler = "default:sand",
 	depth_filler = 2,
-
 	y_min = -31000,
 	y_max = -7,
 	heat_point = -5,
-	humidity_point = 50,
+	humidity_point = 0,
 })
+
+-- Tundra
 
 minetest.register_biome({
 	name = "base_tundra",
@@ -295,8 +311,8 @@ minetest.register_biome({
 
 	y_min          = 2,
 	y_max          = 32000,
-	heat_point     = 20,
-	humidity_point = 20,
+	heat_point     = 10,
+	humidity_point = 0,
 })
 
 minetest.register_biome({
@@ -311,9 +327,11 @@ minetest.register_biome({
 
 	y_min     		 = -31000,
 	y_max          = 1,
-	heat_point     = 20,
-	humidity_point = 20,
+	heat_point     = 10,
+	humidity_point = 0,
 })
+
+-- Tiaga
 
 minetest.register_biome({
 	name = "base_taiga",
@@ -326,8 +344,8 @@ minetest.register_biome({
 
 	y_min          = 2,
 	y_max          = 32000,
-	heat_point     = 20,
-	humidity_point = 80,
+	heat_point     = 10,
+	humidity_point = 20,
 })
 
 minetest.register_biome({
@@ -341,11 +359,11 @@ minetest.register_biome({
 
 	height_min     = -31000,
 	height_max     = 1,
-	heat_point     = 20,
-	humidity_point = 80,
+	heat_point     = 10,
+	humidity_point = 20,
 })
 
--- Hot temp
+-- Desert
 
 minetest.register_biome({
 	name = "base_desert",
@@ -356,7 +374,7 @@ minetest.register_biome({
 	node_stone     = "default:desert_stone",
 	y_min          = 1,
 	y_max          = 32000,
-	heat_point     = 95,
+	heat_point     = 85,
 	humidity_point = 10,
 })
 
@@ -369,9 +387,11 @@ minetest.register_biome({
 	node_stone     = "default:desert_stone",
 	y_min          = -31000,
 	y_max          = 0,
-	heat_point     = 90,
+	heat_point     = 85,
 	humidity_point = 10,
 })
+
+-- Jungle
 
 minetest.register_biome({
 	name = "base_jungle",
@@ -381,8 +401,8 @@ minetest.register_biome({
 	depth_filler   = 2,
 	y_min          = 1,
 	y_max          = 32000,
-	heat_point     = 70,
-	humidity_point = 90,
+	heat_point     = 75,
+	humidity_point = 80,
 })
 
 minetest.register_biome({
@@ -393,8 +413,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -2,
 	y_max = 3,
-	heat_point = 80,
-	humidity_point = 90,
+	heat_point = 75,
+	humidity_point = 80,
 })
 
 minetest.register_biome({
@@ -405,9 +425,11 @@ minetest.register_biome({
 	depth_filler   = 2,
 	y_min          = -31000,
 	y_max          = -2,
-	heat_point     = 60,
-	humidity_point = 90,
+	heat_point     = 75,
+	humidity_point = 80,
 })
+
+-- Savanna
 
 minetest.register_biome({
 	name = "base_savanna",
@@ -417,8 +439,8 @@ minetest.register_biome({
 	depth_filler = 1,
 	y_min = 5,
 	y_max = 32000,
-	heat_point = 95,
-	humidity_point = 50,
+	heat_point = 70,
+	humidity_point = 10,
 })
 
 minetest.register_biome({
@@ -429,8 +451,8 @@ minetest.register_biome({
 	depth_filler = 2,
 	y_min = -31000,
 	y_max = 4,
-	heat_point = 95,
-	humidity_point = 50,
+	heat_point = 70,
+	humidity_point = 10,
 })
 
 -- Underground
@@ -459,6 +481,6 @@ minetest.register_biome({
 	depth_filler = 1,
 	y_min = -6,
 	y_max = 100,
-	heat_point = 80,
-	humidity_point = 50,
+	heat_point = 95,
+	humidity_point = 90,
 })

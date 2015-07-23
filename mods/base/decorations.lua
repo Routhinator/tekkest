@@ -210,7 +210,7 @@ minetest.register_decoration({
 minetest.register_decoration({
 	deco_type = "simple",
 	decoration = "moretrees:rubber_tree_sapling_ongen",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "default:dirt"},
 	height = 1,
 	height_max = 0,
 	sidelen = 16,
@@ -221,7 +221,7 @@ minetest.register_decoration({
 minetest.register_decoration({
 	deco_type = "simple",
 	decoration = "moretrees:willow_sapling_ongen",
-	place_on = {"default:dirt_with_grass"},
+	place_on = {"default:dirt_with_grass", "default:dirt"},
 	height = 1,
 	height_max = 0,
 	sidelen = 16,

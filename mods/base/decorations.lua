@@ -1,15 +1,4 @@
--- Trees
-
-minetest.register_decoration({
-	deco_type = "simple",
-	decoration = "moretrees:birch_sapling_ongen",
-	place_on = "default:dirt_with_grass",
-	height = 1,
-	height_max = 0,
-	sidelen = 16,
-	fill_ratio = 0.001,
-	biomes = {"base_deciduous_forest", "base_grass_wet"}
-})
+-- Birch Forest
 
 minetest.register_decoration({
 	deco_type = "simple",
@@ -22,27 +11,31 @@ minetest.register_decoration({
 	biomes = {"base_birch_forest"}
 })
 
+-- Boreal (Tiaga) Forest
+
 minetest.register_decoration({
 	deco_type = "simple",
 	decoration = "moretrees:fir_sapling_ongen",
-	place_on = {"default:snowblock", "default:dirt_with_grass", "default:dirt_with_snow"},
+	place_on = {"default:snowblock", "default:dirt_with_snow"},
 	height = 1,
 	height_max = 0,
 	sidelen = 16,
-	fill_ratio = 0.01,
-	biomes = {"base_taiga", "base_coniferous_forest"}
+	fill_ratio = 0.008,
+	biomes = {"base_taiga"}
 })
 
 minetest.register_decoration({
 	deco_type = "simple",
 	decoration = "moretrees:spruce_sapling_ongen",
-	place_on = {"default:snowblock", "default:dirt_with_grass", "default:dirt_with_snow"},
+	place_on = {"default:snowblock", "default:dirt_with_snow"},
 	height = 1,
 	height_max = 0,
 	sidelen = 16,
-	fill_ratio = 0.01,
-	biomes = {"base_taiga", "base_coniferous_forest"}
+	fill_ratio = 0.008,
+	biomes = {"base_taiga"}
 })
+
+-- Jungle
 
 minetest.register_decoration({
 	deco_type = "simple",
@@ -55,6 +48,8 @@ minetest.register_decoration({
 	biomes = {"base_jungle"}
 })
 
+-- Savanna
+
 minetest.register_decoration({
 	deco_type = "simple",
 	decoration = "moretrees:acacia_sapling_ongen",
@@ -65,6 +60,54 @@ minetest.register_decoration({
 	fill_ratio = 0.001,
 	biomes = {"base_savanna"}
 })
+
+-- Coniferous Forest
+
+minetest.register_decoration({
+	deco_type = "simple",
+	decoration = "moretrees:fir_sapling_ongen",
+	place_on = {"default:dirt_with_grass"},
+	height = 1,
+	height_max = 0,
+	sidelen = 16,
+	fill_ratio = 0.005,
+	biomes = {"base_coniferous_forest"}
+})
+
+minetest.register_decoration({
+	deco_type = "simple",
+	decoration = "moretrees:spruce_sapling_ongen",
+	place_on = {"default:dirt_with_grass"},
+	height = 1,
+	height_max = 0,
+	sidelen = 16,
+	fill_ratio = 0.005,
+	biomes = {"base_coniferous_forest"}
+})
+
+minetest.register_decoration({
+	deco_type = "simple",
+	decoration = "moretrees:sequoia_sapling_ongen",
+	place_on = {"default:dirt_with_grass"},
+	height = 1,
+	height_max = 0,
+	sidelen = 16,
+	fill_ratio = 0.005,
+	biomes = {"base_coniferous_forest"}
+})
+
+minetest.register_decoration({
+	deco_type = "simple",
+	decoration = "moretrees:pine_sapling_ongen",
+	place_on = {"default:dirt_with_grass"},
+	height = 1,
+	height_max = 0,
+	sidelen = 16,
+	fill_ratio = 0.005,
+	biomes = {"base_coniferous_forest"}
+})
+
+-- Redwood Forest
 
 minetest.register_decoration({
 	deco_type = "simple",
@@ -77,6 +120,8 @@ minetest.register_decoration({
 	biomes = {"base_coniferous_forest", "base_redwood_forest"}
 })
 
+-- Pine Forest
+
 minetest.register_decoration({
 	deco_type = "simple",
 	decoration = "moretrees:pine_sapling_ongen",
@@ -88,6 +133,8 @@ minetest.register_decoration({
 	biomes = {"base_coniferous_forest", "base_pine_forest"}
 })
 
+-- Oak Forest
+
 minetest.register_decoration({
 	deco_type = "simple",
 	decoration = "moretrees:oak_sapling_ongen",
@@ -96,7 +143,31 @@ minetest.register_decoration({
 	height_max = 0,
 	sidelen = 16,
 	fill_ratio = 0.01,
-	biomes = {"base_deciduous_forest", "base_oak_forest"}
+	biomes = {"base_oak_forest"}
+})
+
+-- Deciduous Forest
+
+minetest.register_decoration({
+	deco_type = "simple",
+	decoration = "moretrees:birch_sapling_ongen",
+	place_on = "default:dirt_with_grass",
+	height = 1,
+	height_max = 0,
+	sidelen = 16,
+	fill_ratio = 0.005,
+	biomes = {"base_deciduous_forest"}
+})
+
+minetest.register_decoration({
+	deco_type = "simple",
+	decoration = "moretrees:oak_sapling_ongen",
+	place_on = {"default:dirt_with_grass"},
+	height = 1,
+	height_max = 0,
+	sidelen = 16,
+	fill_ratio = 0.005,
+	biomes = {"base_deciduous_forest"}
 })
 
 minetest.register_decoration({
@@ -106,7 +177,7 @@ minetest.register_decoration({
 	height = 1,
 	height_max = 0,
 	sidelen = 16,
-	fill_ratio = 0.001,
+	fill_ratio = 0.005,
 	biomes = {"base_deciduous_forest"}
 })
 
@@ -117,9 +188,11 @@ minetest.register_decoration({
 	height = 1,
 	height_max = 0,
 	sidelen = 16,
-	fill_ratio = 0.001,
+	fill_ratio = 0.005,
 	biomes = {"base_deciduous_forest"}
 })
+
+-- Wild Orchard
 
 minetest.register_decoration({
 	deco_type = "simple",
@@ -131,6 +204,8 @@ minetest.register_decoration({
 	fill_ratio = 0.01,
 	biomes = {"base_wild_orchard"}
 })
+
+-- Jungle Swamp
 
 minetest.register_decoration({
 	deco_type = "simple",
@@ -152,30 +227,6 @@ minetest.register_decoration({
 	sidelen = 16,
 	fill_ratio = 0.01,
 	biomes = {"base_jungle_swamp"}
-})
-
-
-minetest.register_decoration({
-	deco_type = "simple",
-	decoration = "farming:pumpkin_face",
-	place_on = {"default:dirt_with_grass"},
-	height = 1,
-	height_max = 0,
-	sidelen = 16,
-	fill_ratio = 0.01,
-	biomes = {"base_deciduous_forest"}
-})
-
-
-minetest.register_decoration({
-	deco_type = "simple",
-	decoration = "farming:pumpkin_face_light",
-	place_on = {"default:dirt_with_grass"},
-	height = 1,
-	height_max = 0,
-	sidelen = 16,
-	fill_ratio = 0.01,
-	biomes = {"base_wild_orchard"}
 })
 
 -- Flowers

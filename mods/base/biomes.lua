@@ -480,7 +480,7 @@ minetest.register_biome({
 	depth_filler = 1,
 	y_min = -31000,
 	y_max = 100,
-	heat_point = 80,
+	heat_point = 85,
 	humidity_point = 80,
 })
 
@@ -495,7 +495,7 @@ minetest.register_biome({
 	depth_filler = 1,
 	y_min = -31000,
 	y_max = 100,
-	heat_point = 85,
+	heat_point = 95,
 	humidity_point = 40,
 })
 
@@ -510,6 +510,6 @@ minetest.register_biome({
 	depth_filler = 1,
 	y_min = -31000,
 	y_max = 100,
-	heat_point = 80,
+	heat_point = 90,
 	humidity_point = 70,
 })

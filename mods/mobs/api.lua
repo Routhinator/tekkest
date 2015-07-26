@@ -1,4 +1,4 @@
--- Mobs Api (19th July 2015)
+-- Mobs Api (26th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -20,8 +20,9 @@ function mobs:register_mob(name, def)
 		do_custom = def.do_custom,
 		jump_height = def.jump_height or 6,
 		jump_chance = def.jump_chance or 0,
-		rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
-		lifetimer = def.lifetimer or 180, -- was 600
+		--rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
+		rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
+		lifetimer = def.lifetimer or 180, -- 3 minutes
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
 		physical = true,
@@ -96,7 +97,7 @@ function mobs:register_mob(name, def)
 			v = (v or 0)
 			if def.drawtype
 			and def.drawtype == "side" then
-				self.rotate = 1.5
+				self.rotate = math.rad(90)
 			end
 			local yaw = self.object:getyaw() + self.rotate
 			local x = math.sin(yaw) * -v
@@ -1182,8 +1183,8 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, inter
 		action = function(pos, node, _, active_object_count_wider)
 			-- do not spawn if too many active entities in area
 			if active_object_count_wider > active_object_count
-			or not mobs.spawning_mobs[name] 
-			or not pos then
+			or not mobs.spawning_mobs[name] then
+			--or not pos then
 				return
 			end
 
@@ -1347,7 +1348,6 @@ function check_for_death(self)
 		return
 	end
 	local pos = self.object:getpos()
-	pos.y = pos.y + 0.5 -- drop items half a block higher
 	self.object:remove()
 	local obj = nil
 	for _,drop in ipairs(self.drops) do
@@ -1370,7 +1370,6 @@ function check_for_death(self)
 		})
 	end
 	if self.on_die then
-		pos.y = pos.y - 0.5
 		self.on_die(self, pos)
 	end
 end
@@ -1505,7 +1504,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 		end
 		local name = clicker:get_player_name()
 		-- is mob tamed?
-		if self.tamed == false --self.owner == ""
+		if self.tamed == false
 		and force_take == false then
 			minetest.chat_send_player(name, "Not tamed!")
 			return
@@ -1513,7 +1512,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 		-- cannot pick up if not owner
 		if self.owner ~= name
 		and force_take == false then
-			minetest.chat_send_player(name, "Not owner!")
+			minetest.chat_send_player(name, self.owner.." is owner!")
 			return
 		end
 

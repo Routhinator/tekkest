@@ -17,6 +17,7 @@ for _, state in ipairs({ "flowing", "source" }) do
                 },
             }
         },
+        alpha = 160,
         paramtype = "light",
         paramtype2 = (state == "flowing" and "flowingliquid" or nil),
         light_source = (state == "source" and 10 or 8),
@@ -32,7 +33,7 @@ for _, state in ipairs({ "flowing", "source" }) do
         liquid_viscosity = LAVA_VISC,
         liquid_renewable = false,
         damage_per_second = 6,
-        post_effect_color = { a = 192, r = 100, g = 203, b = 203 },
+        post_effect_color = { a = 160, r = 100, g = 203, b = 203 },
         groups = {
             liquid = 2,
             cold = 6,
@@ -94,6 +95,7 @@ for _, state in ipairs({ "flowing", "source" }) do
                 },
             }
         },
+        alpha = 160,
         paramtype = "light",
         paramtype2 = (state == "flowing" and "flowingliquid" or nil),
         walkable = false,
@@ -131,6 +133,7 @@ for _, state in ipairs({ "flowing", "source" }) do
                 },
             }
         },
+        alpha = 160,
         paramtype = "light",
         paramtype2 = (state == "flowing" and "flowingliquid" or nil),
         walkable = false,

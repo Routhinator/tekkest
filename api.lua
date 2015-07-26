@@ -1,4 +1,4 @@
--- Mobs Api (20th July 2015)
+-- Mobs Api (26th July 2015)
 mobs = {}
 mobs.mod = "redo"
 
@@ -20,7 +20,8 @@ function mobs:register_mob(name, def)
 		do_custom = def.do_custom,
 		jump_height = def.jump_height or 6,
 		jump_chance = def.jump_chance or 0,
-		rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
+		--rotate = def.rotate or 0, -- 0=front, 1.5=side, 3.0=back, 4.5=side2
+		rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
 		lifetimer = def.lifetimer or 180, -- 3 minutes
 		hp_min = def.hp_min or 5,
 		hp_max = def.hp_max or 10,
@@ -96,7 +97,7 @@ function mobs:register_mob(name, def)
 			v = (v or 0)
 			if def.drawtype
 			and def.drawtype == "side" then
-				self.rotate = 1.5
+				self.rotate = math.rad(90)
 			end
 			local yaw = self.object:getyaw() + self.rotate
 			local x = math.sin(yaw) * -v

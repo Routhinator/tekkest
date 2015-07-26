@@ -33,7 +33,7 @@ if mobs.mod and mobs.mod == "redo" then
 	local l_spawn_chance_bird	= 24000
 
 -- load settings
-	dofile(minetest.get_modpath("birds").."/SETTINGS.txt")
+	dofile(minetest.get_modpath("mobs_birds").."/SETTINGS.txt")
 	if not ENABLE_LARGE_BIRDS then
 		l_spawn_chance_bird = l_spawn_chance_bird - 12000
 	end
@@ -43,7 +43,7 @@ if mobs.mod and mobs.mod == "redo" then
 
 -- gulls
 	if ENABLE_GULLS then
-		mobs:register_mob("birds:gull", {
+		mobs:register_mob("mobs_birds:gull", {
 			type = "animal",
 			passive = true,
 			hp_min = 5,
@@ -53,7 +53,7 @@ if mobs.mod and mobs.mod == "redo" then
 			visual = "mesh",
 			mesh = l_model,
 			textures = l_skins_gull,
-			rotate = 4.5,
+			rotate = 270,
 			walk_velocity = 4,
 			run_velocity = 6,
 			fall_speed = 0,
@@ -69,13 +69,13 @@ if mobs.mod and mobs.mod == "redo" then
 			end
 		})
 		--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
-		mobs:spawn_specific("birds:gull", l_spawn_in, l_spawn_near_gull, 5, 20, 30, l_spawn_chance_gull, 2, 0, 31000)
-		mobs:register_egg("birds:gull", "Gull", l_egg_texture, 1)
+		mobs:spawn_specific("mobs_birds:gull", l_spawn_in, l_spawn_near_gull, 5, 20, 30, l_spawn_chance_gull, 2, 0, 31000)
+		mobs:register_egg("mobs_birds:gull", "Gull", l_egg_texture, 1)
 	end
 
 -- large birds
 	if ENABLE_LARGE_BIRDS then
-		mobs:register_mob("birds:bird_lg", {
+		mobs:register_mob("mobs_birds:bird_lg", {
 			type = "animal",
 			passive = true,
 			hp_min = 5,
@@ -86,7 +86,7 @@ if mobs.mod and mobs.mod == "redo" then
 			mesh = l_model,
 			textures = l_skins_bird,
 			visual_size = {x=.5, y=.5},
-			rotate = 4.5,
+			rotate = 270,
 			walk_velocity = 4,
 			run_velocity = 6,
 			fall_speed = 0,
@@ -102,13 +102,13 @@ if mobs.mod and mobs.mod == "redo" then
 			end
 		})
 		--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
-		mobs:spawn_specific("birds:bird_lg", l_spawn_in, l_spawn_near_bird, 5, 20, 30, l_spawn_chance_bird, 2, 0, 31000)
-		mobs:register_egg("birds:bird_lg", "Large bird", l_egg_texture, 1)
+		mobs:spawn_specific("mobs_birds:bird_lg", l_spawn_in, l_spawn_near_bird, 5, 20, 30, l_spawn_chance_bird, 2, 0, 31000)
+		mobs:register_egg("mobs_birds:bird_lg", "Large bird", l_egg_texture, 1)
 	end
 
 -- small birds
 	if ENABLE_SMALL_BIRDS then
-		mobs:register_mob("birds:bird_sm", {
+		mobs:register_mob("mobs_birds:bird_sm", {
 			type = "animal",
 			passive = true,
 			hp_min = 2,
@@ -119,7 +119,7 @@ if mobs.mod and mobs.mod == "redo" then
 			mesh = l_model,
 			textures = l_skins_bird,
 			visual_size = {x=.25, y=.25},
-			rotate = 4.5,
+			rotate = 270,
 			walk_velocity = 4,
 			run_velocity = 6,
 			fall_speed = 0,
@@ -135,8 +135,8 @@ if mobs.mod and mobs.mod == "redo" then
 			end
 		})
 		--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
-		mobs:spawn_specific("birds:bird_sm", l_spawn_in, l_spawn_near_bird, 5, 20, 30, l_spawn_chance_bird, 2, 0, 31000)
-		mobs:register_egg("birds:bird_sm", "Small bird", l_egg_texture, 1)
+		mobs:spawn_specific("mobs_birds:bird_sm", l_spawn_in, l_spawn_near_bird, 5, 20, 30, l_spawn_chance_bird, 2, 0, 31000)
+		mobs:register_egg("mobs_birds:bird_sm", "Small bird", l_egg_texture, 1)
 	end
 
 end

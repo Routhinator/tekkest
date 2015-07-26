@@ -14,7 +14,7 @@ if mobs.mod and mobs.mod == "redo" then
 	local l_spawnchance	= 10000
 
 -- Butterfly
-	mobs:register_mob("butterfly:butterfly", {
+	mobs:register_mob("mobs_butterfly:butterfly", {
 		type = "animal",
 		passive = true,
 		hp_min = 1,
@@ -43,7 +43,7 @@ if mobs.mod and mobs.mod == "redo" then
 		end
 	})
 	--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
-	mobs:spawn_specific("butterfly:butterfly", {"air"}, l_spawnnear, 5, 20, 30, l_spawnchance, 2, 0, 31000)
-	mobs:register_egg("butterfly:butterfly", "Butterfly", "default_cloud.png", 1)
+	mobs:spawn_specific("mobs_butterfly:butterfly", {"air"}, l_spawnnear, 5, 20, 30, l_spawnchance, 2, 0, 31000)
+	mobs:register_egg("mobs_butterfly:butterfly", "Butterfly", "default_cloud.png", 1)
 
 end

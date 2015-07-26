@@ -9,7 +9,7 @@ if mobs.mod and mobs.mod == "redo" then
 	local l_spawnnear	= {"default:stone"}
 	local l_spawnchance	= 10000
 
-	mobs:register_mob("bat:bat", {
+	mobs:register_mob("mobs_bat:bat", {
 		type = "animal",
 		damage = 1,
 		attack_type = "dogfight",
@@ -20,13 +20,13 @@ if mobs.mod and mobs.mod == "redo" then
 		visual = "mesh",
 		mesh = "animal_bat.b3d",
 		textures = l_skins,
-		rotate = 4.5,
+		rotate = 270,
 		walk_velocity = 10,
 		run_velocity = 23,
 		fall_speed = 0,
 		stepheight = 3,
 		sounds = {
-			random = "creatures_ghost",
+			random = "animal_bat",
 			war_cry = "animal_bat",
 			damage = "animal_bat",
 			attack = "animal_bat",
@@ -49,7 +49,7 @@ if mobs.mod and mobs.mod == "redo" then
 	})
 
 	--name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height
-	mobs:spawn_specific("bat:bat", {"air"}, l_spawnnear, 2, 10, 30, l_spawnchance, 5, -100, 11000)
-	mobs:register_egg("bat:bat", "Bat", "animal_bat_inv.png", 0)
+	mobs:spawn_specific("mobs_bat:bat", {"air"}, l_spawnnear, 2, 10, 30, l_spawnchance, 5, -100, 11000)
+	mobs:register_egg("mobs_bat:bat", "Bat", "animal_bat_inv.png", 0)
 
 end

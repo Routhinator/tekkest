@@ -1,3 +1,5 @@
+local S = moreliquids.getter
+
 for _, state in ipairs({ "flowing", "source" }) do
     -- Cryogel
 
